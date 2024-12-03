@@ -1,0 +1,24 @@
+# Python
+*.pyc
+__pycache__/
+db.sqlite3
+
+# Node.js
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environnement Docker
+.env
+docker-compose.override.yml
+
+# IDE/Éditeurs
+.vscode/
+*.swp
+.idea/
+.DS_Store
+
+# Logs
+*.log
