@@ -1,8 +1,11 @@
 # Étape 1 : Utiliser une image de base Node.js
-FROM node:18
+FROM node:latest
 
 # Définir le répertoire de travail
 WORKDIR /app
+
+# Installer Angular CLI globalement
+RUN npm install -g @angular/cli
 
 # Copier les fichiers package.json et package-lock.json pour installer les dépendances
 COPY package*.json ./
@@ -17,4 +20,4 @@ COPY . .
 EXPOSE 4200
 
 # Commande par défaut pour démarrer le serveur Angular
-CMD ["npm", "start"]
+CMD ["ng", "serve", "--host", "0.0.0.0"]
