@@ -31,13 +31,19 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'backend',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ]
+
+# Ajout des modules installés
+
+AUTH_USER_MODEL = 'backend.CustomUser'  
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
