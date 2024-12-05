@@ -5,7 +5,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     REQUIRED_FIELDS = ['email']
     USERNAME_FIELD = 'username'
-
+ 
 
 class Admin(models.Model):
     id_admin = models.AutoField(primary_key=True)
