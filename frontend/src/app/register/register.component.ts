@@ -10,14 +10,15 @@ import { FormsModule } from '@angular/forms';
     styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-    username: string = '';
+    nom: string = '';
+    prenom: string = '';
     email: string = '';
     password: string = '';
     
     constructor(private authService: AuthService) {}
 
     onSubmit() {
-        this.authService.register({ username: this.username, email: this.email, password: this.password }).subscribe(
+        this.authService.register({ nom: this.nom, prenom: this.prenom, email: this.email, mdp: this.password }).subscribe(
             (response) => {
                 console.log('Registration successful', response);
             },
