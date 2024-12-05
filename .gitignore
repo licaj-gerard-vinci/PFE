@@ -18,7 +18,14 @@ docker-compose.override.yml
 .vscode/
 *.swp
 .idea/
-.DS_Store
 
 # Logs
 *.log
+
+# System files
+.DS_Store
+._*
+Thumbs.db
+
+# Django
+**/migrations/

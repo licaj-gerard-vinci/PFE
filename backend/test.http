@@ -1,0 +1,21 @@
+@baseUrl = http://localhost:8000
+
+### Login avec Julien
+POST {{baseUrl}}/login/
+Content-Type: application/json
+
+{
+  "email":"julien@test.com",
+  "mdp":"ipl"
+}
+
+### register
+POST {{baseUrl}}/register/
+Content-Type: application/json
+
+{
+  "nom":"testNom",
+  "prenom":"testPrenom",
+  "email":"julien@test.com",
+  "mdp":"ipl"
+}
