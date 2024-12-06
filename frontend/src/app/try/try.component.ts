@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
+import { ButtonsService } from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
 
 
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
   })
   export class Try implements OnInit{
     enjeux: any[] = [];
-    constructor(private authService: AuthService) {}
+    constructor(private buttonsService: ButtonsService) {}
 
     ngOnInit(): void {
         this.onSubmit();
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 
     onSubmit() {
         console.log("bouton appuyé")
-        this.authService.getEnjeux().subscribe(
+        this.buttonsService.getEnjeux().subscribe(
             (response) =>  {
                 this.enjeux = response;
                 console.log(this.enjeux);

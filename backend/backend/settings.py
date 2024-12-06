@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authentication',
     'rest_framework',
     'corsheaders',
+    'buttons'
 ]
 
 MIDDLEWARE = [
