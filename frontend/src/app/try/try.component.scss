@@ -1,0 +1,31 @@
+/* Style général pour les boutons */
+button {
+    display: flex; /* Utilise Flexbox pour aligner les éléments */
+    align-items: center; /* Centre verticalement l'icône et le texte */
+    justify-content: flex-start; /* Aligne les éléments à gauche */
+    width: 21%; /* Boutons s'étendent sur toute la largeur */
+    padding: 10px;
+    margin: 1px 0;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #f9F9F9; /* Bordure légère */
+    background-color: #f9f9f9; /* Fond clair */
+    cursor: pointer;
+    color:#013238;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+button:hover {
+    background-color: #e0f7fa; /* Couleur d'arrière-plan au survol */
+    color: #00796b; /* Couleur de texte au survol */
+}
+button img.icon {
+    width: 20px; /* Taille de l'icône */
+    height: 20px;
+    margin-right: 10px; /* Espace entre l'icône et le texte */
+    display: inline-block;
+}
+
+body {
+    background-color: #B5CDBF;
+    padding-bottom: 500px;
+}
