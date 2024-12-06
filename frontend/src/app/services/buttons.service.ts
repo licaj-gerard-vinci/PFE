@@ -13,4 +13,7 @@ export class ButtonsService {
     getEnjeux(): Observable<any> {
         return this.http.get(`${this.baseUrl}/enjeux`);
     }
+    getQuestions(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/questions`);
+    }
 }

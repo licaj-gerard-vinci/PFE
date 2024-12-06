@@ -1,0 +1,15 @@
+<body>
+    <div *ngIf="enjeux.length >0 ; else elseBlock">
+        <div *ngFor="let enjeu of sortedEnjeux; let i = index">
+            <button (click)="sortQuestions(enjeu.id_enjeu)"><img [src]="selectedEnjeuId === enjeu.id_enjeu ? '/chevron-down.svg' : '/chevron-right.svg'" alt="icone" class="icon" />{{i+1}}. {{enjeu.nom}}</button>
+            <div class="questions-container" [class.active]="selectedEnjeuId === enjeu.id_enjeu">
+                <div *ngFor="let question of sortedQuestions; let j = index">
+                    <button>{{i+1}}.{{j+1}} {{question.sujet}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #elseBlock>
+        <p>Aucun enjeu présent</p>
+    </ng-template>
+</body>

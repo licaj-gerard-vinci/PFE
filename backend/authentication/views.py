@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import CustomUser
 from .models import Admin
-from .models import Enjeux
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 
@@ -34,9 +33,3 @@ class LoginView(APIView):
                 "access": str(refresh.access_token),
             }, status=status.HTTP_200_OK)
         return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-    
-class Subtitles(APIView):
-    def get(self, request):
-        enjeux = Enjeux.objects.filter(enjeu_parent__isnull = True)
-        data = [{"id": enjeu.id_enjeu, "nom": enjeu.nom} for enjeu in enjeux]
-        return Response(data, status=status.HTTP_200_OK)

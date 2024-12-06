@@ -4,16 +4,17 @@ button {
     align-items: center; /* Centre verticalement l'icône et le texte */
     justify-content: flex-start; /* Aligne les éléments à gauche */
     width: 21%; /* Boutons s'étendent sur toute la largeur */
-    padding: 10px;
+    padding: 5px;
     margin: 1px 0;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     border: 1px solid #f9F9F9; /* Bordure légère */
     background-color: #f9f9f9; /* Fond clair */
     cursor: pointer;
     color:#013238;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.5s ease;
 }
+
 button:hover {
     background-color: #e0f7fa; /* Couleur d'arrière-plan au survol */
     color: #00796b; /* Couleur de texte au survol */
@@ -23,9 +24,24 @@ button img.icon {
     height: 20px;
     margin-right: 10px; /* Espace entre l'icône et le texte */
     display: inline-block;
+    transition: all 0.5s linear;
 }
 
 body {
     background-color: #B5CDBF;
     padding-bottom: 500px;
 }
+
+.questions-container {
+    overflow: hidden; /* Empêche le débordement */
+    max-height: 0; /* Cache les questions initialement */
+    opacity: 0; /* Initialement invisible */
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    padding-left: 20px; /* Décalage vers la droite */
+    max-width: 94.5%;
+  }
+  
+  .questions-container.active {
+    max-height: 500px; /* Une hauteur suffisamment grande pour contenir toutes les questions */
+    opacity: 1; /* Rendre visible */
+  }

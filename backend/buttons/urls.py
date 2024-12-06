@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import Subtitles
+from .views import Enjeuxx
+from .views import Questionss
 
 urlpatterns = [
-    path('enjeux/', Subtitles.as_view(), name="enjeux"),
+    path('enjeux/', Enjeuxx.as_view(), name="enjeux"),
+    path('questions/', Questionss.as_view(), name="questions")
 ]

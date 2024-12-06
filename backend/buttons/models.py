@@ -11,3 +11,17 @@ class Enjeux(models.Model):
 
     def __str__(self):
         return self.nom
+
+class Questions(models.Model):
+    id_question = models.AutoField(primary_key=True)
+    sujet = models.CharField(max_length = 255)
+    statut = models.CharField(max_length = 1)
+    id_enjeu = models.ForeignKey(Enjeux, null=False, blank=False, on_delete=models.DO_NOTHING, db_column='id_enjeu')
+    est_ouverte = models.BooleanField()
+
+    class Meta:
+        db_table = 'questions'
+        managed = False
+
+    def __str__(self):
+        return self.sujet
