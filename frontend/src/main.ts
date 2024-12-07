@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app/app-routing.module';
 import { CommonModule } from '@angular/common';
 import { routes } from './app/app-routing.module';
 
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
