@@ -19,3 +19,6 @@ Content-Type: application/json
   "email":"julien@test.com",
   "mdp":"ipl"
 }
+
+### get un admin
+GET {{baseUrl}}/auth/admin/julien@test.com/
