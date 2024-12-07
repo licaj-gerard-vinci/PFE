@@ -19,13 +19,16 @@ Content-Type: application/json
   "email":"julien@test.com",
   "mdp":"ipl"
 }
+> {%
+  client.global.set("julienToken", response.body.access);
+%}
 
 ### vérifie le token
 POST {{baseUrl}}/auth/verify-token/
 Content-Type: application/json
 
 {
-  "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzNTg4MDY2LCJpYXQiOjE3MzM1ODc3NjYsImp0aSI6IjMwYTI4MTA5ZjE0ZDRmNmI4NWI0NDM5MDJmNjc3Yzk3IiwidXNlcl9pZCI6Imp1bGllbkB0ZXN0LmNvbSJ9.A9XerL4DxoZWaOq3maNnQ6F7E-rFI-Fg1Bh7RpaqPi4"
+  "token":"{{julienToken}}"
 }
 
 ### get un admin
