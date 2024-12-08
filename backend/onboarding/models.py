@@ -45,7 +45,7 @@ class Client(models.Model):
         return self.nom_entreprise
 
 class QuestionsOnboarding(models.Model):
-    id_question = models.AutoField(primary_key=True)
+    id_questions_onboarding = models.AutoField(primary_key=True)
     question = models.CharField(max_length=5000)
 
     class Meta:

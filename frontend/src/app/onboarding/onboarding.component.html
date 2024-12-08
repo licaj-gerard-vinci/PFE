@@ -1,0 +1,44 @@
+<div class="onboarding-container">
+  <h2>Onboarding Questions</h2>
+
+  <form (ngSubmit)="submitForm()">
+    <div *ngFor="let question of questions; let i = index" class="question-item">
+      <div class="question-number">{{ i + 1 }}.</div>
+      <div class="question-text">{{ question.question }}</div>
+      
+      <!-- Input de type number pour les questions 11 et 13 -->
+      <input
+        *ngIf="i === 10 || i === 12"
+        type="number"
+        [id]="'question-' + i"
+        [(ngModel)]="question.answer"
+        name="question-{{ i }}"
+        class="question-input"
+      />
+      
+      <!-- Select pour les questions 12, 14, 15, 16 et 18 -->
+      <select
+        *ngIf="i === 11 || i === 13 || i === 14 || i === 15 || i === 17"
+        [id]="'question-' + i"
+        [(ngModel)]="question.answer"
+        name="question-{{ i }}"
+        class="question-input"
+      >
+        <option [value]="true">Oui</option>
+        <option [value]="false">Non</option>
+      </select>
+      
+      <!-- Input de type text pour les autres questions -->
+      <input
+        *ngIf="i !== 10 && i !== 12 && i !== 11 && i !== 13 && i !== 14 && i !== 15 && i !== 17"
+        type="text"
+        [id]="'question-' + i"
+        [(ngModel)]="question.answer"
+        name="question-{{ i }}"
+        class="question-input"
+      />
+    </div>
+
+    <button type="submit" class="submit-button">Submit</button>
+  </form>
+</div>
