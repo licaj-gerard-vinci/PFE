@@ -1,13 +1,13 @@
 @baseUrl = http://localhost:8000
 
-### register
+### register dans admin
 POST {{baseUrl}}/auth/register/
 Content-Type: application/json
 
 {
   "nom":"testNom",
   "prenom":"testPrenom",
-  "email":"julien@test.com",
+  "email":"julien@admin.com",
   "mdp":"ipl"
 }
 
@@ -16,7 +16,7 @@ POST {{baseUrl}}/auth/login/
 Content-Type: application/json
 
 {
-  "email":"julien@test.com",
+  "email":"julien@admin.com",
   "mdp":"ipl"
 }
 > {%
@@ -36,4 +36,16 @@ GET {{baseUrl}}/auth/admin/julien@test.com/
 
 ### get un clent
 GET {{baseUrl}}/auth/client/jean.dupont@example.com/
+
+### Login un client
+POST {{baseUrl}}/auth/login/
+Content-Type: application/json
+
+{
+  "email":"jean.dupont@example.com",
+  "mdp":"ipl"
+}
+> {%
+  client.global.set("clientToken", response.body.access);
+%}
 
