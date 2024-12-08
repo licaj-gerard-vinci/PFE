@@ -5,7 +5,7 @@ from rest_framework import status
 from django.db.models import Count, Sum
 from backend.models import Clients, Engagements, ReponseClient, Recaps
 
-# Create your views here.
+
 class RapportView(APIView):
     def get(self, request, client_id):
         try:

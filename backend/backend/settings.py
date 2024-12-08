@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
-from rest_framework.settings import api_settings
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,21 +40,8 @@ INSTALLED_APPS = [
     'backend',
     'authentication',
     'rest_framework',
-    'rest_framework_simplejwt',
     'corsheaders',
 ]
-
-# Configuration REST Framework
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
-
-# Configuration JWT
-SIMPLE_JWT = {
-    'USER_ID_FIELD': 'email',  # Spécifie le champ d'identifiant
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
