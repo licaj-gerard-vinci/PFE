@@ -1,11 +1,23 @@
 <body>
     <div *ngIf="enjeux.length >0 ; else elseBlock">
         <div *ngFor="let enjeu of sortedEnjeux; let i = index">
-            <button (click)="sortQuestions(enjeu.id_enjeu)"><img [src]="selectedEnjeuId === enjeu.id_enjeu ? '/chevron-down.svg' : '/chevron-right.svg'" alt="icone" class="icon" />{{i+1}}. {{enjeu.nom}}</button>
+            <button (click)="sortQuestions(enjeu.id_enjeu)"><img [src]="selectedEnjeuId === enjeu.id_enjeu ? '/chevron-down.svg' : '/chevron-right.svg'" alt="icone" class="icon" />{{i+1}}. {{enjeu.nom}} <img *ngIf="hasAllResponses(enjeu.id_enjeu)" src="/check.png" alt="icon" class="check-icon"></button>
             <div class="questions-container" [class.active]="selectedEnjeuId === enjeu.id_enjeu">
-                <div *ngFor="let question of sortedQuestions; let j = index">
+                <div *ngFor="let question of sortedQuestions; let j = index"
+                    [ngClass]="{'selected': question.id_question === selectedQuestionId}"
+                    (click)="selectQuestion(question.id_question)">
                     <button>{{i+1}}.{{j+1}} {{question.sujet}}</button>
                 </div>
+            </div>
+        </div>
+        <div *ngIf="!checkEachEnjeux()">
+            <button (click)="openModal()" class="validation">{{sortedEnjeux.length+1}}. VALIDATION</button>
+        </div>
+        <div class="modal" *ngIf="showModal">
+            <div class="modal-content">
+              <p>Voulez-vous vraiment valider votre questionnaire ?</p>
+              <button (click)="confirmValidation()">Oui</button>
+              <button (click)="closeModal()">Non</button>
             </div>
         </div>
     </div>

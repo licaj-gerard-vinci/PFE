@@ -16,4 +16,10 @@ export class ButtonsService {
     getQuestions(): Observable<any> {
         return this.http.get(`${this.baseUrl}/questions`);
     }
+    getClientResponses(id_client:number): Observable<any> {
+        return this.http.get(`${this.baseUrl}/responsesClient/?id_client=${id_client}`);
+    }
+    getReponse(id_reponse:number): Observable<any> {
+        return this.http.get(`${this.baseUrl}/responses/?id_reponse=${id_reponse}`);
+    }
 }

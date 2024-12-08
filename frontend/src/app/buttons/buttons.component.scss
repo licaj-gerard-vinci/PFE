@@ -1,28 +1,31 @@
-/* Style général pour les boutons */
 button {
-    display: flex; /* Utilise Flexbox pour aligner les éléments */
-    align-items: center; /* Centre verticalement l'icône et le texte */
-    justify-content: flex-start; /* Aligne les éléments à gauche */
-    width: 21%; /* Boutons s'étendent sur toute la largeur */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 21%;
     padding: 5px;
     margin: 1px 0;
     font-size: 12px;
     font-weight: 500;
-    border: 1px solid #f9F9F9; /* Bordure légère */
-    background-color: #f9f9f9; /* Fond clair */
+    border: 1px solid #f9F9F9;
+    background-color: #f9f9f9;
     cursor: pointer;
     color:#013238;
     transition: background-color 0.5s ease;
 }
+button img.check-icon {
+  margin-left: auto; /* Pousse l'icône complètement à droite */
+  height: 16px; /* Ajuste la taille de l'icône si nécessaire */
+}
 
 button:hover {
-    background-color: #e0f7fa; /* Couleur d'arrière-plan au survol */
-    color: #00796b; /* Couleur de texte au survol */
+    background-color: #e0f7fa;
+    color: #00796b;
 }
 button img.icon {
-    width: 20px; /* Taille de l'icône */
+    width: 20px;
     height: 20px;
-    margin-right: 10px; /* Espace entre l'icône et le texte */
+    margin-right: 10px;
     display: inline-block;
     transition: all 0.5s linear;
 }
@@ -33,15 +36,68 @@ body {
 }
 
 .questions-container {
-    overflow: hidden; /* Empêche le débordement */
-    max-height: 0; /* Cache les questions initialement */
-    opacity: 0; /* Initialement invisible */
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
     transition: max-height 0.5s ease, opacity 0.5s ease;
-    padding-left: 20px; /* Décalage vers la droite */
+    padding-left: 20px;
     max-width: 94.5%;
+    align-items: left;
+  }
+  .questions-container button{
+    height: 30px; /* Assure que les boutons des questions ont également la même hauteur */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   
   .questions-container.active {
-    max-height: 500px; /* Une hauteur suffisamment grande pour contenir toutes les questions */
-    opacity: 1; /* Rendre visible */
+    max-height: 1000px;
+    opacity: 1;
+    display: block;
   }
+
+  .selected button {
+    background-color: #DFD4FB;
+  }
+  
+  .check-icon {
+    width: 15px;
+    height: 15px;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  .validation {
+    padding-left: 1.85%;
+    height: 30px;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: #B5CDBF;
+    padding: 20px;
+    color : #013238;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .modal-content button {
+    border-radius: 5px;
+    color : #013238;
+    margin-bottom: 5px;
+    margin-left: 35%;
+    cursor: pointer;
+  }
+  
