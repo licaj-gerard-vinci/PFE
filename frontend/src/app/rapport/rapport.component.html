@@ -1,66 +1,65 @@
 <div class="rapport-container" *ngIf="!isLoading && !errorMessage; else loadingOrError">
-    <div class="rapport-header">
-      <h1>Rapport d'impact et Pacte d'engagement</h1>
-      <p class="subtitle">Entreprise : {{ rapportData.client.nom_entreprise }}</p>
-    </div>
-  
-    <div class="section client-info" *ngIf="rapportData?.client">
-      <h2>Informations Client</h2>
-      <p><strong>Nom :</strong> {{ rapportData.client.nom }} {{ rapportData.client.prenom }}</p>
-      <p><strong>Email :</strong> {{ rapportData.client.email }}</p>
-      <p><strong>Entreprise :</strong> {{ rapportData.client.nom_entreprise }}</p>
-      <p><strong>Code NACE :</strong> {{ rapportData.client.code_nace }}</p>
-      <p><strong>Chiffre d'affaires :</strong> {{ rapportData.client.chiffre_affaire | currency:'EUR' }}</p>
-      <p><strong>Nombre de travailleurs :</strong> {{ rapportData.client.nombre_travailleurs }}</p>
-    </div>
-  
-    <div class="section engagements" *ngIf="rapportData?.engagements?.length > 0; else noEngagements">
-      <h2>Engagements</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Engagement</th>
-            <th>Commentaire</th>
-            <th>KPI</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let engagement of rapportData.engagements">
-            <td>{{ engagement.engagement }}</td>
-            <td>{{ engagement.commentaire }}</td>
-            <td>{{ engagement.kpi }}</td>
-            <td>{{ engagement.date }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  
-    <ng-template #noEngagements>
-      <p>Aucun engagement disponible pour ce client.</p>
-    </ng-template>
-  
-    <div class="section scores" *ngIf="rapportData?.scores">
-      <h2>Scores</h2>
-      <p><strong>Score total :</strong> {{ rapportData.scores.score_total }}</p>
-      <p><strong>Nombre de réponses :</strong> {{ rapportData.scores.total_reponses }}</p>
-    </div>
-  
-    <div class="section recaps" *ngIf="rapportData?.recaps">
-      <h2>Résumé</h2>
-      <ul>
-        <li>Métrique : {{ rapportData.recaps.est_metrique ? 'Oui' : 'Non' }}</li>
-        <li>Formalisation : {{ rapportData.recaps.est_formalisation ? 'Oui' : 'Non' }}</li>
-        <li>Pratique : {{ rapportData.recaps.est_pratique ? 'Oui' : 'Non' }}</li>
-        <li>Sensible : {{ rapportData.recaps.est_sensible ? 'Oui' : 'Non' }}</li>
-        <li>Reporting : {{ rapportData.recaps.est_reporting ? 'Oui' : 'Non' }}</li>
-      </ul>
-    </div>
+  <div class="rapport-header">
+    <h1>Rapport d'impact et Pacte d'engagement</h1>
+    <p class="subtitle">Entreprise : {{ rapportData.client.nom_entreprise }}</p>
   </div>
-  
-  <!-- Gestion du chargement ou des erreurs -->
-  <ng-template #loadingOrError>
-    <div *ngIf="isLoading">Chargement du rapport en cours...</div>
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <div class="section client-info" *ngIf="rapportData?.client">
+    <h2>Informations Client</h2>
+    <p><strong>Nom :</strong> {{ rapportData.client.nom }} {{ rapportData.client.prenom }}</p>
+    <p><strong>Email :</strong> {{ rapportData.client.adresse_mail }}</p>
+    <p><strong>Entreprise :</strong> {{ rapportData.client.nom_entreprise }}</p>
+    <p><strong>Code NACE :</strong> {{ rapportData.client.code_nace_activite_principal }}</p>
+    <p><strong>Chiffre d'affaires :</strong> {{ rapportData.client.chiffre_affaire_du_dernier_exercice_fiscal | currency:'EUR' }}</p>
+    <p><strong>Nombre de travailleurs :</strong> {{ rapportData.client.nombre_travailleurs }}</p>
+  </div>
+
+  <div class="section engagements" *ngIf="rapportData?.engagements?.length > 0; else noEngagements">
+    <h2>Engagements</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Engagement</th>
+          <th>Commentaire</th>
+          <th>KPI</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let engagement of rapportData.engagements">
+          <td>{{ engagement.engagement }}</td>
+          <td>{{ engagement.commentaire }}</td>
+          <td>{{ engagement.kpi }}</td>
+          <td>{{ engagement.date }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noEngagements>
+    <p>Aucun engagement disponible pour ce client.</p>
   </ng-template>
-  
+
+  <div class="section scores" *ngIf="rapportData?.scores">
+    <h2>Scores</h2>
+    <p><strong>Score total :</strong> {{ rapportData.scores.score_total }}</p>
+    <p><strong>Nombre de réponses :</strong> {{ rapportData.scores.total_reponses }}</p>
+  </div>
+
+  <div class="section recaps" *ngIf="rapportData?.recaps">
+    <h2>Résumé</h2>
+    <ul>
+      <li>Métrique : {{ rapportData.recaps.est_metrique ? 'Oui' : 'Non' }}</li>
+      <li>Formalisation : {{ rapportData.recaps.est_formalisation ? 'Oui' : 'Non' }}</li>
+      <li>Pratique : {{ rapportData.recaps.est_pratique ? 'Oui' : 'Non' }}</li>
+      <li>Sensible : {{ rapportData.recaps.est_sensible ? 'Oui' : 'Non' }}</li>
+      <li>Reporting : {{ rapportData.recaps.est_reporting ? 'Oui' : 'Non' }}</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Gestion du chargement ou des erreurs -->
+<ng-template #loadingOrError>
+  <div *ngIf="isLoading">Chargement du rapport en cours...</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+</ng-template>

@@ -6,11 +6,11 @@ import { RapportComponent } from './rapport/rapport.component';
 import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: HomeComponent }, // Route pour la page d'accueil
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'report/:id', component: RapportComponent }, // Ajustement ici
-  { path: '**', redirectTo: 'login' },
+  { path: 'report/:clientId', component: RapportComponent },
+  { path: '**', redirectTo: 'login' } 
 ];
 
 

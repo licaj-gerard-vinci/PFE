@@ -1,61 +1,60 @@
 .rapport-container {
-    font-family: 'Arial', sans-serif;
-    margin: 20px;
-    padding: 20px;
-    background-color: #f5f5f5;
-  
-    .rapport-header {
-      text-align: center;
-      margin-bottom: 40px;
-  
-      h1 {
-        color: #004a6b;
-        font-size: 2em;
-      }
-  
-      .subtitle {
-        color: #00897b;
-        font-size: 1.2em;
-        font-weight: bold;
-      }
+  font-family: 'Arial', sans-serif;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f5f5f5;
+
+  .rapport-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    h1 {
+      color: #004a6b;
+      font-size: 2em;
     }
-  
-    .section {
-      margin-bottom: 30px;
-      background-color: #ffffff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  
-      h2 {
-        color: #004a6b;
-        border-bottom: 2px solid #00897b;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-      }
-  
-      table {
-        width: 100%;
-        border-collapse: collapse;
-  
-        th {
-          text-align: left;
-          padding: 10px;
-          background-color: #004a6b;
-          color: #ffffff;
-        }
-  
-        td {
-          padding: 10px;
-          border-bottom: 1px solid #ddd;
-        }
-      }
-    }
-  
-    .error-message {
-      color: red;
+
+    .subtitle {
+      color: #00897b;
+      font-size: 1.2em;
       font-weight: bold;
-      text-align: center;
     }
   }
-  
+
+  .section {
+    margin-bottom: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      color: #004a6b;
+      border-bottom: 2px solid #00897b;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th {
+        text-align: left;
+        padding: 10px;
+        background-color: #004a6b;
+        color: #ffffff;
+      }
+
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+    }
+  }
+
+  .error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+  }
+}

@@ -9,8 +9,6 @@ from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import AccessToken, TokenError
 import re
-from django.db.models import Count, Sum
-from backend.models import Clients, Engagements, ReponseClient, Recaps
 
 class RegisterView(APIView):
     def post(self, request):
