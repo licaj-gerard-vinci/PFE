@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   constructor(private router: Router) {}
 
-  navigateToRapport() {
-    this.router.navigate(['/rapport']); // Navigue vers la page du rapport
+  navigateToRapport(clientId : number) {
+    this.router.navigate([`/report/${clientId}`]); 
   }
 }

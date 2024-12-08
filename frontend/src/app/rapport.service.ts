@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class RapportService {
-  private apiUrl = 'http://127.0.0.1:8000/auth/rapport/';
+  private apiUrl = 'http://127.0.0.1:8000/report';
 
   constructor(private http: HttpClient) {}
 
   getRapport(clientId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}${clientId}/`);
+    return this.http.get(`${this.apiUrl}/${clientId}/`);
   }
 }

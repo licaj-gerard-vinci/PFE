@@ -22,7 +22,7 @@ export class RapportComponent implements OnInit {
 
   loadRapport(): void {
     const clientId = 1; // Dynamique : ID du client connecté (remplacez par un token si besoin)
-    this.http.get(`http://127.0.0.1:8000/auth/rapport/${clientId}/`).subscribe(
+    this.http.get(`http://127.0.0.1:8000/report/${clientId}/`).subscribe(
       (data) => {
         this.rapportData = data;
         this.isLoading = false; // Fin du chargement
