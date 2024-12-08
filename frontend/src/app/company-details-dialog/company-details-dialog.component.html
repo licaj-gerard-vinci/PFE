@@ -1,0 +1,59 @@
+<div class="dialog-container">
+  <h2 style="text-align: center;">Modifier les détails de l'entreprise</h2>
+
+  <form (ngSubmit)="saveChanges()">
+    <!-- Company Name -->
+    <div class="field-container">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Nom de l'entreprise</mat-label>
+        <input matInput [(ngModel)]="company.nom_entreprise" name="nom_entreprise" placeholder="N/D" />
+      </mat-form-field>
+    </div>
+
+    <!-- Email -->
+    <div class="field-container">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="company.adresse_mail" name="adresse_mail" placeholder="N/D" />
+      </mat-form-field>
+    </div>
+
+    <!-- Code NACE -->
+    <div class="field-container">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Code NACE</mat-label>
+        <input matInput [(ngModel)]="company.code_nace_principal" name="code_nace_principal" placeholder="N/D" />
+      </mat-form-field>
+    </div>
+
+    <!-- Chiffre d'affaires -->
+    <div class="field-container">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Chiffre d'affaires</mat-label>
+        <input matInput type="number" [(ngModel)]="company.chiffre_affaire_du_dernier_exercice_fiscal" name="chiffre_affaire" placeholder="N/D" />
+      </mat-form-field>
+    </div>
+
+    <!-- Nombre de travailleurs -->
+    <div class="field-container">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Nombre de travailleurs</mat-label>
+        <input matInput type="number" [(ngModel)]="company.nombre_travailleurs" name="nombre_travailleurs" placeholder="N/D" />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <p class="template-title">Templates</p>
+      <div class="scrollable-checkbox-list">
+        <mat-checkbox *ngFor="let template of templates" [(ngModel)]="template.selected" name="template_{{ template.id_template }}">
+          {{ template.nom }}
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button mat-button color="warn" (click)="close()">Annuler</button>
+      <button mat-raised-button color="primary" type="submit">Enregistrer</button>
+    </div>
+  </form>
+</div>

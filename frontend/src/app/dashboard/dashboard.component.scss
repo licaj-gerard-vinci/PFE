@@ -1,0 +1,71 @@
+.container {
+    max-width: 900px;
+    margin: auto;
+  }
+
+tr:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.actions-cell {
+  text-align: center;
+}
+
+.no-data-message {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-top: 20px;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  background-color: #5f1f1f;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+@media (max-width: 600px) {
+  .mat-header-cell, .mat-cell {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .mat-button {
+    min-width: 64px;
+    padding: 0 8px;
+  }
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+/* Search Container: Aligns the search field to the right */
+.search-container {
+  display: flex;
+  justify-content: flex-end; /* Align search field to the right */
+  margin-bottom: 1px; /* Add spacing between the search field and the table */
+}
+
+/* Search Field: Adjust width and height */
+.search-field {
+  width: 250px; /* Compact width */
+  min-height: 36px; /* Adjust the height of the field including the border */
+}
+
+/* Adjust padding inside the search field */
+.search-field input {
+  padding: 4px 8px; /* Smaller padding for a compact look */
+}
+
+.mdc-text-field__input {
+  height: 10px !important; /* Adjust height */
+}
