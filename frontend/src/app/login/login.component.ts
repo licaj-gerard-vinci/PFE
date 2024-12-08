@@ -23,6 +23,10 @@ import { CommonModule } from '@angular/common';
       this.authService.login({ email: this.email, mdp: this.password }).subscribe(
         (response) => {
           console.log('Login successful', response);
+          if (response.access) {
+            this.authService.storeTokens({ access: response.access });
+            window.location.href = '/'; // Redirect to home page
+          }
         },
         (error) => {
           console.error('Login failed', error);
