@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from .models import CustomUser
-from .models import Admin
+from .models import Admin, Client
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
@@ -78,3 +78,18 @@ def get_admin_by_email(request, email):
         return JsonResponse(admin, safe=False)  # Retourne les données JSON
     except Admin.DoesNotExist:
         return JsonResponse({'error': 'Admin not found'}, status=404)
+
+def get_client_by_email(request, email):
+    try:
+        # Filtre pour trouver le Client par son email
+        client = Client.objects.values(
+            'id_client', 'prenom', 'nom', 'email', 'fonction', 'nom_entreprise', 'forme_juridique',
+            'adresse_siege_social', 'adresse_site_web', 'code_nace_activite_principal',
+            'chiffre_affaire_du_dernier_exercice_fiscal', 'franchise', 'nombre_travailleurs',
+            'litige_respect_loi_social_environnemental', 'honnete', 'soumission_demande_de_subside_pour_le_label',
+            'ajouter_autre_chose', 'remarque_commentaire_precision', 'date_de_soumission', 'est_valide'
+        ).get(email=email)  # Exclut 'mdp' en ne le sélectionnant pas explicitement
+
+        return JsonResponse(client, safe=False)  # Retourne les données JSON
+    except Client.DoesNotExist:
+        return JsonResponse({'error': 'Client not found'}, status=404)

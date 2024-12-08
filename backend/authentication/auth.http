@@ -34,3 +34,6 @@ Content-Type: application/json
 ### get un admin
 GET {{baseUrl}}/auth/admin/julien@test.com/
 
+### get un clent
+GET {{baseUrl}}/auth/client/jean.dupont@example.com/
+
