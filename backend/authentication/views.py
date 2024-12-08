@@ -10,10 +10,13 @@ from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import AccessToken, TokenError
+import re
 
 class RegisterView(APIView):
     def post(self, request):
         data = request.data
+        if is_valid_email_domain(data['email']):
+            return Response({"error": "Email invalide"}, status=status.HTTP_400_BAD_REQUEST)
         try:
             user = Admin.objects.create(
                 nom=data['nom'],
@@ -31,23 +34,27 @@ class LoginView(APIView):
         email = request.data.get('email')
         password = request.data.get('mdp')
 
-        try:
-            # Recherche de l'utilisateur dans la base de données
-            admin = Admin.objects.get(email=email)
+        if not is_valid_email_domain(email):  # Si l'email contient 'admin' ou 'BetterBusiness'
+            try:
+                user = Admin.objects.get(email=email)
+            except Admin.DoesNotExist:
+                return Response({'error': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            try:
+                user = Client.objects.get(email=email)
+            except Client.DoesNotExist:
+                return Response({'error': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
 
             # Vérifie si le mot de passe est correct
-            if check_password(password, admin.mdp):
-                # Génère un token JWT
-                refresh = RefreshToken.for_user(admin)
-                return Response({
-                    'refresh': str(refresh),
-                    'access': str(refresh.access_token),
-                })
-            else:
-                return Response({'error': 'Mot de passe incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        except Admin.DoesNotExist:
-            return Response({'error': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
+        if check_password(password, user.mdp):
+            # Génère un token JWT
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            })
+        else:
+            return Response({'error': 'Mot de passe incorrect'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class VerifyTokenView(APIView):
     permission_classes = [AllowAny]  # Permet d'accéder sans authentification
@@ -93,3 +100,11 @@ def get_client_by_email(request, email):
         return JsonResponse(client, safe=False)  # Retourne les données JSON
     except Client.DoesNotExist:
         return JsonResponse({'error': 'Client not found'}, status=404)
+
+
+def is_valid_email_domain(email):
+    """
+    Vérifie si l'email n'a pas un domaine contenant 'admin' ou 'BetterBusiness'.
+    """
+    domain = email.split('@')[-1]  # Récupère le domaine après @
+    return not re.search(r'(admin|BetterBusiness)', domain, re.IGNORECASE)
