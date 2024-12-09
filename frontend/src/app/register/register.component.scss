@@ -1,6 +1,6 @@
 /* Variables de couleur */
-$input-bg: #ffffff;
-$primary-color: #3f4c76; // Couleur principale pour contraste du texte
+$input-bg: #b5cdbf;
+$primary-color: #b5cdbf; // Couleur principale pour contraste du texte
 
 .register-container {
   position: relative;
@@ -12,7 +12,7 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
   /* Ajout de l'image en fond */
   background: url('../../assets/images/background.png') no-repeat center center;
   background-size: cover; /* S'assure que l'image couvre toute la page */
-  background-color: #3f4c76;
+  background-color: #013238;
 
   .register-form {
     position: relative;
@@ -21,13 +21,22 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
     border-radius: 8px;
     text-align: center;
 
-    .cart-icon::before {
+    transform: translateY(-8%);
+
+    .form-title {
+      color: #ffffff;  
+      font-size: 24px;  
+      margin-bottom: 30px; 
+      font-weight: bold;
+    }
+
+    .logo-icon::before {
         content: '';
         display: block;
-        width: 80px;
-        height: 80px;
+        width: 300px;
+        height: 200px;
         margin: 0 auto; // Centre l'icône horizontalement
-        background-image: url('../../assets/images/cart-icon.png');
+        background-image: url('../../assets/images/logo_shiftingpact.png');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -50,23 +59,32 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
         color: #888;
       }
 
+      .icon-lock {
+        font-size: 20px;
+      }
+
       input {
         padding: 10px 10px 10px 40px;
-        border: none;
+        border: 2px solid #ffffff;
         border-radius: 4px;
-        background-color: $input-bg;
-        outline: none;
+        background-color: transparent;
+        color: #ffffff;
         font-size: 16px;
+
+        &::placeholder {
+          color: #ffffff;
+          opacity: 0.7;
+        }
       }
     }
 
     .btn-register {
-      width: 100%;
+      width: 70%;
       padding: 10px;
-      border: none;
+      border: 2px solid #ffffff;
       border-radius: 4px;
-      background-color: $input-bg;
-      color: $primary-color;
+      background-color: transparent;
+      color: #ffffff;
       font-weight: bold;
       cursor: pointer;
       transition: background-color 0.3s;

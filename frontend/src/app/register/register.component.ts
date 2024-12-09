@@ -25,6 +25,7 @@ export class RegisterComponent {
         this.authService.register({ nom: this.nom, prenom: this.prenom, email: this.email, mdp: this.password }).subscribe(
             (response) => {
                 console.log('Registration successful', response);
+                window.location.href = '/';
             },
             (error) => {
                 console.error('Registration failed', error);
