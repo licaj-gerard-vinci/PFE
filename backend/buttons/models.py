@@ -108,7 +108,7 @@ class Engagement(models.Model):
     commentaire = models.CharField(max_length=50000)
     id_Admin = models.ForeignKey(Admin,null=False,on_delete=models.DO_NOTHING, db_column="id_Admin")
     KPIS = models.CharField(max_length=255)
-    date = models.DateField
+    date = models.DateField()
 
     class Meta : 
         db_table = 'engagements'
@@ -119,14 +119,14 @@ class Engagement(models.Model):
     
 class ReponseClient(models.Model):
     id_reponse_client = models.AutoField(primary_key=True)
-    id_client = models.ForeignKey(Client,null=False, on_delete=models.DO_NOTHING, db_column="id_client")
-    id_reponse = models.ForeignKey(ChoixReponse,null=False,on_delete=models.DO_NOTHING, db_column="id_reponse")
-    commentaire = models.CharField(max_length=5000)
-    rep_aujourdhui = models.CharField(max_length=255)
-    rep_dans_2_ans = models.CharField(max_length=255)
-    score_final = models.IntegerField
-    sa_reponse = models.CharField(max_length=255)
-    id_engagement = models.ForeignKey(Engagement,null=True,on_delete=models.DO_NOTHING, db_column="id_engagement")
+    id_client = models.IntegerField()
+    id_reponse = models.IntegerField()
+    commentaire = models.TextField(null=True, blank=True)
+    rep_aujourd_hui = models.CharField(max_length=255, null=True, blank=True)
+    rep_dans_2_ans = models.CharField(max_length=255, null=True, blank=True)
+    score_final = models.IntegerField(default=0)
+    sa_reponse = models.CharField(max_length=255, null=True, blank=True)
+    id_engagement = models.IntegerField(null=True,blank=True)
 
     class Meta :
         db_table = 'reponse_client'

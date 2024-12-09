@@ -67,7 +67,6 @@ class GetQuestionsAndReponsesView(APIView):
                 "reponses": reponses_data,  # Associer les réponses ici
             })
         # Retourner toutes les questions avec leurs réponses
-        print(data)
         return Response(data)
 
 
@@ -91,11 +90,11 @@ class SauvegardeReponseClientView(APIView):
                 id_client=data['id_client'],
                 id_reponse=data['id_reponse'],
                 commentaire=data.get('commentaire'),
-                rep_aujourd_hui=data.get('rep_aujourd_hui'),
-                rep_dans_2_ans=data.get('rep_dans_2_ans'),
+                rep_aujourd_hui=data.get('rep_aujourd_hui',''),
+                rep_dans_2_ans=data.get('rep_dans_2_ans',''),
                 score_final=data['score_final'],
-                sa_reponse=data.get('sa_reponse'),
-            
+                sa_reponse=data.get('sa_reponse',''),
+                id_engagement = data.get('id_engagement', None)
             )
             return Response({"message": "Réponse sauvegardée avec succès"}, status=201)
 

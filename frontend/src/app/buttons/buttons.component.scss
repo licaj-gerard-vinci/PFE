@@ -111,10 +111,10 @@ button img.icon {
   
   .left {
     flex: 1; /* Largeur de la colonne gauche */
-    max-width: 25%; /* Limite la largeur à 30% */
+    max-width: 29%; /* Limite la largeur à 30% */
     padding: 10px;
-    margin-top: 18%;
-    margin-left: 2%;
+    margin-top: 14.5%;
+    margin-left: 1%;
   }
   
   .right {
@@ -187,7 +187,7 @@ button img.icon {
   /* Onglet actif */
   .aujourdhui.active,
   .engagement.active {
-    color: #007bff; /* Texte bleu pour l'onglet actif */
+    background-color: #DFD4FB;
     font-weight: bold;
   }
   

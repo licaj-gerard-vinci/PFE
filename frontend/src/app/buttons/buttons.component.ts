@@ -107,6 +107,8 @@ import { FormsModule } from '@angular/forms';
     
     selectQuestion(questionId: number): void {
         this.selectedQuestionId = questionId;
+        this.getGoodQuestion(questionId);
+        console.log(this.currentQuestionIndex);
     }
     getResponseById(_id_reponse : number): any {
         this.buttonsService.getReponse(_id_reponse).subscribe(
@@ -232,6 +234,11 @@ import { FormsModule } from '@angular/forms';
       this.currentQuestionIndex--;
       this.resetResponses(); // Réinitialiser les réponses
     }
+  }
+
+  getGoodQuestion(id_question: number): void {
+    this.currentQuestionIndex = id_question-1;
+    this.resetResponses();
   }
 
   // Changer d'onglet
