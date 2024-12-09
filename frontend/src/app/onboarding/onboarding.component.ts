@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OnboardingService } from './onboarding.service';
 import { FormsModule } from '@angular/forms'; // Importez FormsModule
+import { Router } from '@angular/router'; // Importez Router
 import { CommonModule } from '@angular/common'; // Importez CommonModule
 
 @Component({
@@ -12,28 +13,14 @@ import { CommonModule } from '@angular/common'; // Importez CommonModule
 })
 export class OnboardingComponent implements OnInit {
   questions: any[] = [];
-  prenom: string = '';
-  nom: string = '';
-  adresse_mail: string = '';
-  fonction: string = '';
-  nom_entreprise: string = '';
-  numero_tva: string = '';
-  forme_juridique: string = '';
-  adresse_siege_social: string = '';
-  adresse_site_web: string = '';
-  code_nace_activite_principal: string = '';
-  chiffre_affaire_du_dernier_exercice_fiscal: number = 0;
-  franchise: boolean = false;
-  nombre_travailleurs: number = 0;
-  litige_respect_loi_social_environnemental: boolean = false;
-  honnete: boolean = false;
-  soumission_demande_de_subside_pour_le_label: boolean = false;
-  partenaire_introduction: string = '';
-  ajouter_autre_chose: boolean = false;
-  remarque_commentaire_precision: string = '';
-  date_de_soumission: Date = new Date();
+  currentPage: number = 0;
+  pageSize: number = 5;
+  formSubmitted: boolean = false;
+  successMessage: string = '';
 
-  constructor(private onboardingService: OnboardingService) {}
+
+  constructor(private onboardingService: OnboardingService, private router: Router) {}
+
 
   ngOnInit(): void {
     this.onboardingService.getQuestions().subscribe(
@@ -47,8 +34,30 @@ export class OnboardingComponent implements OnInit {
     );
   }
 
+  isFormValid(): boolean {
+    return this.paginatedQuestions.every(question => question.answer !== undefined && question.answer !== null && question.answer !== '');
+  }
+
+  get paginatedQuestions() {
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    return this.questions.slice(start, end);
+  }
+
+  nextPage() {
+    if ((this.currentPage + 1) * this.pageSize < this.questions.length) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+
   submitForm(): void {
-    const formattedDate = this.date_de_soumission.toISOString().split('T')[0];
+    const formattedDate = new Date().toISOString().split('T')[0];
 
     const answers = {
       prenom: this.questions[0]?.answer || '',
@@ -62,13 +71,13 @@ export class OnboardingComponent implements OnInit {
       adresse_site_web: this.questions[8]?.answer || '',
       code_nace_activite_principal: this.questions[9]?.answer || '',
       chiffre_affaire_du_dernier_exercice_fiscal: this.questions[10]?.answer || 0,
-      franchise: this.questions[11]?.answer === 'true',
+      franchise: this.questions[11]?.answer,
       nombre_travailleurs: this.questions[12]?.answer || 0,
-      litige_respect_loi_social_environnemental: this.questions[13]?.answer === 'true',
+      litige_respect_loi_social_environnemental: this.questions[13]?.answer,
       honnete: this.questions[14]?.answer === 'true',
-      soumission_demande_de_subside_pour_le_label: this.questions[15]?.answer === 'true',
+      soumission_demande_de_subside_pour_le_label: this.questions[15]?.answer,
       partenaire_introduction: this.questions[16]?.answer || '',
-      ajouter_autre_chose: this.questions[17]?.answer === 'true',
+      ajouter_autre_chose: this.questions[17]?.answer,
       remarque_commentaire_precision: this.questions[18]?.answer || '',
       date_de_soumission: formattedDate
     };
@@ -76,7 +85,15 @@ export class OnboardingComponent implements OnInit {
     console.log('Form submitted', answers);
     this.onboardingService.submitAnswers(answers).subscribe(
       (response) => {
+        
+          this.formSubmitted = true;
+          this.successMessage = 'Vous avez bien été enregistré(e)';
+    
         console.log('Answers submitted successfully', response);
+
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3000);
       },
       (error) => {
         console.error('Error submitting answers', error);

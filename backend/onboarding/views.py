@@ -52,7 +52,7 @@ class OnboardingView(APIView):
                 est_valide=False,
                 mdp="test132"
             )
-            return Response(status=status.HTTP_201_CREATED)
+            return Response("Le client a bien été enregistré!",status=status.HTTP_201_CREATED)
         except ValidationError as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

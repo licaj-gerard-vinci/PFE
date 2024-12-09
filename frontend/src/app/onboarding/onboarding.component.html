@@ -1,44 +1,52 @@
 <div class="onboarding-container">
   <h2>Onboarding Questions</h2>
 
-  <form (ngSubmit)="submitForm()">
-    <div *ngFor="let question of questions; let i = index" class="question-item">
-      <div class="question-number">{{ i + 1 }}.</div>
+  <!-- Affichage du message de succès -->
+  <div *ngIf="formSubmitted" class="success-message">
+    {{ successMessage }}
+  </div>
+
+  <!-- Formulaire -->
+  <form *ngIf="!formSubmitted" (ngSubmit)="submitForm()">
+    <div *ngFor="let question of paginatedQuestions; let i = index" class="question-item">
+      <div class="question-number">{{ currentPage * pageSize + i + 1 }}.</div>
       <div class="question-text">{{ question.question }}</div>
       
-      <!-- Input de type number pour les questions 11 et 13 -->
       <input
-        *ngIf="i === 10 || i === 12"
+        *ngIf="currentPage * pageSize + i === 10 || currentPage * pageSize + i === 12"
         type="number"
-        [id]="'question-' + i"
+        [id]="'question-' + (currentPage * pageSize + i)"
         [(ngModel)]="question.answer"
-        name="question-{{ i }}"
+        name="question-{{ currentPage * pageSize + i }}"
         class="question-input"
       />
       
-      <!-- Select pour les questions 12, 14, 15, 16 et 18 -->
       <select
-        *ngIf="i === 11 || i === 13 || i === 14 || i === 15 || i === 17"
-        [id]="'question-' + i"
+        *ngIf="currentPage * pageSize + i === 11 || currentPage * pageSize + i === 13 || currentPage * pageSize + i === 14 || currentPage * pageSize + i === 15 || currentPage * pageSize + i === 17"
+        [id]="'question-' + (currentPage * pageSize + i)"
         [(ngModel)]="question.answer"
-        name="question-{{ i }}"
+        name="question-{{ currentPage * pageSize + i }}"
         class="question-input"
       >
         <option [value]="true">Oui</option>
         <option [value]="false">Non</option>
       </select>
       
-      <!-- Input de type text pour les autres questions -->
       <input
-        *ngIf="i !== 10 && i !== 12 && i !== 11 && i !== 13 && i !== 14 && i !== 15 && i !== 17"
+        *ngIf="currentPage * pageSize + i !== 10 && currentPage * pageSize + i !== 12 && currentPage * pageSize + i !== 11 && currentPage * pageSize + i !== 13 && currentPage * pageSize + i !== 14 && currentPage * pageSize + i !== 15 && currentPage * pageSize + i !== 17"
         type="text"
-        [id]="'question-' + i"
+        [id]="'question-' + (currentPage * pageSize + i)"
         [(ngModel)]="question.answer"
-        name="question-{{ i }}"
+        name="question-{{ currentPage * pageSize + i }}"
         class="question-input"
       />
     </div>
 
-    <button type="submit" class="submit-button">Submit</button>
+    <div class="pagination-buttons">
+      <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">Précédent</button>
+      <button type="button" (click)="nextPage()" [disabled]="(currentPage + 1) * pageSize >= questions.length">Suivant</button>
+    </div>
+
+    <button type="submit" class="submit-button" [disabled]="!isFormValid()">Submit</button>
   </form>
 </div>

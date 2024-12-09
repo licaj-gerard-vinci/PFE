@@ -2,7 +2,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #b5cdbf; /* Vert d’eau */
   border-radius: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   font-family: 'Arial', sans-serif;
@@ -11,15 +11,15 @@
 h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #013238; /* Vert foncé */
   font-size: 24px;
 }
 
 .question-item {
   margin-bottom: 20px;
   padding: 15px;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: #ffffff; /* Blanc */
+  border: 1px solid #013238; /* Vert foncé */
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
@@ -27,39 +27,66 @@ h2 {
 .question-number {
   font-weight: bold;
   margin-bottom: 5px;
-  color: #007bff;
+  color: #013238; /* Vert foncé */
 }
 
 .question-text {
   margin-bottom: 10px;
   font-size: 16px;
-  color: #555;
+  color: #013238; /* Vert foncé */
 }
 
 .question-input,
 .question-select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #01b84d; /* Vert d’eau */
   border-radius: 4px;
   font-size: 14px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  background-color: #ffffff; /* Blanc */
 }
 
 .question-input:focus,
 .question-select:focus {
-  border-color: #007bff;
+  border-color: #013238; /* Vert foncé */
   outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  box-shadow: 0 0 5px rgba(1, 50, 56, 0.5); /* Vert foncé */
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.pagination-buttons button {
+  padding: 10px 20px;
+  background-color: #013238; /* Vert foncé */
+  color: #ffffff; /* Blanc */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-buttons button:disabled {
+  background-color: #b5cdbf; /* Vert d’eau */
+  cursor: not-allowed;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+  background-color: #01b84d; /* Vert d’eau */
 }
 
 .submit-button {
   display: block;
   width: 100%;
   padding: 15px;
-  background-color: #007bff;
-  color: white;
+  background-color: #013238; /* Vert foncé */
+  color: #ffffff; /* Blanc */
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -68,5 +95,16 @@ h2 {
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #b5cdbf; /* Vert d’eau */
+}
+
+.success-message {
+  background-color: #dff0d8; /* Vert clair */
+  color: #3c763d; /* Vert foncé */
+  border: 1px solid #d6e9c6; /* Bordure vert clair */
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
 }
