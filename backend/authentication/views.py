@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
-from .models import Admin, Client
+from backend.models import Admin, Clients
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
@@ -39,7 +39,7 @@ class LoginView(APIView):
                 return Response({'error': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
         else:
             try:
-                user = Client.objects.get(email=email)
+                user = Clients.objects.get(email=email)
             except Client.DoesNotExist:
                 return Response({'error': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -87,7 +87,7 @@ def get_admin_by_email(request, email):
 def get_client_by_email(request, email):
     try:
         # Filtre pour trouver le Client par son email
-        client = Client.objects.values(
+        client = Clients.objects.values(
             'id_client', 'prenom', 'nom', 'email', 'fonction', 'nom_entreprise', 'forme_juridique',
             'adresse_siege_social', 'adresse_site_web', 'code_nace_activite_principal',
             'chiffre_affaire_du_dernier_exercice_fiscal', 'franchise', 'nombre_travailleurs',
