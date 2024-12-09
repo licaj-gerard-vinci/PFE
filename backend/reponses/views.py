@@ -46,9 +46,7 @@ class AddVerificationView(APIView):
             for reponse_client in reponses_clients:
                 Verification.objects.create(
                     id_reponse_client=reponse_client,
-                    #est_valide=False,  # Par défaut non validé
-                    module_esg="popo",
-                    module_pacte_engagement="popo",
+                    est_valide=False,  # Par défaut non validé
                     id_admin=admin.id_admin
                 )
 

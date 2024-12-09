@@ -109,8 +109,7 @@ class ReponseClient(models.Model):
     id_client = models.ForeignKey(Client, on_delete=models.CASCADE,db_column='id_client')
     id_reponse = models.ForeignKey(Reponse, on_delete=models.CASCADE, db_column='id_reponse')
     commentaire = models.TextField(null=True, blank=True)
-    rep_aujourd_hui = models.CharField(max_length=255, null=True, blank=True)
-    rep_dans_2_ans = models.CharField(max_length=255, null=True, blank=True)
+    est_un_engagement = models.BooleanField()
     score_final = models.IntegerField()
     sa_reponse = models.CharField(max_length=255, null=True, blank=True)
     id_engagement = models.ForeignKey(Engagement, on_delete=models.CASCADE, null=True, blank=True, db_column='id_engagement')
@@ -122,8 +121,7 @@ class ReponseClient(models.Model):
 
 class Verification(models.Model):
     id_reponse_client = models.OneToOneField(ReponseClient, on_delete=models.CASCADE, primary_key=True, db_column='id_reponse_client')
-    module_esg = models.CharField(max_length=255, db_column='module_esg')
-    module_pacte_engagement = models.CharField(max_length=255, db_column='module_pacte_engagement')
+    est_valide = models.BooleanField()
     id_admin = models.IntegerField()
 
     class Meta:
