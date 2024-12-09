@@ -35,7 +35,8 @@ button img.icon {
 
 .body {
     background-color: #B5CDBF;
-    padding-bottom: 500px;
+    width: 100%;
+    height: 100%;
 }
 
 .questions-container {
@@ -68,6 +69,14 @@ button img.icon {
     width: 15px;
     height: 15px;
     margin-left: 10px;
+    vertical-align: middle;
+  }
+
+  .croixRouge{
+    width: 22px;
+    height: 22px;
+    padding-left: 10px;
+    margin-right: 5px;
     vertical-align: middle;
   }
 
@@ -135,12 +144,11 @@ button img.icon {
   /* Formulaire */
   
   .simple-form {
-    border: 2px solid #000; /* Bordure noire */
     border-radius: 5px;
     padding: 30px; /* Augmente l'espace intérieur */
     width: 90%; /* Augmente la largeur relative à l'écran */
-    max-width: 800px; /* Limite la largeur maximale */
-    min-height: 400px; /* Augmente la hauteur minimale */
+    max-width: 850px; /* Limite la largeur maximale */
+    min-height: 450px; /* Augmente la hauteur minimale */
     background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre pour le style */
     position: relative;
@@ -149,6 +157,21 @@ button img.icon {
     justify-content: space-between;
     align-items: center;
     text-align: center;
+    background: linear-gradient(to left, #769785, #93BDA6,#A5C9B6);
+  }
+  .info1{
+    width: 40px;
+    position: absolute;
+    top : 29%;
+    left : 85%;
+    cursor: pointer;
+  }
+  .info2{
+    width: 40px;
+    position: absolute;
+    top : 3%;
+    left : 90%;
+    cursor: pointer;
   }
   
 
@@ -160,7 +183,6 @@ button img.icon {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    border: 2px solid #000; /* Bordure noire autour du conteneur */
     border-radius: 5px 5px 0 0;
     overflow: hidden; /* Empêche le débordement des bordures */
     margin-bottom: 20px;
@@ -171,12 +193,14 @@ button img.icon {
   .engagement {
     flex: 1;
     text-align: center;
-    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
     cursor: pointer;
     padding: 10px 0;
+    margin: 2px;
     background-color: #fff; /* Blanc par défaut */
-    border-right: 1px solid #000; /* Ligne de séparation noire */
     transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
   }
   
   /* Supprimer la bordure droite du dernier élément */
@@ -188,7 +212,6 @@ button img.icon {
   .aujourdhui.active,
   .engagement.active {
     background-color: #DFD4FB;
-    font-weight: bold;
   }
   
   /* Responsive */
@@ -212,7 +235,6 @@ button img.icon {
   .engagement {
     flex: 1; /* Laisse l'espace occupé par l'onglet inchangé */
     text-align: center; /* Centre uniquement le texte horizontalement */
-    font-weight: bold;
     padding: 10px 0; /* Ajoute un espace vertical */
     background-color: #fff; /* Blanc par défaut */
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -227,7 +249,6 @@ button img.icon {
 /* Conteneur pour aligner numéro et texte */
 .question-container {
     display: flex;
-    align-items: center; /* Alignement vertical centré */
     justify-content: space-between; /* Ajuste l'espacement horizontal */
     width: 100%; /* Prend toute la largeur disponible */
     margin-bottom: 10px; /* Ajoute de l'espace sous la question */
@@ -236,20 +257,25 @@ button img.icon {
   
   /* Numéro de la question */
   .question-number {
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     margin-right: 10px; /* Espacement entre le numéro et le texte */
+    color: #013238;
     text-align: left;
   }
   
   /* Texte de la question */
   .question-text {
-    font-size: 1.2rem;
+    font-size: 26px;
     font-weight: normal;
-    text-align: center; /* Centré horizontalement */
     flex: 1; /* Permet au texte d'occuper tout l'espace disponible */
+    color: #013238;
   }
+  .logo {
+    position : absolute;
+    top : 3%;
 
+    height: 175px;
+  }
 
 
 
@@ -259,38 +285,43 @@ button img.icon {
   
   /* Confirm button */
   .confirm-button button {
-    background-color: #007bff;
-    color: white;
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
+    margin-left: 45px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
   
   .confirm-button button:hover {
-    background-color: #0056b3;
+    background-color: #FFFFFF;
     transform: scale(1.05);
   }
   
   /* Side buttons (left and right) */
   .side-button {
-    background-color: #007bff;
+    background-color: #013238;
     color: white;
     border: none;
     border-radius: 50%;
     width: 40px;
     height: 40px;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
     cursor: pointer;
     display: flex;
-    align-items: center;
     justify-content: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
   
   .side-button:hover {
-    background-color: #0056b3;
+    background-color: #013238;
+    color: #ffffff;
     transform: scale(1.1);
   }
   
@@ -319,15 +350,17 @@ ul {
 
 li {
   margin: 10px 0; /* Ajoute de l'espace entre chaque option */
+  font-size: 20px;
   display: flex;
   align-items: center; /* Centre verticalement le texte et le bouton */
 }
 
 label {
-  font-size: 1rem;
+  font-size: 20px;
   margin-left: 10px; /* Ajoute de l'espace entre le bouton et le texte */
   cursor: pointer;
 }
+
 
 textarea {
   resize: none; /* Empêche le redimensionnement */
@@ -335,7 +368,7 @@ textarea {
   max-width: 1500px; /* Largeur maximale */
   height: 200px; /* Hauteur fixe */
   box-sizing: border-box; /* Gère les marges et les bordures pour correspondre à la largeur */
-  border: 2px solid #007BFF; /* Bordure fine bleue */
+  border: 2px solid #013238; /* Bordure fine bleue */
   border-radius: 8px; /* Coins légèrement arrondis */
   padding: 10px; /* Espacement intérieur */
   background-color: #fff; /* Fond blanc */
@@ -347,7 +380,7 @@ textarea {
 }
 
 textarea:focus {
-  border-color: #0056b3; /* Bordure bleue foncée au focus */
+  border-color: #013238; /* Bordure bleue foncée au focus */
   box-shadow: 0 0 10px rgba(0, 91, 187, 0.2); /* Ajoute une ombre légère au focus */
 }
 

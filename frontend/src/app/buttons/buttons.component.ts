@@ -28,13 +28,15 @@ import { FormsModule } from '@angular/forms';
     showModal: boolean = false;
     showInfo: boolean = false;
     showInfo2: boolean = false;
+    clientsTemplates: any[] = [];
     constructor(private buttonsService: ButtonsService) {}
 
     ngOnInit(): void {
         this.getEnjeux();
         this.getQuestions();
         this.getClientResponses();
-        this.loadQuestions(); // Charger les questions au démarrage
+        this.loadQuestions();
+        this.getTemplates();
     }
 
     getEnjeux() {
@@ -58,6 +60,17 @@ import { FormsModule } from '@angular/forms';
             (error) => {
                 console.log(error)
             }
+        )
+    }
+    getTemplates() {
+        this.buttonsService.getTemplatesClient(this.id_client).subscribe(
+          (response) => {
+            this.clientsTemplates = response;
+            console.log(this.clientsTemplates);
+          },
+          (error) => {
+            console.log(error)
+          }
         )
     }
     getClientResponses(): Promise<void> {
@@ -86,7 +99,7 @@ import { FormsModule } from '@angular/forms';
             this.sortedQuestions = [];
             this.questions.forEach(question => {
                 const enjeu = this.getEnjeuByid(question.id_enjeu);
-                if (question.id_enjeu === _id_enjeu || enjeu.enjeu_parent === _id_enjeu){
+                if ((question.id_enjeu === _id_enjeu || enjeu.enjeu_parent === _id_enjeu)){
                     this.sortedQuestions.push(question)
                 }
             })
@@ -104,7 +117,16 @@ import { FormsModule } from '@angular/forms';
             }
         })
     }
-    
+    checkTemplatesReponses(reponse:any): boolean{
+      console.log(reponse)
+      if (reponse.id_template === 1){
+        return true;
+      }
+      if (this.clientsTemplates.find(response1 => response1.id_template === reponse.id_template)){
+        return true;
+      }
+      return false;
+    }
     selectQuestion(questionId: number): void {
         this.selectedQuestionId = questionId;
         this.getGoodQuestion(questionId);
@@ -203,6 +225,7 @@ import { FormsModule } from '@angular/forms';
           reponses: q.reponses.map((r: any) => ({
             id: r.id_reponse, // ID de la réponse
             text: r.texte, // Texte de la réponse
+            id_template: r.id_template,
             score: r.score_individuelle, // Score associé
             champLibre: r.champ_libre, // Si champ libre
           })),
@@ -225,6 +248,7 @@ import { FormsModule } from '@angular/forms';
     if (this.currentQuestionIndex < this.questions2.length - 1) {
       this.currentQuestionIndex++;
       this.resetResponses(); // Réinitialiser les réponses
+      this.selectedQuestionId = this.currentQuestionIndex+1;
     }
   }
 
@@ -233,12 +257,14 @@ import { FormsModule } from '@angular/forms';
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
       this.resetResponses(); // Réinitialiser les réponses
+      this.selectedQuestionId = this.currentQuestionIndex+1;
     }
   }
 
   getGoodQuestion(id_question: number): void {
     this.currentQuestionIndex = id_question-1;
     this.resetResponses();
+    this.selectedQuestionId = this.currentQuestionIndex+1;
   }
 
   // Changer d'onglet

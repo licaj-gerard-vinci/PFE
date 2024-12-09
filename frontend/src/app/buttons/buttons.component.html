@@ -1,7 +1,10 @@
 <body class="body">
   <div class="main-container">
     <div class="left">
-    <div *ngIf="enjeux.length >0">
+      <img src="/logo.png" class="logo">
+      <img (click)="openInfo1()" src="/information.png" class="info1">
+      <img (click)="openInfo2()" src="/information.png" class="info2">
+    <div *ngIf="enjeux.length >0;">
         <div *ngFor="let enjeu of sortedEnjeux; let i = index">
             <button (click)="sortQuestions(enjeu.id_enjeu)"><img [src]="selectedEnjeuId === enjeu.id_enjeu ? '/chevron-down.svg' : '/chevron-right.svg'" alt="icone" class="icon" />{{i+1}}. {{enjeu.nom}} <img *ngIf="hasAllResponses(enjeu.id_enjeu)" src="/check.png" alt="icon" class="check-icon"></button>
             <div class="questions-container" [class.active]="selectedEnjeuId === enjeu.id_enjeu">
@@ -38,14 +41,14 @@
           [class.active]="activeTab === 'aujourdhui'"
           (click)="switchTab('aujourdhui')"
         >
-          <p>Aujourd'hui</p>
+          <p>AUJOURD'HUI</p>
         </div>
         <div
           class="engagement"
           [class.active]="activeTab === 'engagement'"
           (click)="switchTab('engagement')"
         >
-          <p>Pacte d'engagement (Dans les 2 ans)</p>
+          <p>PACTE D'ENGAGEMENT (DANS LES 2 ANS)</p>
         </div>
       </div>
   
@@ -59,8 +62,8 @@
         <!-- Type Radio -->
         <ul *ngIf="currentQuestion?.type === 'radio'">
           <li *ngFor="let reponse of currentQuestion.reponses">
-            <label>
-              <input
+            <label  *ngIf="checkTemplatesReponses(reponse) ; else elseBlock">
+              <input 
                 type="radio"
                 [value]="reponse.text"
                 name="answer"
@@ -68,13 +71,16 @@
               />
               {{ reponse.text }}
             </label>
+            <ng-template #elseBlock>
+              <img src="/croixRouge.png" class="croixRouge">{{ reponse.text }}
+            </ng-template>
           </li>
         </ul>
   
         <!-- Type Checkbox -->
         <ul *ngIf="currentQuestion?.type === 'checkbox'">
           <li *ngFor="let reponse of currentQuestion.reponses">
-            <label>
+            <label *ngIf="checkTemplatesReponses(reponse); else elseBlock1">
               <input
                 type="checkbox"
                 [value]="reponse.text"
@@ -82,6 +88,9 @@
               />
               {{ reponse.text }}
             </label>
+            <ng-template #elseBlock1>
+              <img src="/croixRouge.png" class="croixRouge">{{ reponse.text }}
+            </ng-template>
           </li>
         </ul>
   

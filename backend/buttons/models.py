@@ -134,3 +134,15 @@ class ReponseClient(models.Model):
 
     def __str__(self):
         return self.commentaire
+    
+class TemplateClient(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_template = models.IntegerField()
+    id_client = models.IntegerField()
+
+    class Meta :
+        db_table = 'templates_clients'
+        managed = False
+
+    def __str__(self):
+        return self.id_template

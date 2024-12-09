@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, ObservedValueOf } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -29,5 +29,8 @@ export class ButtonsService {
     saveReponseClient(reponseData: any) {
         const headers = { 'Content-Type': 'application/json' };
         return this.http.post(`${this.baseUrl}/sauvegarderReponse/`, reponseData, { headers });
+    }
+    getTemplatesClient(id_client:number): Observable<any> {
+        return this.http.get(`${this.baseUrl}/templates/?id_client=${id_client}`);
     }
 }

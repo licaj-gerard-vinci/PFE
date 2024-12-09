@@ -5,6 +5,7 @@ from .models import Enjeux
 from .models import Question
 from .models import ReponseClient
 from .models import ChoixReponse
+from .models import TemplateClient
 from django.http import JsonResponse
 from django.db import IntegrityError
 
@@ -106,4 +107,12 @@ class SauvegardeReponseClientView(APIView):
             # Gère toute autre exception
             print("Erreur :", str(e))
             return Response({"error": str(e)}, status=500)
+        
+class TemplatessClients(APIView):
+    def get(self, request):
+            _id_client= int(request.query_params.get('id_client'))
+            templates_client = TemplateClient.objects.filter(id_client = _id_client).values("id_template","id_client")
+            templates_client_list = list(templates_client)
+            return JsonResponse(templates_client_list, safe=False)
+
 
