@@ -62,7 +62,7 @@ export class OnboardingComponent implements OnInit {
     const answers = {
       prenom: this.questions[0]?.answer || '',
       nom: this.questions[1]?.answer || '',
-      adresse_mail: this.questions[2]?.answer || '',
+      email: this.questions[2]?.answer || '',
       fonction: this.questions[3]?.answer || '',
       nom_entreprise: this.questions[4]?.answer || '',
       numero_tva: this.questions[5]?.answer || '',

@@ -4,17 +4,15 @@ from rest_framework.views import APIView
 
 from onboarding.models import Client, QuestionsOnboarding
 
-
 from rest_framework.exceptions import ValidationError
 
 class OnboardingView(APIView):
     def post(self, request):
         data = request.data
-        print(data)
         try:
             # Valider les champs attendus
             required_fields = [
-                'prenom', 'nom', 'adresse_mail', 'fonction',
+                'prenom', 'nom', 'email', 'fonction',
                 'nom_entreprise', 'numero_tva', 'forme_juridique',
                 'adresse_siege_social', 'adresse_site_web',
                 'code_nace_activite_principal', 'chiffre_affaire_du_dernier_exercice_fiscal',
@@ -30,7 +28,7 @@ class OnboardingView(APIView):
             client = Client.objects.create(
                 prenom=data['prenom'],
                 nom=data['nom'],
-                adresse_mail=data['adresse_mail'],
+                email=data['email'],
                 fonction=data['fonction'],
                 nom_entreprise=data['nom_entreprise'],
                 numero_tva=data['numero_tva'],
@@ -48,8 +46,7 @@ class OnboardingView(APIView):
                 ajouter_autre_chose=data['ajouter_autre_chose'] == "true",
                 remarque_commentaire_precision=data['remarque_commentaire_precision'],
                 date_de_soumission=data['date_de_soumission'],
-                id_template_id=1,
-                est_valide=False,
+                est_valide='N/D',
                 mdp="test132"
             )
             return Response("Le client a bien été enregistré!",status=status.HTTP_201_CREATED)

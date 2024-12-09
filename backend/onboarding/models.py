@@ -15,7 +15,7 @@ class Client(models.Model):
     id_client = models.AutoField(primary_key=True)
     prenom = models.CharField(max_length=255)
     nom = models.CharField(max_length=255)
-    adresse_mail = models.EmailField(unique=True)
+    email = models.EmailField(unique=True)
     fonction = models.CharField(max_length=255)
     nom_entreprise = models.CharField(max_length=255)
     numero_tva = models.CharField(max_length=255)
@@ -33,8 +33,7 @@ class Client(models.Model):
     ajouter_autre_chose = models.BooleanField()
     remarque_commentaire_precision = models.CharField(max_length=5000, null=True)
     date_de_soumission = models.DateField()
-    id_template = models.ForeignKey(Template, on_delete=models.SET_NULL, null=True, db_column='id_template')
-    est_valide = models.BooleanField()
+    est_valide = models.CharField(max_length=255)
     mdp = models.CharField(max_length=5000, null=True)
 
     class Meta:
