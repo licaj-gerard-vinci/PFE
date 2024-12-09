@@ -3,10 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
-from .models import CustomUser
 from .models import Admin, Client
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth import authenticate
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import AccessToken, TokenError
@@ -108,3 +106,4 @@ def is_valid_email_domain(email):
     """
     domain = email.split('@')[-1]  # Récupère le domaine après @
     return not re.search(r'(admin|BetterBusiness)', domain, re.IGNORECASE)
+

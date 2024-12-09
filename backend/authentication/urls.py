@@ -7,4 +7,5 @@ urlpatterns = [
     path('verify-token/', VerifyTokenView.as_view(), name='verify_token'),
     path('admin/<str:email>/', get_admin_by_email, name='get_admin_by_email'),
     path('client/<str:email>/', get_client_by_email, name='get_client_by_email'),
+    
 ]
