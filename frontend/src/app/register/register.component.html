@@ -1,10 +1,59 @@
-<div class="register-container">
-    <h2>Register</h2>
-    <form (submit)="onSubmit()">
-      <input type="text" placeholder="nom" [(ngModel)]="nom" name="nom" required />
-      <input type="text" placeholder="prenom" [(ngModel)]="prenom" name="prenom" required />
-      <input type="email" placeholder="Email" [(ngModel)]="email" name="email" required />
-      <input type="password" placeholder="Password" [(ngModel)]="password" name="mdp" required />  
-      <button type="submit">Register</button>
-    </form>
+  <div class="register-container">
+    <div class="background-shapes">
+      <!-- Couche d'arrière-plan pour les formes -->
+      <div class="shape green-circle"></div>
+      <div class="shape blue-ring"></div>
+      <div class="shape wave"></div>
+    </div>
+  
+    <div class="register-form">
+      <div class="cart-icon"></div>
+      <form (submit)="onSubmit()">
+        <div class="input-group">
+          <i class="icon-user"></i>
+          <input 
+            type="text" 
+            [(ngModel)]="nom" 
+            placeholder="nom" 
+            name="nom" 
+            required
+          />
+        </div>
+        <div class="input-group">
+          <i class="icon-lock"></i>
+          <input 
+            type="text" 
+            placeholder="prenom" 
+            [(ngModel)]="prenom" 
+            name="prenom" 
+            required 
+          />
+        </div>
+        <div class="input-group">
+          <i class="icon-user"></i>
+          <input 
+            type="email" 
+            [(ngModel)]="email" 
+            placeholder="email" 
+            name="email" 
+            required
+          />
+        </div>
+        <div class="input-group">
+          <i class="icon-lock"></i>
+          <input 
+            type="password" 
+            placeholder="password" 
+            [(ngModel)]="password" 
+            name="mdp" 
+            required 
+          />
+        </div>
+        <div *ngIf="registerError" class="error-message" style="color: red;">
+          {{ registerError }}
+        </div>
+        <button type="submit" class="btn-register">REGISTER</button>
+      </form>
+    </div>
   </div>
+  
