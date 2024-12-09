@@ -31,29 +31,25 @@ class AddVerificationView(APIView):
         # Récupérer les données de la requête
         admin_id = request.data['id_admin'] # Assurez-vous que l'utilisateur connecté est un admin
         try:
-            print("🟨id_client : ", client_id)
-            print("🟨🟨admin_id : ", admin_id)
+
             # Vérifiez si l'utilisateur est bien un admin
             admin = get_object_or_404(Admin, id_admin=admin_id)
-            print("🟨🟨🟨id_client : ", client_id)
-            print("🟨🟨🟨🟨??admin : ", admin)
 
+            print(admin.email)
 
             # Récupérez toutes les réponses du client spécifié
             reponses_clients = ReponseClient.objects.filter(id_client=client_id)
-            print("🟨🟨🟨🟨🟨??reponses_clients : ", reponses_clients)
             if not reponses_clients.exists():
                 print("🔴 line 41: ", reponses_clients)
                 return Response({"error": "Aucune réponse trouvée pour ce client."}, status=status.HTTP_404_NOT_FOUND)
-            print("🟨🟨🟨🟨🟨🔴🔴??reponses_clients : ", reponses_clients)
             # Créer les vérifications pour chaque réponse du client
             for reponse_client in reponses_clients:
                 Verification.objects.create(
                     id_reponse_client=reponse_client,
                     #est_valide=False,  # Par défaut non validé
-                    modules_esg="popo",
+                    module_esg="popo",
                     module_pacte_engagement="popo",
-                    id_admin=int(admin.id_admin)
+                    id_admin=admin.id_admin
                 )
 
             return Response(

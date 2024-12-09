@@ -40,7 +40,7 @@ class Client(models.Model):
     id_client = models.AutoField(primary_key=True)
     prenom = models.CharField(max_length=255)
     nom = models.CharField(max_length=255)
-    adresse_mail = models.EmailField(unique=True)
+    email = models.EmailField(unique=True)
     fonction = models.CharField(max_length=255)
     nom_entreprise = models.CharField(max_length=255)
     forme_juridique = models.TextField()
@@ -56,7 +56,7 @@ class Client(models.Model):
     ajouter_autre_chose = models.BooleanField()
     remarque_commentaire_precision = models.TextField(null=True, blank=True)
     date_de_soumission = models.DateField()
-    est_valide = models.BooleanField()
+    est_valide = models.CharField(max_length=255)
     mdp = models.TextField(null=True, blank=True)
 
     class Meta:
@@ -121,9 +121,10 @@ class ReponseClient(models.Model):
 
 
 class Verification(models.Model):
-    id_reponse_client = models.OneToOneField(ReponseClient, on_delete=models.CASCADE, primary_key=True)
-    est_valide = models.BooleanField()
-    id_admin = models.ForeignKey(Admin, on_delete=models.CASCADE)
+    id_reponse_client = models.OneToOneField(ReponseClient, on_delete=models.CASCADE, primary_key=True, db_column='id_reponse_client')
+    module_esg = models.CharField(max_length=255, db_column='module_esg')
+    module_pacte_engagement = models.CharField(max_length=255, db_column='module_pacte_engagement')
+    id_admin = models.IntegerField()
 
     class Meta:
         db_table = 'verifications'
