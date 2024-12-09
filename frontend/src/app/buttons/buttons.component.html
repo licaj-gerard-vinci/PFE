@@ -1,5 +1,7 @@
-<body>
-    <div *ngIf="enjeux.length >0 ; else elseBlock">
+<body class="body">
+  <div class="main-container">
+    <div class="left">
+    <div *ngIf="enjeux.length >0">
         <div *ngFor="let enjeu of sortedEnjeux; let i = index">
             <button (click)="sortQuestions(enjeu.id_enjeu)"><img [src]="selectedEnjeuId === enjeu.id_enjeu ? '/chevron-down.svg' : '/chevron-right.svg'" alt="icone" class="icon" />{{i+1}}. {{enjeu.nom}} <img *ngIf="hasAllResponses(enjeu.id_enjeu)" src="/check.png" alt="icon" class="check-icon"></button>
             <div class="questions-container" [class.active]="selectedEnjeuId === enjeu.id_enjeu">
@@ -10,7 +12,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="!checkEachEnjeux()">
+        <div *ngIf="checkEachEnjeux()">
             <button (click)="openModal()" class="validation">{{sortedEnjeux.length+1}}. VALIDATION</button>
         </div>
         <div class="modal" *ngIf="showModal">
@@ -21,7 +23,86 @@
             </div>
         </div>
     </div>
-    <ng-template #elseBlock>
-        <p>Aucun enjeu présent</p>
-    </ng-template>
+  </div>
+  <div class="right">
+<div class="form-container">
+    <!-- Flèche gauche -->
+    <button class="side-button left-button" (click)="previousQuestion()"><</button>
+  
+    <!-- Formulaire -->
+    <form class="simple-form">
+      <!-- Conteneur pour Aujourd'hui et Pacte d'engagement -->
+      <div class="header-container">
+        <div
+          class="aujourdhui"
+          [class.active]="activeTab === 'aujourdhui'"
+          (click)="switchTab('aujourdhui')"
+        >
+          <p>Aujourd'hui</p>
+        </div>
+        <div
+          class="engagement"
+          [class.active]="activeTab === 'engagement'"
+          (click)="switchTab('engagement')"
+        >
+          <p>Pacte d'engagement (Dans les 2 ans)</p>
+        </div>
+      </div>
+  
+      <!-- Numéro et Texte de la question dans un conteneur commun -->
+      <div class="question-container">
+        <div class="question-number">{{ currentQuestion.number }}</div>
+        <div class="question-text">{{ currentQuestion.text }}</div>
+      </div>
+  
+      <div class="question-options">
+        <!-- Type Radio -->
+        <ul *ngIf="currentQuestion?.type === 'radio'">
+          <li *ngFor="let reponse of currentQuestion.reponses">
+            <label>
+              <input
+                type="radio"
+                [value]="reponse.text"
+                name="answer"
+                (change)="onReponseSelected(reponse)"
+              />
+              {{ reponse.text }}
+            </label>
+          </li>
+        </ul>
+  
+        <!-- Type Checkbox -->
+        <ul *ngIf="currentQuestion?.type === 'checkbox'">
+          <li *ngFor="let reponse of currentQuestion.reponses">
+            <label>
+              <input
+                type="checkbox"
+                [value]="reponse.text"
+                (change)="onCheckboxChange($event, reponse)"
+              />
+              {{ reponse.text }}
+            </label>
+          </li>
+        </ul>
+  
+        <!-- Type Libre -->
+        <div *ngIf="currentQuestion?.type === 'libre'">
+          <textarea
+            placeholder="Votre réponse (max 50000 caractères)..."
+            [(ngModel)]="responses.aujourdhui"
+          ></textarea>
+        </div>
+      </div>
+  
+      <!-- Bouton Confirmer -->
+      <div class="confirm-button">
+        <button type="button" (click)="confirmAnswer()">CONFIRMER</button>
+      </div>
+    </form>
+  
+    <!-- Flèche droite -->
+    <button class="side-button right-button" (click)="nextQuestion()">></button>
+  </div>
+</div>
+</div>
 </body>

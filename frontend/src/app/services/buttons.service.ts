@@ -22,4 +22,12 @@ export class ButtonsService {
     getReponse(id_reponse:number): Observable<any> {
         return this.http.get(`${this.baseUrl}/responses/?id_reponse=${id_reponse}`);
     }
+    getQuestionsReponse(): Observable<any> {
+        return this.http.get<any>(`${this.baseUrl}/questionsReponses/`);
+    }
+    
+    saveReponseClient(reponseData: any) {
+        const headers = { 'Content-Type': 'application/json' };
+        return this.http.post(`${this.baseUrl}/sauvegarderReponse/`, reponseData, { headers });
+    }
 }

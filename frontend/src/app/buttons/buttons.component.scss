@@ -2,10 +2,10 @@ button {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: 21%;
+    width: 75%;
     padding: 5px;
     margin: 1px 0;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
     border: 1px solid #f9F9F9;
     background-color: #f9f9f9;
@@ -16,6 +16,9 @@ button {
 button img.check-icon {
   margin-left: auto; /* Pousse l'icône complètement à droite */
   height: 16px; /* Ajuste la taille de l'icône si nécessaire */
+}
+.enjeux{
+  height: 100vh;
 }
 
 button:hover {
@@ -30,7 +33,7 @@ button img.icon {
     transition: all 0.5s linear;
 }
 
-body {
+.body {
     background-color: #B5CDBF;
     padding-bottom: 500px;
 }
@@ -99,5 +102,284 @@ body {
     margin-bottom: 5px;
     margin-left: 35%;
     cursor: pointer;
+  }
+  
+  .main-container {
+    display: flex;
+    gap: 20px; /* Espacement entre les colonnes */
+  }
+  
+  .left {
+    flex: 1; /* Largeur de la colonne gauche */
+    max-width: 25%; /* Limite la largeur à 30% */
+    padding: 10px;
+    margin-top: 18%;
+    margin-left: 2%;
+  }
+  
+  .right {
+    flex: 2; /* Largeur de la colonne droite */
+    max-width: 75%; /* Limite la largeur à 70% */
+    padding: 20px;
+    border-radius: 8px;
+  }
+
+  .form-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+  }
+
+
+  /* Formulaire */
+  
+  .simple-form {
+    border: 2px solid #000; /* Bordure noire */
+    border-radius: 5px;
+    padding: 30px; /* Augmente l'espace intérieur */
+    width: 90%; /* Augmente la largeur relative à l'écran */
+    max-width: 800px; /* Limite la largeur maximale */
+    min-height: 400px; /* Augmente la hauteur minimale */
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajoute une ombre pour le style */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+  
+
+
+  
+  
+  /* Header container */
+.header-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border: 2px solid #000; /* Bordure noire autour du conteneur */
+    border-radius: 5px 5px 0 0;
+    overflow: hidden; /* Empêche le débordement des bordures */
+    margin-bottom: 20px;
+  }
+  
+  /* Aujourd'hui et Pacte d'engagement */
+  .aujourdhui,
+  .engagement {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px 0;
+    background-color: #fff; /* Blanc par défaut */
+    border-right: 1px solid #000; /* Ligne de séparation noire */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  /* Supprimer la bordure droite du dernier élément */
+  .engagement {
+    border-right: none;
+  }
+  
+  /* Onglet actif */
+  .aujourdhui.active,
+  .engagement.active {
+    color: #007bff; /* Texte bleu pour l'onglet actif */
+    font-weight: bold;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header-container {
+      flex-direction: column;
+    }
+  
+    .aujourdhui,
+    .engagement {
+      border-right: none;
+      border-bottom: 1px solid #000;
+    }
+  
+    .engagement {
+      border-bottom: none; /* Supprimer la bordure du dernier élément en mode vertical */
+    }
+  }
+
+
+  .engagement {
+    flex: 1; /* Laisse l'espace occupé par l'onglet inchangé */
+    text-align: center; /* Centre uniquement le texte horizontalement */
+    font-weight: bold;
+    padding: 10px 0; /* Ajoute un espace vertical */
+    background-color: #fff; /* Blanc par défaut */
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+
+
+
+
+
+
+/* Conteneur pour aligner numéro et texte */
+.question-container {
+    display: flex;
+    align-items: center; /* Alignement vertical centré */
+    justify-content: space-between; /* Ajuste l'espacement horizontal */
+    width: 100%; /* Prend toute la largeur disponible */
+    margin-bottom: 10px; /* Ajoute de l'espace sous la question */
+    top: -10px; 
+  }
+  
+  /* Numéro de la question */
+  .question-number {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 10px; /* Espacement entre le numéro et le texte */
+    text-align: left;
+  }
+  
+  /* Texte de la question */
+  .question-text {
+    font-size: 1.2rem;
+    font-weight: normal;
+    text-align: center; /* Centré horizontalement */
+    flex: 1; /* Permet au texte d'occuper tout l'espace disponible */
+  }
+
+
+
+
+
+  
+  
+  
+  /* Confirm button */
+  .confirm-button button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .confirm-button button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  /* Side buttons (left and right) */
+  .side-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .side-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+  }
+  
+  /* Left button specific */
+  .left-button {
+    margin-right: 10px;
+  }
+  
+  /* Right button specific */
+  .right-button {
+    margin-left: 10px;
+  }
+
+
+  
+
+
+
+/* Styling response list */
+ul {
+  list-style-type: none; /* Supprime les puces */
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+li {
+  margin: 10px 0; /* Ajoute de l'espace entre chaque option */
+  display: flex;
+  align-items: center; /* Centre verticalement le texte et le bouton */
+}
+
+label {
+  font-size: 1rem;
+  margin-left: 10px; /* Ajoute de l'espace entre le bouton et le texte */
+  cursor: pointer;
+}
+
+textarea {
+  resize: none; /* Empêche le redimensionnement */
+  width: 100%; /* Largeur relative à l'espace parent */
+  max-width: 1500px; /* Largeur maximale */
+  height: 200px; /* Hauteur fixe */
+  box-sizing: border-box; /* Gère les marges et les bordures pour correspondre à la largeur */
+  border: 2px solid #007BFF; /* Bordure fine bleue */
+  border-radius: 8px; /* Coins légèrement arrondis */
+  padding: 10px; /* Espacement intérieur */
+  background-color: #fff; /* Fond blanc */
+  font-family: Arial, sans-serif; /* Police propre et lisible */
+  font-size: 14px; /* Taille de texte */
+  color: #333; /* Couleur du texte */
+  outline: none; /* Supprime la bordure par défaut au focus */
+  transition: box-shadow 0.3s ease, border-color 0.3s ease; /* Animation fluide */
+}
+
+textarea:focus {
+  border-color: #0056b3; /* Bordure bleue foncée au focus */
+  box-shadow: 0 0 10px rgba(0, 91, 187, 0.2); /* Ajoute une ombre légère au focus */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .simple-form {
+      width: 90%;
+    }
+  
+    .side-button {
+      width: 35px;
+      height: 35px;
+    }
+  
+  
+    .side-button.left-button, .side-button.right-button {
+      margin: 0 5px; /* Adjust margin for smaller screens */
+    }
   }
   
