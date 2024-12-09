@@ -1,11 +1,10 @@
+# backend/client/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Client, Template
-from .serializers import ClientSerializer
+from .serializers import ClientSerializer, TemplateSerializer
 from rest_framework import status
-from .serializers import TemplateSerializer
 from rest_framework.generics import RetrieveAPIView
-
 
 class TemplateListView(APIView):
     def get(self, request):
@@ -15,12 +14,12 @@ class TemplateListView(APIView):
 
 class CompanyListView(APIView):
     def get(self, request):
-        companies = Client.objects.select_related('id_template').all()
+        companies = Client.objects.prefetch_related('templates').all()
         serializer = ClientSerializer(companies, many=True)
         return Response(serializer.data)
-    
+
 class CompanyDetailView(RetrieveAPIView):
-    queryset = Client.objects.select_related('id_template').all()
+    queryset = Client.objects.prefetch_related('templates').all()
     serializer_class = ClientSerializer
     lookup_field = 'id_client'
 
@@ -38,7 +37,6 @@ class CompanyUpdateView(APIView):
 
     def patch(self, request, id_client):
         try:
-            # Partial update (only modify the fields provided in the request)
             company = Client.objects.get(id_client=id_client)
             serializer = ClientSerializer(company, data=request.data, partial=True)
             if serializer.is_valid():

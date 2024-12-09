@@ -14,17 +14,17 @@
     <div class="field-container">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Email</mat-label>
-        <input matInput [(ngModel)]="company.adresse_mail" name="adresse_mail" placeholder="N/D" />
+        <input matInput [(ngModel)]="company.email" name="adresse_mail" placeholder="N/D" />
       </mat-form-field>
     </div>
 
-    <!-- Code NACE -->
-    <div class="field-container">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Code NACE</mat-label>
-        <input matInput [(ngModel)]="company.code_nace_principal" name="code_nace_principal" placeholder="N/D" />
-      </mat-form-field>
-    </div>
+  <!-- Code NACE -->
+  <div class="field-container">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Code NACE</mat-label>
+      <input matInput [(ngModel)]="company.code_nace_activite_principal" name="code_nace_activite_principal" placeholder="N/D" />
+    </mat-form-field>
+  </div>
 
     <!-- Chiffre d'affaires -->
     <div class="field-container">
@@ -42,14 +42,36 @@
       </mat-form-field>
     </div>
 
-    <div class="field-container">
-      <p class="template-title">Templates</p>
-      <div class="scrollable-checkbox-list">
-        <mat-checkbox *ngFor="let template of templates" [(ngModel)]="template.selected" name="template_{{ template.id_template }}">
-          {{ template.nom }}
-        </mat-checkbox>
-      </div>
-    </div>
+  <!-- Is Company Valid -->
+  <div class="field-container">
+    <p class="field-label">Valider l'entreprise</p>
+    <mat-radio-group [(ngModel)]="company.est_valide" name="est_valide">
+      <mat-radio-button [value]="'validée'">Validée</mat-radio-button>
+      <mat-radio-button [value]="'refusée'">Refusée</mat-radio-button>
+      <mat-radio-button [value]="'N/D'">N/D</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+<!-- Templates -->
+<div class="field-container" *ngIf="company.est_valide === 'validée'">
+  <p class="template-title">Templates</p>
+  <div class="scrollable-checkbox-list">
+    <mat-checkbox
+      *ngFor="let template of templates"
+      [(ngModel)]="template.selected"
+      name="template_{{ template.id_template }}">
+      {{ template.nom }}
+    </mat-checkbox>
+  </div>
+</div>
+
+<!-- Reason for Refusal -->
+<div class="field-container" *ngIf="company.est_valide === 'refusée'">
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Raison du refus</mat-label>
+    <textarea matInput [(ngModel)]="company.raison_refus" name="raison_refus" placeholder="N/D"></textarea>
+  </mat-form-field>
+</div>
 
     <div class="form-actions">
       <button mat-button color="warn" (click)="close()">Annuler</button>

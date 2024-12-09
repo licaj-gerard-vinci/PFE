@@ -1,6 +1,11 @@
 .container {
-    max-width: 900px;
     margin: auto;
+    text-align: center;
+    border-radius: 10px;
+    padding: 20px;
+  h2 {
+    color: #013238;
+  }
   }
 
 tr:nth-child(odd) {
@@ -11,15 +16,11 @@ tr:nth-child(even) {
   background-color: #ffffff;
 }
 
-.actions-cell {
-  text-align: center;
-}
-
 .no-data-message {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
-  color: #555;
+  color: #013238;
   margin-top: 20px;
 }
 
@@ -57,6 +58,13 @@ tr:nth-child(even) {
 
 /* Search Field: Adjust width and height */
 .search-field {
+  mat-icon {
+    color: #013238;
+  }
+
+  mat-label {
+    color: #013238;
+  }
   width: 250px; /* Compact width */
   min-height: 36px; /* Adjust the height of the field including the border */
 }
@@ -68,4 +76,65 @@ tr:nth-child(even) {
 
 .mdc-text-field__input {
   height: 10px !important; /* Adjust height */
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-container {
+  display: flex; /* Enables flexbox */
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  width: 15%; /* Adjust width as needed */
+  max-width: 600px; /* Prevent the chart from being too large */
+  margin: 20px auto; /* Centers the container itself */
+  border: 2px solid #013238; /* Optional: adds a border for aesthetics */
+  border-radius: 10px; /* Optional: makes the edges rounded */
+  padding: 15px; /* Adds spacing inside the container */
+}
+
+.table-container table {
+  border: 1px solid #013238;
+
+  th {
+    background-color: #013238;
+    color: #ffffff;
+  }
+
+  td {
+    color: #013238;
+  }
+}
+
+.actions-cell button {
+  background-color: #fdef91;
+  text-align: center;
+  color: #013238;
+
+  &:hover {
+    background-color: #d3c876;
+  }
+}
+
+.field-container {
+  margin-bottom: 20px;
+}
+
+.field-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #013238; /* Vert foncé */
+  margin-bottom: 10px;
+}
+
+mat-radio-group {
+  display: flex;
+  gap: 15px; /* Adds spacing between buttons */
+}
+
+mat-radio-button {
+  color: #013238; /* Vert foncé */
 }
