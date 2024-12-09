@@ -4,9 +4,10 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { RapportComponent } from './rapport/rapport.component';
 import { HomeComponent } from './home/home.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent }, // Route pour la page d'accueil
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] }, // Route pour la page d'accueil
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'report/:clientId', component: RapportComponent },
