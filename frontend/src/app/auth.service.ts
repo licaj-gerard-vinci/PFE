@@ -32,4 +32,9 @@ export class AuthService {
   clearToken(): void {
     sessionStorage.removeItem('access_token');
   }
+
+    // Fonction pour vérifier si l'utilisateur est connecté
+    isLoggedIn(): boolean {
+        return !!this.getAccessToken();
+    }
 }
