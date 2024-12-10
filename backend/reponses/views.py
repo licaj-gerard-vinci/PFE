@@ -1,9 +1,8 @@
-
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from backend.models import Admin, ReponseClient, Verifications, Reponses
+from backend.models import Admin, ReponseClient, Verifications, Reponses, Clients
 from django.shortcuts import get_object_or_404
 
 
@@ -55,6 +54,8 @@ class AddVerificationView(APIView):
                 {"message": f"Vérifications créées pour toutes les réponses du client {client_id}."},
                 status=status.HTTP_201_CREATED
             )
+        except Http404:
+            return Response({"error": "Admin non trouvé."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -148,7 +149,6 @@ class GetVerificationsView(APIView):
 
             return Response(data, status=status.HTTP_200_OK)
         except Exception as e:
-            print("2🔴 BAD REQUEST: ", e)
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -190,13 +190,9 @@ class DeleteReponseClientView(APIView):
 
         except Http404:
             return Response({"error": "Réponse client non trouvée."}, status=status.HTTP_404_NOT_FOUND)
-        except AttributeError as e:
-            print("AttributeError: ", e)
         except Exception as e:
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_412_PRECONDITION_FAILED)
 
-
-# Crée moi une classe qui me permet de modifier Le contenu de la réponse si un champ libre == True et de modifier le score_final de la réponse_client
 
 class UpdateReponseClientView(APIView):
     def put(self, request, reponse_client_id):
@@ -222,26 +218,23 @@ class UpdateReponseClientView(APIView):
         '''
 
         try:
-            # fixme: elle ne met pas à jour les données en base de données
             # Vérifier si le contenu et le score_final sont présents dans la requête
             if 'contenu' not in request.data or 'score_final' not in request.data:
-                print("🔴 BAD REQUEST: ", request.data)
                 return Response({"error": "Le contenu et le score final sont requis."},
                                 status=status.HTTP_400_BAD_REQUEST)
             # Récupérer la réponse client spécifique
             reponse_client = get_object_or_404(ReponseClient, id_reponse_client=reponse_client_id)
-            print("1🟨 reponse_client: ", reponse_client)
 
-            print(f"2🟨 Q{reponse_client.id_reponse.id_reponse} => ")
             reponse = Reponses.objects.get(id_reponse=reponse_client.id_reponse.id_reponse)
-            print("3🟨 champ_libre: ", reponse.champ_libre)
-            # Vérifier si le champ libre est activé            # Vérifier si le champ libre est activé
+            # Vérifier si le champ libre est activé
             if reponse.champ_libre:
                 # Modifier le contenu de la réponse client
                 reponse.texte = request.data.get('contenu')
 
                 # Modifier le score final de la réponse client
-                reponse_client.score_final = request.data.get('score_final')
+                reponse.score_final = request.data.get('score_final')
+
+                reponse.save()
                 reponse_client.save()
 
                 # Retourner un succès
@@ -255,5 +248,89 @@ class UpdateReponseClientView(APIView):
 
         except Http404:
             return Response({"error": "Réponse client non trouvée."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Faismoi une classe qui me permet d'ajouter une réponse client si elle n'existe pas   En créant un lien entre réponse client et qui qui est en réponse avec une méthode post dans lequel on aura le l'i D de la réponse l'i D du client et une valeur bullienne indiquant que si la réponse est un engagement ou non. cette classe doit aussi permettre de d'enregistrer le score final de la réponse client
+
+class AddReponseClientView(APIView):
+    def post(self, request):
+        """
+            Crée une réponse client si elle n'existe pas.
+            :param request: La requête HTTP.
+            :return: Un message de succès ou d'erreur.
+
+            Exemple de route:
+            POST /reponse_client/reponse_verifier/add
+            Exemple de corps de requête:
+            {
+                "id_reponse": 1,
+                "id_client": 1,
+                "est_engagement": false,
+                "id_admin": 1,
+            }
+
+            Exemple de réponse:
+            {
+                "message": "Réponse client créée avec succès."
+            }
+        """
+        try:
+            # Vérifier si l'id de la réponse, l'id du client, l'est_engagement et l'id de l'admin sont présents dans la requête
+            if 'id_reponse' not in request.data or 'id_client' not in request.data or 'est_engagement' not in request.data or 'id_admin' not in request.data:
+                return Response(
+                    {"error": "L'ID de la réponse, l'ID du client, l'engagement et l'ID de l'admin sont requis."},
+                    status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                # Vérifiez que l'admin existe
+                admin = get_object_or_404(Admin, id_admin=request.data['id_admin'])
+            except Http404:
+                return Response({"error": "Admin non trouvé."}, status=status.HTTP_404_NOT_FOUND)
+            # Récupérer la réponse spécifique
+            reponse_client = ReponseClient.objects.filter(id_reponse=request.data['id_reponse'],
+                                                          id_client=request.data['id_client'])
+            if reponse_client.exists():
+                return Response({"error": "La réponse client existe déjà."}, status=status.HTTP_412_PRECONDITION_FAILED)
+
+            reponse = get_object_or_404(Reponses, id_reponse=request.data['id_reponse'])
+
+            client = get_object_or_404(Clients, id_client=request.data['id_client'])  # Retrieve the Clients instance
+
+            # Créer la réponse client
+            reponse_client = ReponseClient.objects.create(
+                id_reponse=reponse,
+                id_client=client,  # Assign the Clients instance
+                est_un_engagement=request.data['est_engagement'],
+                score_final=1080
+            )
+
+            # Créer la vérification associée
+            Verifications.objects.create(
+                id_reponse_client=reponse_client,
+                est_valide=True,
+                id_admin=admin
+            )
+
+            # Récupérer la réponse client spécifique
+            reponse_client = ReponseClient.objects.get(id_reponse=reponse, id_client=client)
+            # Modifier le score final de la réponse client
+
+            if reponse_client.est_un_engagement:
+                reponse_client.score_final = reponse.score_engagement
+            else:
+                reponse_client.score_final = reponse.score_individuel
+
+            reponse_client.save()
+
+            # Retourner un succès
+            return Response(
+                {"message": "Réponse client créée avec succès."},
+                status=status.HTTP_201_CREATED
+            )
+
+        except Http404:
+            return Response({"error": "Réponse non trouvée."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
