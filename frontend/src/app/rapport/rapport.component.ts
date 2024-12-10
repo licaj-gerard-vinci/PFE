@@ -16,6 +16,8 @@ export class RapportComponent implements OnInit {
   errorMessage: string | null = null; // Message d’erreur
   chart: any; // Instance du graphique global
   domainChart: any; // Instance pour le graphique des domaines (E, S, G)
+  radarChart: any; // Instance pour le graphique radar
+
   currentDomainIndex: number = 0; // Index du domaine actuellement affiché
   currentDate: Date = new Date(); // Date actuelle
 
@@ -24,18 +26,24 @@ export class RapportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadRapport(); // Chargement des données au démarrage
+    this.loadRapport();
   }
 
   loadRapport(): void {
     this.rapportService.getRapport().subscribe(
       (data: any) => {
-        console.log('Données reçues :', data); // Debug
-        this.rapportData = data;
-        this.isLoading = false;
-        this.renderChart(); // Graphique global
-        this.renderEngagementChart(); // Graphique des engagements
-        this.renderDomainSwitchChart(); // Graphique par domaine
+        if (data && data.client) { // Validation des données reçues
+          console.log('Données reçues :', data); // Debug
+          this.rapportData = data;
+          this.isLoading = false;
+          this.renderChartScoreTotal();
+          this.renderEngagementChart(); 
+          this.renderDomainSwitchChart();
+          this.renderCircularChart();
+        } else {
+          this.errorMessage = 'Données invalides reçues du serveur.';
+          this.isLoading = false;
+        }
       },
       (error) => {
         console.error('Erreur lors du chargement des données :', error);
@@ -46,7 +54,7 @@ export class RapportComponent implements OnInit {
   }
 
   // Rendu du graphique global (score ESG total)
-  renderChart(): void {
+  renderChartScoreTotal(): void {
     setTimeout(() => {
       const canvas = document.getElementById('gaugeChart') as HTMLCanvasElement;
 
@@ -87,13 +95,10 @@ export class RapportComponent implements OnInit {
         circumference: 270,
         plugins: {
           legend: { display: false },
-          tooltip: { enabled: false },
+          tooltip: { enabled: false
+           },
         },
       };
-
-      if (this.chart) {
-        this.chart.destroy();
-      }
 
       this.chart = new Chart(ctx, {
         type: 'doughnut',
@@ -238,6 +243,99 @@ export class RapportComponent implements OnInit {
   
     return `${formattedStartDate} - ${formattedEndDate}`;
   }
+  
+  renderCircularChart(): void {
+    setTimeout(() => {
+      const canvas = document.getElementById('circularChart') as HTMLCanvasElement;
+  
+      if (!canvas) {
+        console.error('Canvas introuvable pour le graphique circulaire.');
+        return;
+      }
+  
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.error('Contexte de canvas introuvable pour le graphique circulaire.');
+        return;
+      }
+  
+      const labels = [
+        'Environnemental - Score Actuel',
+        'Environnemental - Score Engagement',
+        'Social - Score Actuel',
+        'Social - Score Engagement',
+        'Gouvernance - Score Actuel',
+        'Gouvernance - Score Engagement',
+      ];
+  
+      const scores = [
+        this.rapportData?.domains[0]?.score_actuel || 0, // Environnemental - Actuel
+        this.rapportData?.domains[0]?.score_engagement || 0, // Environnemental - Engagement
+        this.rapportData?.domains[1]?.score_actuel || 0, // Social - Actuel
+        this.rapportData?.domains[1]?.score_engagement || 0, // Social - Engagement
+        this.rapportData?.domains[2]?.score_actuel || 0, // Gouvernance - Actuel
+        this.rapportData?.domains[2]?.score_engagement || 0, // Gouvernance - Engagement
+      ];
+  
+      const colors = [
+        '#88CCF1', // Bleu clair pour Environnemental - Actuel
+        '#B8E986', // Vert clair pour Environnemental - Engagement
+        '#FFDD57', // Jaune pour Social - Actuel
+        '#FFD1DC', // Rose clair pour Social - Engagement
+        '#6ACD8D', // Vert foncé pour Gouvernance - Actuel
+        '#D4A5A5', // Beige foncé pour Gouvernance - Engagement
+      ];
+  
+      const data = {
+        labels,
+        datasets: [
+          {
+            data: scores,
+            backgroundColor: colors,
+            borderWidth: 1,
+          },
+        ],
+      };
+  
+      const options = {
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: (context: any) => {
+                const label = context.label || '';
+                const value = context.raw || 0;
+                return `${label}: ${value}%`;
+              },
+            },
+          },
+        },
+        cutout: '5%', // Épaisseur de l'anneau
+        responsive: true,
+        maintainAspectRatio: false,
+      };
+  
+      this.chart = new Chart(ctx, {
+        type: 'doughnut',
+        data,
+        options,
+      });
+    }, 100);
+  }
+
+  getDateLimite(): string {
+    const currentDate = new Date();
+    const dateLimite = new Date();
+    dateLimite.setFullYear(currentDate.getFullYear() + 2); // Add 2 years to today's date
+  
+    // Format the date to "dd/MM/yyyy"
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return dateLimite.toLocaleDateString('fr-FR', options);
+  }
+  
+  
   
 
 }
