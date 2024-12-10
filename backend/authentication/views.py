@@ -88,11 +88,11 @@ def get_client_by_email(request, email):
     try:
         # Filtre pour trouver le Client par son email
         client = Clients.objects.values(
-            'id_client', 'prenom', 'nom', 'email', 'fonction', 'nom_entreprise', 'forme_juridique',
+            'id_client', 'prenom', 'nom', 'email', 'fonction', 'nom_entreprise', 'numero_tva', 'forme_juridique',
             'adresse_siege_social', 'adresse_site_web', 'code_nace_activite_principal',
-            'chiffre_affaire_du_dernier_exercice_fiscal', 'franchise', 'nombre_travailleurs',
+            'chiffre_affaire_du_dernier_exercice_fiscal', 'franchise', 'nombre_travailleurs', 'raison_refus', 
             'litige_respect_loi_social_environnemental', 'honnete', 'soumission_demande_de_subside_pour_le_label',
-            'ajouter_autre_chose', 'remarque_commentaire_precision', 'date_de_soumission', 'est_valide'
+            'partenaire_introduction', 'ajouter_autre_chose', 'remarque_commentaire_precision', 'date_de_soumission', 'est_valide'
         ).get(email=email)  # Exclut 'mdp' en ne le sélectionnant pas explicitement
 
         return JsonResponse(client, safe=False)  # Retourne les données JSON
