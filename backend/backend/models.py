@@ -130,7 +130,7 @@ class ReponseClient(models.Model):
     id_reponse = models.ForeignKey('Reponses', models.DO_NOTHING, db_column='id_reponse')
     commentaire = models.CharField(max_length=5000, blank=True, null=True)
     est_un_engagement = models.BooleanField()
-    score_final = models.IntegerField()
+    score_final = models.FloatField()
     sa_reponse = models.CharField(max_length=255, blank=True, null=True)
     id_engagement = models.ForeignKey(Engagements, models.DO_NOTHING, db_column='id_engagement', blank=True, null=True)
 
@@ -144,10 +144,10 @@ class Reponses(models.Model):
     id_reponse = models.AutoField(primary_key=True)
     id_question = models.ForeignKey(Questions, models.DO_NOTHING, db_column='id_question')
     texte = models.CharField(max_length=50000, blank=True, null=True)
-    score_individuel = models.IntegerField()
+    score_individuel = models.FloatField()
     id_template = models.ForeignKey('Templates', models.DO_NOTHING, db_column='id_template')
     champ_libre = models.BooleanField()
-    score_engagement = models.IntegerField()
+    score_engagement = models.FloatField()
 
     class Meta:
         managed = False

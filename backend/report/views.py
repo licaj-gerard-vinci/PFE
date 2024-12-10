@@ -81,6 +81,10 @@ class RapportView(APIView):
                     "nom": client.nom,
                     "email": client.email,
                     "nom_entreprise": client.nom_entreprise,
+                    "fonction": client.fonction,
+                    "numero_tva": client.numero_tva,
+                    "adresse_siege_social": client.adresse_siege_social,
+                    "code_nace_activite_principal": client.code_nace_activite_principal,
                 },
                 "scores": {
                     "score_total": round(score_final_percentage, 2),
