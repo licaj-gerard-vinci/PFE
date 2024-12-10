@@ -6,6 +6,7 @@ from .models import Question
 from .models import ReponseClient
 from .models import ChoixReponse
 from .models import TemplateClient
+from .models import Client
 from django.http import JsonResponse
 from django.db import IntegrityError
 
@@ -116,4 +117,18 @@ class TemplatessClients(APIView):
             templates_client_list = list(templates_client)
             return JsonResponse(templates_client_list, safe=False)
 
+class SimulateLogin(APIView):
+    def get(self, request):
+        # Récupérer le dernier utilisateur
+        last_user = Client.objects.order_by('-id_client').values('id_client', 'prenom', 'nom', 'email').first()
+
+        if not last_user:
+            return Response({"error": "Aucun utilisateur trouvé"}, status=404)
+
+        return Response({
+            "id_client": last_user['id_client'],
+            "prenom": last_user['prenom'],
+            "nom": last_user['nom'],
+            "adresse_mail": last_user['email']
+        }, status=200)
 

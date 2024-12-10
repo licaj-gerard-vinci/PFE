@@ -33,4 +33,7 @@ export class ButtonsService {
     getTemplatesClient(id_client:number): Observable<any> {
         return this.http.get(`${this.baseUrl}/templates/?id_client=${id_client}`);
     }
+    getSimulatedLogin(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/testLogin/`);
+      }
 }

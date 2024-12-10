@@ -22,7 +22,7 @@ import { FormsModule } from '@angular/forms';
     sortedEnjeux: any[] = [];
     selectedEnjeuId: number | null = null;
     selectedQuestionId: number | null = null;
-    id_client: number = 1;
+    id_client: number = 0;
     hasAllQuestions : any[] = [];
     Responses: any[] = [];
     showModal: boolean = false;
@@ -40,12 +40,34 @@ import { FormsModule } from '@angular/forms';
     constructor(private buttonsService: ButtonsService) {}
 
     ngOnInit(): void {
-        this.getEnjeux();
-        this.getQuestions();
-        this.getClientResponses();
-        this.loadQuestions();
-        this.getTemplates();
-    }
+      this.buttonsService.getSimulatedLogin().subscribe(
+          (response) => {
+              // Mettre uniquement l'ID du client dans id_client
+              this.id_client = response.id_client;
+              console.log('ID Client récupéré :', this.id_client);
+
+              // Afficher d'autres informations dans la console
+              console.log('Informations complètes du client connecté :', {
+                  prenom: response.prenom,
+                  nom: response.nom,
+                  email: response.adresse_mail
+              });
+
+              // L'utilisateur est connecté, charger les données
+              this.getEnjeux();
+              this.getQuestions();
+              this.getClientResponses();
+              this.loadQuestions();
+              this.getTemplates();
+          },
+          (error) => {
+              console.error('Utilisateur non connecté ou erreur :', error);
+
+              // Affichez un popup ou un message pour indiquer que l'utilisateur n'est pas connecté
+              alert('Vous devez être connecté pour accéder à ce formulaire.');
+          }
+      );
+  }
 
     getEnjeux() {
         this.buttonsService.getEnjeux().subscribe(
@@ -491,5 +513,16 @@ getExistingAnswer(questionId: number) {
     return false;
   }
   return true;
+}
+copyLink() {
+  const currentUrl = window.location.href; // Obtient l'URL actuelle
+  navigator.clipboard.writeText(currentUrl)
+    .then(() => {
+      alert('Lien copié dans le presse-papier !'); // Message de confirmation
+    })
+    .catch(err => {
+      console.error('Erreur lors de la copie du lien :', err);
+      alert('Impossible de copier le lien.');
+    });
 }
 }
