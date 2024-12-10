@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from rest_framework.settings import api_settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,8 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ms8i)+h@gd^m&tfp(#43g(!gf&d9mgijxwr(9s6ww2n)hjz#n-'
-
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -38,11 +38,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'backend',
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     # nos applications
     'authentication',
     'reponses',
 ]
+
+# Configuration REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+# Configuration JWT
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'email',  # Spécifie le champ d'identifiant
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +72,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200"
 ]
 
-AUTH_USER_MODEL = 'authentication.CustomUser'
+#AUTH_USER_MODEL = 'authentication.CustomUser'
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -97,6 +110,19 @@ DATABASES = {
         },
     }
 }
+
+
+class DisableMigrations:
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return None
+
+
+MIGRATION_MODULES = DisableMigrations()
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

@@ -1,0 +1,106 @@
+/* Variables de couleur */
+$input-bg: #b5cdbf;
+$primary-color: #3f4c76; // Couleur principale pour contraste du texte
+
+.login-container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Ajout de l'image en fond */
+  background: url('../../assets/images/background.png') no-repeat center center;
+  background-size: cover; /* S'assure que l'image couvre toute la page */
+  background-color: #013238;
+
+
+  .login-form {
+    position: relative;
+    z-index: 2;
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+
+    transform: translateY(-10%);
+
+    .form-title {
+      color: #ffffff;  
+      font-size: 24px;  
+      margin-bottom: 30px; 
+      font-weight: bold;
+    }
+
+    .logo-icon::before {
+        content: '';
+        display: block;
+        width: 300px;
+        height: 200px;
+        margin: 0 auto; // Centre l'icône horizontalement
+        background-image: url('../../assets/images/logo_shiftingpact.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+      
+      .error-message {
+        margin-top: 10px;
+        font-size: bold;
+      }
+
+      i {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        color: #888;
+      }
+
+      input {
+        padding: 10px 10px 10px 40px;
+        border: 2px solid #ffffff;
+        border-radius: 4px;
+        background-color: transparent;
+        color: #ffffff;
+        font-size: 16px;
+
+        &::placeholder {
+          color: #ffffff;
+          opacity: 0.7;
+        }
+      }
+    }
+
+    .btn-login {
+      width: 70%;
+      padding: 10px;
+      border: 2px solid #ffffff;
+      border-radius: 4px;
+      background-color: transparent;
+      color: #ffffff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: darken($input-bg, 10%);
+      }
+    }
+
+    .forgot-password {
+      display: inline-block;
+      margin-top: 10px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

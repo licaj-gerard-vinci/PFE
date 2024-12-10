@@ -1,8 +1,41 @@
 <div class="login-container">
-  <h2>Login</h2>
-  <form (submit)="onSubmit()">
-    <input type="text" [(ngModel)]="username" placeholder="Username" name="username" required />
-    <input type="password" placeholder="Password" [(ngModel)]="password" name="password" required />
-    <button type="submit">Login</button>
-  </form>
+  <div class="background-shapes">
+    <!-- Couche d'arrière-plan pour les formes -->
+    <div class="shape green-circle"></div>
+    <div class="shape blue-ring"></div>
+    <div class="shape wave"></div>
+  </div>
+
+  <!-- Contenu de login centré -->
+  <div class="login-form">
+    <div class="logo-icon"></div>
+    <h2 class="form-title">LOGIN</h2>
+    <form (submit)="onSubmit()">
+      <div class="input-group">
+        <i class="icon-user"></i>
+        <input 
+          type="text" 
+          [(ngModel)]="email" 
+          placeholder="EMAIL" 
+          name="email" 
+          required
+        />
+      </div>
+      <div class="input-group">
+        <i class="icon-lock"></i>
+        <input 
+          type="password" 
+          placeholder="PASSWORD" 
+          [(ngModel)]="password" 
+          name="password" 
+          required 
+        />
+      </div>
+      <div *ngIf="loginError" class="error-message" style="color: red;">
+        {{ loginError }}
+      </div>
+      <button type="submit" class="btn-login">LOGIN</button>
+    </form>
+    <a href="/register" class="forgot-password">No Account ?</a>
+  </div>
 </div>
