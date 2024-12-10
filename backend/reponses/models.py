@@ -7,7 +7,7 @@ from django.db import models
 class Enjeu(models.Model):
     id_enjeu = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
-    enjeu_parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    enjeu_parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, db_column='enjeu_parent')
 
     class Meta:
         db_table = 'enjeux'
@@ -68,8 +68,8 @@ class Question(models.Model):
     id_question = models.AutoField(primary_key=True)
     sujet = models.CharField(max_length=255)
     statut = models.CharField(max_length=1, choices=[('A', 'Actif'), ('E', 'En attente'), ('C', 'Clos')])
-    id_enjeu = models.ForeignKey(Enjeu, on_delete=models.CASCADE)
-    est_ouverte = models.BooleanField()
+    id_enjeu = models.ForeignKey(Enjeu, on_delete=models.CASCADE, db_column='id_enjeu')
+    type = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'questions'
@@ -78,10 +78,10 @@ class Question(models.Model):
 
 class Reponse(models.Model):
     id_reponse = models.AutoField(primary_key=True)
-    id_question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    id_question = models.ForeignKey(Question, on_delete=models.CASCADE, db_column='id_question')
     texte = models.TextField(null=True, blank=True)
-    score_individuelle = models.IntegerField()
-    id_template = models.ForeignKey(Template, on_delete=models.CASCADE)
+    score_individuel = models.IntegerField()
+    id_template = models.ForeignKey(Template, on_delete=models.CASCADE, db_column='id_template')
     champ_libre = models.BooleanField()
     score_engagement = models.IntegerField()
 
@@ -92,10 +92,10 @@ class Reponse(models.Model):
 
 class Engagement(models.Model):
     id_engagement = models.AutoField(primary_key=True)
-    id_enjeu = models.ForeignKey(Enjeu, on_delete=models.CASCADE)
+    id_enjeu = models.ForeignKey(Enjeu, on_delete=models.CASCADE, db_column='id_enjeu')
     engagement = models.TextField()
     commentaire = models.TextField(null=True, blank=True)
-    id_admin = models.ForeignKey(Admin, on_delete=models.CASCADE)
+    id_admin = models.ForeignKey(Admin, on_delete=models.CASCADE, db_column='id_admin')
     kpis = models.CharField(max_length=255, null=True, blank=True)
     date = models.DateField()
 
@@ -143,7 +143,7 @@ class Glossaire(models.Model):
 
 class Recap(models.Model):
     id_recap = models.AutoField(primary_key=True)
-    id_enjeu = models.ForeignKey(Enjeu, on_delete=models.CASCADE)
+    id_enjeu = models.ForeignKey(Enjeu, on_delete=models.CASCADE, db_column='id_enjeu')
     id_client = models.OneToOneField(Client, on_delete=models.CASCADE)
     est_metrique = models.BooleanField()
     est_formalisation = models.BooleanField()
@@ -168,8 +168,8 @@ class Standard(models.Model):
 
 
 class TemplateClient(models.Model):
-    id_template = models.ForeignKey(Template, on_delete=models.CASCADE)
-    id_client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    id_template = models.ForeignKey(Template, on_delete=models.CASCADE, db_column='id_template')
+    id_client = models.ForeignKey(Client, on_delete=models.CASCADE, db_column='id_client')
 
     class Meta:
         db_table = 'templates_clients'
