@@ -25,14 +25,14 @@ class Questionss(APIView):
 class ResponsessClient(APIView):
     def get(self, request):
         _id_client= int(request.query_params.get('id_client'))
-        responses_client = ReponseClient.objects.filter(id_client = _id_client).values("id_reponse_client","id_client","id_reponse")
+        responses_client = ReponseClient.objects.filter(id_client = _id_client).values("id_reponse_client","id_client","id_reponse", "rep_aujourd_hui")
         responses_client_list = list(responses_client)
         return JsonResponse(responses_client_list, safe=False)
 
 class Responses(APIView):
     def get(self, request):
         _id_reponse = int(request.query_params.get('id_reponse'))
-        response = ChoixReponse.objects.filter(id_reponse=_id_reponse).values("id_reponse", "id_question").first()
+        response = ChoixReponse.objects.filter(id_reponse=_id_reponse).values("id_reponse", "id_question", "texte").first()
         return JsonResponse(response, safe=False)
 
 class GetQuestionsAndReponsesView(APIView):
@@ -50,7 +50,7 @@ class GetQuestionsAndReponsesView(APIView):
                 {
                     "id_reponse": r.id_reponse,
                     "texte": r.texte,
-                    "score_individuelle": r.score_individuelle,
+                    "score_individuel": r.score_individuel,
                     "id_template": r.id_template_id,
                     "champ_libre": r.champ_libre,
                     "score_engagement": r.score_engagement,
@@ -93,8 +93,9 @@ class SauvegardeReponseClientView(APIView):
                 commentaire=data.get('commentaire'),
                 rep_aujourd_hui=data.get('rep_aujourd_hui',''),
                 rep_dans_2_ans=data.get('rep_dans_2_ans',''),
-                score_final=data['score_final'],
-                sa_reponse=data.get('sa_reponse',''),
+                est_un_engagement = data.get('est_engagement'),
+                score_final= data.get('score_final'),
+                sa_reponse= data.get('sa_reponse',''),
                 id_engagement = data.get('id_engagement', None)
             )
             return Response({"message": "Réponse sauvegardée avec succès"}, status=201)

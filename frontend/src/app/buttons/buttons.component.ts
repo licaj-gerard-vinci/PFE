@@ -31,39 +31,13 @@ import { FormsModule } from '@angular/forms';
     clientsTemplates: any[] = [];
     champLibreAujourdhui: string = '';
     champLibreEngagement: string = '';
-    selectedCheckboxeAujourdhui: { id: number; text: string }[] = [];
-    selectedCheckboxeEngagement: { id: number; text: string }[] = [];
+    selectedCheckboxeAujourdhui: { id: number; text: string; score:number }[] = [];
+    selectedCheckboxeEngagement: { id: number; text: string; score:number }[] = [];
     showCommentField: boolean = false;
     comment: string = '';
     champLibre: string = '';
+    reponseQuestionClient: any[] = [];
     constructor(private buttonsService: ButtonsService) {}
-
-    toggleCommentField(): void {
-
-      if(this.showCommentField == false){
-        this.showCommentField = true;
-      }else{
-        this.showCommentField = false; 
-      }
-
-    }
-
-    onCommentInput(event: Event): void {
-      this.comment = (event.target as HTMLTextAreaElement).value; // Met à jour manuellement
-      console.log('Valeur actuelle du commentaire :', this.comment);
-    }
-
-    onChampInput(event: Event): void {
-      const value = (event.target as HTMLTextAreaElement).value;
-      if (this.activeTab === 'aujourdhui') {
-        this.champLibreAujourdhui = value;
-        console.log('Valeur pour Aujourdhui :', this.champLibreAujourdhui);
-      } else if (this.activeTab === 'engagement') {
-        this.champLibreEngagement = value;
-        console.log('Valeur pour Engagement :', this.champLibreEngagement);
-      }
-    }
-
 
     ngOnInit(): void {
         this.getEnjeux();
@@ -108,22 +82,23 @@ import { FormsModule } from '@angular/forms';
         )
     }
     getClientResponses(): Promise<void> {
-        console.log(this.id_client)
-        return new Promise ((resolve, reject) => {
-            this.buttonsService.getClientResponses(this.id_client).subscribe(
-            (response) => {
-                this.clientReponses = response;
-                console.log(this.clientReponses)
-                this.getReelReponses();
-                resolve()
-            },
-            (error) => {
-                console.log(error)
-                reject(error);
-            }
-        )
-        });
+      this.clientReponses = [];
+      return new Promise ((resolve, reject) => {
+          this.buttonsService.getClientResponses(this.id_client).subscribe(
+          (response) => {
+              this.clientReponses = response;
+              console.log(this.clientReponses)
+              this.getReelReponses();
+              resolve()
+          },
+          (error) => {
+              console.log(error)
+              reject(error);
+          }
+      )
+      });
     }
+
     sortQuestions(_id_enjeu: any): void {
         if (this.selectedEnjeuId === _id_enjeu){
             this.sortedQuestions = [];
@@ -139,10 +114,10 @@ import { FormsModule } from '@angular/forms';
             })
         }
     }
+
     getEnjeuByid(_id_enjeu: number): any {
         return this.enjeux.find(enjeu => enjeu.id_enjeu === _id_enjeu);
     }
-
 
     sortEnjeux(){
         this.enjeux.forEach(enjeu => {
@@ -151,8 +126,8 @@ import { FormsModule } from '@angular/forms';
             }
         })
     }
+
     checkTemplatesReponses(reponse:any): boolean{
-      console.log(reponse)
       if (reponse.id_template === 1){
         return true;
       }
@@ -161,6 +136,7 @@ import { FormsModule } from '@angular/forms';
       }
       return false;
     }
+
     selectQuestion(questionId: number): void {
         this.selectedQuestionId = questionId;
         this.getGoodQuestion(questionId);
@@ -170,13 +146,27 @@ import { FormsModule } from '@angular/forms';
         this.buttonsService.getReponse(_id_reponse).subscribe(
             (response) => {
                 this.Responses.push(response);
-                console.log(this.Responses)
             },
             (error) => {
                 console.log(error);
             }
-        ); 
+        );
     }
+    getClientAnswer(questionId: number): any[] {
+      return this.Responses.filter(res => res.id_question === questionId) || [];
+    }
+    
+
+    checkIfCanAnswer(questionId: number): boolean {
+      const question = this.questions2.find(q => q.id === questionId);
+      if (!question || !question.reponses) {
+        return false;
+      }
+      const allBlocked = question.reponses.some((reponse: any) => this.checkTemplatesReponses(reponse));
+    
+      return  allBlocked;
+    }
+
     getReelReponses(): any {
         this.clientReponses.forEach(reponse => {
             this.getResponseById(reponse.id_reponse);
@@ -191,12 +181,15 @@ import { FormsModule } from '@angular/forms';
             }
         })
         for (const question of this.hasAllQuestions) {
+          if (!this.checkIfCanAnswer(question.id_question)){
+          } else {
             const bool = this.Responses.find(response => {
-                return response.id_question === question.id_question;
-            });
+            return response.id_question === question.id_question;
+          });
             if (!bool){
-                return false;
+              return false;
             }
+          }
         }
         return true;
     }
@@ -237,34 +230,29 @@ import { FormsModule } from '@angular/forms';
     closeInfo2(): void {
         this.showInfo2 = false;
     }
-    // Stockage des réponses sélectionnées pour chaque onglet
   responses = {
-    aujourdhui: null as string | null, // Réponse pour aujourd'hui
-    engagement: null as string | null, // Réponse pour dans 2 ans
+    aujourdhui: null as string | null, 
+    engagement: null as string | null, 
   };
 
-  selectedCheckboxes: string[] = []; // Stocke les réponses sélectionnées pour les checkbox
+  selectedCheckboxes: string[] = []; 
 
-  // Charger les questions depuis le backend
   loadQuestions(): void {
     this.buttonsService.getQuestionsReponse().subscribe(
       (response) => {
-        console.log('Données brutes reçues :', response); // Vérifiez si les doublons viennent du backend
-  
         this.questions2 = response.map((q: any, index: number) => ({
-          id: q.id_question, // ID de la question
-          type: q.type, // Type de la question ('radio', 'checkbox', 'libre')
-          number: `Q${index + 1}`, // Numéro de la question
-          text: q.sujet, // Texte de la question
+          id: q.id_question,
+          type: q.type,
+          number: `Q${index + 1}`,
+          text: q.sujet,
           reponses: q.reponses.map((r: any) => ({
-            id: r.id_reponse, // ID de la réponse
-            text: r.texte, // Texte de la réponse
+            id: r.id_reponse,
+            text: r.texte,
             id_template: r.id_template,
-            score: r.score_individuelle, // Score associé
-            champLibre: r.champ_libre, // Si champ libre
+            score: r.score_individuel, 
+            champLibre: r.champ_libre,
           })),
         }));
-        console.log('Questions transformées :', this.questions2);
       },
       (error) => {
         console.error('Erreur lors du chargement des questions :', error);
@@ -272,25 +260,22 @@ import { FormsModule } from '@angular/forms';
     );
   }
 
-  // Récupérer la question actuelle
   get currentQuestion() {
     return this.questions2[this.currentQuestionIndex] || null;
   }
 
-  // Passer à la question suivante
   nextQuestion(): void {
     if (this.currentQuestionIndex < this.questions2.length - 1) {
       this.currentQuestionIndex++;
-      this.resetResponses(); // Réinitialiser les réponses
+      this.resetResponses(); 
       this.selectedQuestionId = this.currentQuestionIndex+1;
     }
   }
 
-  // Revenir à la question précédente
   previousQuestion(): void {
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
-      this.resetResponses(); // Réinitialiser les réponses
+      this.resetResponses(); 
       this.selectedQuestionId = this.currentQuestionIndex+1;
     }
   }
@@ -301,16 +286,14 @@ import { FormsModule } from '@angular/forms';
     this.selectedQuestionId = this.currentQuestionIndex+1;
   }
 
-  // Changer d'onglet
   switchTab(tab: 'aujourdhui' | 'engagement'): void {
     this.activeTab = tab;
   }
 
-  // Réinitialiser les réponses pour les deux onglets
   resetResponses(): void {
     this.responses.aujourdhui = null;
     this.responses.engagement = null;
-    this.selectedCheckboxes = []; // Réinitialiser les checkbox sélectionnées
+    this.selectedCheckboxes = []; 
     this.selectedCheckboxeAujourdhui = [];
     this.selectedCheckboxeEngagement = [];
     this.champLibreAujourdhui = " ";
@@ -318,21 +301,19 @@ import { FormsModule } from '@angular/forms';
     this.showCommentField = false;
   }
 
-  // Capturer la réponse sélectionnée pour les types 'radio' et 'libre'
-  onReponseSelected(reponse: { id: number; text: string }): void {
+  onReponseSelected(reponse: { id: number; text: string; score: number}): void {
     if (this.activeTab === 'aujourdhui') {
-      this.responses.aujourdhui = reponse.text; // Stocker la réponse pour aujourd'hui
+      this.responses.aujourdhui = reponse.text;
     } else if (this.activeTab === 'engagement') {
-      this.responses.engagement = reponse.text; // Stocker la réponse pour dans 2 ans
+      this.responses.engagement = reponse.text;
     }
   }
 
-  onCheckboxChange(event: Event, reponse: { id: number; text: string }): void {
+  onCheckboxChange(event: Event, reponse: { id: number; text: string; score: number}): void {
     const checkbox = event.target as HTMLInputElement;
-
     if (this.activeTab === 'aujourdhui') {
       if (checkbox.checked) {
-        this.selectedCheckboxeAujourdhui.push({ id: reponse.id, text: reponse.text });
+        this.selectedCheckboxeAujourdhui.push({ id: reponse.id, text: reponse.text, score: reponse.score });
       } else {
         this.selectedCheckboxeAujourdhui = this.selectedCheckboxeAujourdhui.filter(
           (r) => r.id !== reponse.id
@@ -340,7 +321,7 @@ import { FormsModule } from '@angular/forms';
       }
     } else if (this.activeTab === 'engagement') {
       if (checkbox.checked) {
-        this.selectedCheckboxeEngagement.push({ id: reponse.id, text: reponse.text });
+        this.selectedCheckboxeEngagement.push({ id: reponse.id, text: reponse.text, score: reponse.score });
       } else {
         this.selectedCheckboxeEngagement = this.selectedCheckboxeEngagement.filter(
           (r) => r.id !== reponse.id
@@ -349,127 +330,166 @@ import { FormsModule } from '@angular/forms';
     }
 
   }
-
-  // Confirmer les réponses pour les deux onglets
-  // Confirmer les réponses pour les deux onglets
-confirmAnswer(): void {
-  console.log('Réponses sélectionnées (commentaire) :', this.comment);
-  if (!this.currentQuestion) {
-    console.warn('Aucune question sélectionnée.');
-    return;
+  isAnswered(questionId: number): boolean {
+    return this.Responses.some(response => response.id_question === questionId);
   }
 
-  // Gestion des checkboxes pour Aujourd'hui
-  if (this.currentQuestion.type === 'checkbox' && this.selectedCheckboxeAujourdhui.length > 0) {
-    this.selectedCheckboxeAujourdhui.forEach((reponse) => {
-      const reponseUtilisateur = {
-        id_client: this.id_client,
-        id_question: this.currentQuestion.id,
-        id_reponse: reponse.id,
-        commentaire: this.comment || null,
-        rep_aujourd_hui: reponse.text,
-        rep_dans_2_ans: null,
-        score_final: 0,
-        id_engagement: null,
-      };
-
-      console.log('Donnée envoyée pour aujourdhui :', reponseUtilisateur);
-
-      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-        (response) => {
-          console.log('Réponse sauvegardée avec succès pour Aujourd\'hui :', response);
-        },
-        (error) => {
-          console.error('Erreur lors de la sauvegarde pour Aujourd\'hui :', error);
-        }
-      );
-    });
-  }
-
-  // Gestion des checkboxes pour Engagement
-  if (this.currentQuestion.type === 'checkbox' && this.selectedCheckboxeEngagement.length > 0) {
-    this.selectedCheckboxeEngagement.forEach((reponse) => {
-      const reponseUtilisateur = {
-        id_client: this.id_client,
-        id_question: this.currentQuestion.id,
-        id_reponse: reponse.id,
-        commentaire: this.comment || null,
-        rep_aujourd_hui: null,
-        rep_dans_2_ans: reponse.text,
-        score_final: 0,
-        id_engagement: null,
-      };
-
-      console.log('Donnée envoyée pour Engagement :', reponseUtilisateur);
-
-      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-        (response) => {
-          console.log('Réponse sauvegardée avec succès pour Engagement :', response);
-        },
-        (error) => {
-          console.error('Erreur lors de la sauvegarde pour Engagement :', error);
-        }
-      );
-    });
-  }
-    // Gestion des réponses de type 'radio'
-    if (this.currentQuestion.type === 'radio') {
-      const selectedReponse = this.currentQuestion.reponses.find(
-        (r: { id: number; text: string }) => r.text === this.responses.aujourdhui
-      );
-      const reponseUtilisateur = {
-        id_client: this.id_client,
-        id_question: this.currentQuestion.id,
-        id_reponse: selectedReponse ? selectedReponse.id : null,
-        commentaire: this.comment || null,
-        rep_aujourd_hui: this.responses.aujourdhui || null,
-        rep_dans_2_ans: this.responses.engagement || null,
-        score_final: 0,
-        id_engagement: null,
-      };
-  
-      console.log('Donnée envoyée pour Radio :', reponseUtilisateur);
-  
-      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-        (response) => {
-          console.log('Réponse sauvegardée avec succès pour Radio :', response);
-        },
-        (error) => {
-          console.error('Erreur lors de la sauvegarde pour Radio :', error);
-        }
-      );
+  confirmAnswer(): void {
+    if (!this.currentQuestion) {
+      console.warn('Aucune question sélectionnée.');
+      return;
     }
 
+    if (this.currentQuestion.type === 'checkbox' && this.selectedCheckboxeAujourdhui.length > 0) {
+      this.selectedCheckboxeAujourdhui.forEach((reponse) => {
+        const reponseUtilisateur = {
+          id_client: this.id_client,
+          id_question: this.currentQuestion.id,
+          id_reponse: reponse.id,
+          commentaire: this.comment || null,
+          rep_aujourd_hui: reponse.text,
+          rep_dans_2_ans: null,
+          est_engagement: false,
+          score_final: reponse.score,
+          id_engagement: null,
+        };
 
-    if (this.currentQuestion.type === 'libre') {
-      console.log(this.currentQuestion.reponses);
-      const reponseUtilisateur = {
-        id_client: this.id_client,
-        id_question: this.currentQuestion.id,
-        id_reponse: this.currentQuestion.reponses[0].id,
-        commentaire: this.comment || null,
-        rep_aujourd_hui: this.champLibreAujourdhui || null,
-        rep_dans_2_ans: this.champLibreEngagement || null,
-        score_final: 0,
-        id_engagement: null,
-      };
-    
-      console.log('Donnée envoyée pour champ texte:', reponseUtilisateur);
-    
-      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-        (response) => {
-          console.log('Réponse sauvegardée avec succès :', response);
-        },
-        (error) => {
-          console.error('Erreur lors de la sauvegarde :', error);
-        }
-      );
+        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+          (response) => {
+            console.log('Réponse sauvegardée avec succès pour Aujourd\'hui :', response);
+            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+            this.clientReponses.push(reponse);
+          },
+          (error) => {
+            console.error('Erreur lors de la sauvegarde pour Aujourd\'hui :', error);
+          }
+        );
+      });
     }
-    
-    
 
-  // Réinitialiser après envoi
-  this.resetResponses();
-  this.nextQuestion();
+    if (this.currentQuestion.type === 'checkbox' && this.selectedCheckboxeEngagement.length > 0) {
+      this.selectedCheckboxeEngagement.forEach((reponse) => {
+        const reponseUtilisateur = {
+          id_client: this.id_client,
+          id_question: this.currentQuestion.id,
+          id_reponse: reponse.id,
+          commentaire: this.comment || null,
+          rep_aujourd_hui: null,
+          rep_dans_2_ans: reponse.text,
+          est_engagement: true,
+          score_final: reponse.score,
+          id_engagement: null,
+        };
+
+        console.log('Donnée envoyée pour Engagement :', reponseUtilisateur);
+
+        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+          (response) => {
+            console.log('Réponse sauvegardée avec succès pour Engagement :', response);
+            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+            this.clientReponses.push(reponse);
+          },
+          (error) => {
+            console.error('Erreur lors de la sauvegarde pour Engagement :', error);
+          }
+        );
+      });
+    }
+      if (this.currentQuestion.type === 'radio') {
+        const selectedReponse = this.currentQuestion.reponses.find(
+          (r: { id: number; text: string; score:number }) => r.text === this.responses.aujourdhui
+        );
+        let est_enga = false;
+        if (this.responses.aujourdhui === null){
+          est_enga = true;
+        }
+        const reponseUtilisateur = {
+          id_client: this.id_client,
+          id_question: this.currentQuestion.id,
+          id_reponse: selectedReponse ? selectedReponse.id : null,
+          commentaire: this.comment || null,
+          rep_aujourd_hui: this.responses.aujourdhui || null,
+          rep_dans_2_ans: this.responses.engagement || null,
+          est_engagement: est_enga,
+          score_final: selectedReponse.score,
+          id_engagement: null,
+        };
+    
+    
+        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+          (response) => {
+            console.log('Réponse sauvegardée avec succès pour Radio :', response);
+            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+            this.clientReponses.push(reponse);
+          },
+          (error) => {
+            console.error('Erreur lors de la sauvegarde pour Radio :', error);
+          }
+        );
+      }
+
+
+      if (this.currentQuestion.type === 'libre') {
+        let est_enga = false;
+        if (this.responses.aujourdhui === null){
+          est_enga = true;
+        }
+        const reponseUtilisateur = {
+          id_client: this.id_client,
+          id_question: this.currentQuestion.id,
+          id_reponse: this.currentQuestion.reponses[0].id,
+          commentaire: this.comment || null,
+          rep_aujourd_hui: this.champLibreAujourdhui || null,
+          rep_dans_2_ans: this.champLibreEngagement || null,
+          est_engagement: est_enga,
+          score_final: 0,
+          id_engagement: null,
+        };
+        
+        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+          (response) => {
+            console.log('Réponse sauvegardée avec succès :', response);
+            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+            this.clientReponses.push(reponse);
+          },
+          (error) => {
+            console.error('Erreur lors de la sauvegarde :', error);
+          }
+        );
+      }
+    this.resetResponses();
+    this.nextQuestion();
+  }
+toggleCommentField(): void {
+
+  if(this.showCommentField == false){
+    this.showCommentField = true;
+  }else{
+    this.showCommentField = false; 
+  }
+
+}
+
+onCommentInput(event: Event): void {
+  this.comment = (event.target as HTMLTextAreaElement).value; 
+  console.log('Valeur actuelle du commentaire :', this.comment);
+}
+
+onChampInput(event: Event): void {
+  const value = (event.target as HTMLTextAreaElement).value;
+  if (this.activeTab === 'aujourdhui') {
+    this.champLibreAujourdhui = value;
+    console.log('Valeur pour Aujourdhui :', this.champLibreAujourdhui);
+  } else if (this.activeTab === 'engagement') {
+    this.champLibreEngagement = value;
+    console.log('Valeur pour Engagement :', this.champLibreEngagement);
+  }
+}
+getExistingAnswer(questionId: number) {
+  const bool = this.Responses.find(response => response.id_question === questionId);
+  if (!bool){
+    return false;
+  }
+  return true;
 }
 }

@@ -1,4 +1,4 @@
-button {
+.button {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -21,11 +21,11 @@ button img.check-icon {
   height: 100vh;
 }
 
-button:hover {
+.button:hover {
     background-color: #e0f7fa;
     color: #00796b;
 }
-button img.icon {
+.button img.icon {
     width: 20px;
     height: 20px;
     margin-right: 10px;
@@ -70,6 +70,11 @@ button img.icon {
     height: 15px;
     margin-left: 10px;
     vertical-align: middle;
+  }
+  .check {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
   }
 
   .croixRouge{
@@ -202,7 +207,9 @@ button img.icon {
     transition: background-color 0.3s ease, color 0.3s ease;
     border-radius: 5px;
   }
-  
+  .answered{
+    background-color: #769785;
+  }
   /* Supprimer la bordure droite du dernier élément */
   .engagement {
     border-right: none;
@@ -242,6 +249,10 @@ button img.icon {
     border-radius: 100%;
     width: 50px;
     height: 50px;
+    font-weight: bold;
+    font-size: 32px;
+    background-color: #013238;
+    color: #ffffff;
   }
 
 
@@ -284,7 +295,7 @@ button img.icon {
   
   
   
-  .confirm-button button {
+  .confirm-button {
     background-color: #ffffff;
     color: #000000;
     font-weight: bold;
@@ -294,10 +305,10 @@ button img.icon {
     margin-left: 45px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    justify-content: left;
   }
-  
-  .confirm-button button:hover {
-    background-color: #FFFFFF;
+
+  .confirm-button:hover{
     transform: scale(1.05);
   }
   
@@ -314,6 +325,7 @@ button img.icon {
     cursor: pointer;
     display: flex;
     justify-content: center;
+    padding-top: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
