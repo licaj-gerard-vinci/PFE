@@ -252,8 +252,6 @@ class UpdateReponseClientView(APIView):
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Faismoi une classe qui me permet d'ajouter une réponse client si elle n'existe pas   En créant un lien entre réponse client et qui qui est en réponse avec une méthode post dans lequel on aura le l'i D de la réponse l'i D du client et une valeur bullienne indiquant que si la réponse est un engagement ou non. cette classe doit aussi permettre de d'enregistrer le score final de la réponse client
-
 class AddReponseClientView(APIView):
     def post(self, request):
         """
@@ -334,3 +332,5 @@ class AddReponseClientView(APIView):
             return Response({"error": "Réponse non trouvée."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
