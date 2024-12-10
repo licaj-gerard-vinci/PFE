@@ -31,8 +31,8 @@ import { FormsModule } from '@angular/forms';
     clientsTemplates: any[] = [];
     champLibreAujourdhui: string = '';
     champLibreEngagement: string = '';
-    selectedCheckboxeAujourdhui: { id: number; text: string; score:number }[] = [];
-    selectedCheckboxeEngagement: { id: number; text: string; score:number }[] = [];
+    selectedCheckboxeAujourdhui: { id: number; text: string; score:number; score_engagement: number }[] = [];
+    selectedCheckboxeEngagement: { id: number; text: string; score:number; score_engagement: number }[] = [];
     showCommentField: boolean = false;
     comment: string = '';
     champLibre: string = '';
@@ -273,6 +273,7 @@ import { FormsModule } from '@angular/forms';
             id_template: r.id_template,
             score: r.score_individuel, 
             champLibre: r.champ_libre,
+            score_engagement: r.score_engagement
           })),
         }));
       },
@@ -323,7 +324,7 @@ import { FormsModule } from '@angular/forms';
     this.showCommentField = false;
   }
 
-  onReponseSelected(reponse: { id: number; text: string; score: number}): void {
+  onReponseSelected(reponse: { id: number; text: string; score: number; score_engagement: number}): void {
     if (this.activeTab === 'aujourdhui') {
       this.responses.aujourdhui = reponse.text;
     } else if (this.activeTab === 'engagement') {
@@ -331,11 +332,11 @@ import { FormsModule } from '@angular/forms';
     }
   }
 
-  onCheckboxChange(event: Event, reponse: { id: number; text: string; score: number}): void {
+  onCheckboxChange(event: Event, reponse: { id: number; text: string; score: number; score_engagement:number}): void {
     const checkbox = event.target as HTMLInputElement;
     if (this.activeTab === 'aujourdhui') {
       if (checkbox.checked) {
-        this.selectedCheckboxeAujourdhui.push({ id: reponse.id, text: reponse.text, score: reponse.score });
+        this.selectedCheckboxeAujourdhui.push({ id: reponse.id, text: reponse.text, score: reponse.score, score_engagement:reponse.score_engagement });
       } else {
         this.selectedCheckboxeAujourdhui = this.selectedCheckboxeAujourdhui.filter(
           (r) => r.id !== reponse.id
@@ -343,7 +344,7 @@ import { FormsModule } from '@angular/forms';
       }
     } else if (this.activeTab === 'engagement') {
       if (checkbox.checked) {
-        this.selectedCheckboxeEngagement.push({ id: reponse.id, text: reponse.text, score: reponse.score });
+        this.selectedCheckboxeEngagement.push({ id: reponse.id, text: reponse.text, score: reponse.score, score_engagement: reponse.score_engagement });
       } else {
         this.selectedCheckboxeEngagement = this.selectedCheckboxeEngagement.filter(
           (r) => r.id !== reponse.id
@@ -399,7 +400,7 @@ import { FormsModule } from '@angular/forms';
           rep_aujourd_hui: null,
           rep_dans_2_ans: reponse.text,
           est_engagement: true,
-          score_final: reponse.score,
+          score_final: reponse.score_engagement,
           id_engagement: null,
         };
 
@@ -418,36 +419,125 @@ import { FormsModule } from '@angular/forms';
       });
     }
       if (this.currentQuestion.type === 'radio') {
-        const selectedReponse = this.currentQuestion.reponses.find(
-          (r: { id: number; text: string; score:number }) => r.text === this.responses.aujourdhui
+        console.log(this.responses);
+        if (this.responses.aujourdhui !== null && this.responses.engagement !== null){
+          const selectedReponse = this.currentQuestion.reponses.find(
+            (r: { id: number; text: string; score:number; score_engagement:number }) => r.text === this.responses.aujourdhui
+          );
+          const selectedReponse2 = this.currentQuestion.reponses.find(
+            (r: { id: number; text: string; score:number; score_engagement:number }) => r.text === this.responses.engagement
+          );
+          const reponseUtilisateur = {
+            id_client: this.id_client,
+            id_question: this.currentQuestion.id,
+            id_reponse: selectedReponse ? selectedReponse.id : null,
+            commentaire: this.comment || null,
+            rep_aujourd_hui: this.responses.aujourdhui || null,
+            rep_dans_2_ans: null,
+            est_engagement: false,
+            score_final: selectedReponse.score,
+            id_engagement: null,
+          };
+          const reponseUtilisateur2 = {
+            id_client: this.id_client,
+            id_question: this.currentQuestion.id,
+            id_reponse: selectedReponse2 ? selectedReponse2.id : null,
+            commentaire: this.comment || null,
+            rep_aujourd_hui: null,
+            rep_dans_2_ans: this.responses.engagement || null,
+            est_engagement: true,
+            score_final: selectedReponse2.score_engagement,
+            id_engagement: null,
+          };
+      
+          this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+            (response) => {
+              console.log('Réponse sauvegardée avec succès pour Radio :', response);
+              const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+              this.clientReponses.push(reponse);
+            },
+            (error) => {
+              console.error('Erreur lors de la sauvegarde pour Radio :', error);
+            }
+          );
+          this.buttonsService.saveReponseClient(reponseUtilisateur2).subscribe(
+            (response) => {
+              console.log('Réponse sauvegardée avec succès pour Radio :', response);
+              const reponse = this.getResponseById(reponseUtilisateur2.id_reponse)
+              this.clientReponses.push(reponse);
+            },
+            (error) => {
+              console.error('Erreur lors de la sauvegarde pour Radio :', error);
+            }
+          );
+        } else{
+        let selectedReponse = this.currentQuestion.reponses.find(
+          (r: { id: number; text: string; score:number; score_engagement:number }) => r.text === this.responses.aujourdhui
         );
+        if (!selectedReponse){
+          selectedReponse = this.currentQuestion.reponses.find(
+            (r: { id: number; text: string; score:number; score_engagement:number }) => r.text === this.responses.engagement
+          );
+        }
         let est_enga = false;
         if (this.responses.aujourdhui === null){
           est_enga = true;
         }
-        const reponseUtilisateur = {
-          id_client: this.id_client,
-          id_question: this.currentQuestion.id,
-          id_reponse: selectedReponse ? selectedReponse.id : null,
-          commentaire: this.comment || null,
-          rep_aujourd_hui: this.responses.aujourdhui || null,
-          rep_dans_2_ans: this.responses.engagement || null,
-          est_engagement: est_enga,
-          score_final: selectedReponse.score,
-          id_engagement: null,
-        };
-    
-    
-        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-          (response) => {
-            console.log('Réponse sauvegardée avec succès pour Radio :', response);
-            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-            this.clientReponses.push(reponse);
-          },
-          (error) => {
-            console.error('Erreur lors de la sauvegarde pour Radio :', error);
-          }
-        );
+        let score_final;
+        if (this.responses.aujourdhui === null){
+          console.log(selectedReponse.score_engagement);
+          score_final = selectedReponse.score_engagement;
+          const reponseUtilisateur = {
+            id_client: this.id_client,
+            id_question: this.currentQuestion.id,
+            id_reponse: selectedReponse ? selectedReponse.id : null,
+            commentaire: this.comment || null,
+            rep_aujourd_hui: this.responses.aujourdhui || null,
+            rep_dans_2_ans: this.responses.engagement || null,
+            est_engagement: est_enga,
+            score_final: score_final,
+            id_engagement: null,
+          };
+      
+      
+          this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+            (response) => {
+              console.log('Réponse sauvegardée avec succès pour Radio :', response);
+              const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+              this.clientReponses.push(reponse);
+            },
+            (error) => {
+              console.error('Erreur lors de la sauvegarde pour Radio :', error);
+            }
+          );
+        }
+        if (this.responses.engagement === null){
+          score_final = selectedReponse.score;
+          const reponseUtilisateur = {
+            id_client: this.id_client,
+            id_question: this.currentQuestion.id,
+            id_reponse: selectedReponse ? selectedReponse.id : null,
+            commentaire: this.comment || null,
+            rep_aujourd_hui: this.responses.aujourdhui || null,
+            rep_dans_2_ans: this.responses.engagement || null,
+            est_engagement: est_enga,
+            score_final: score_final,
+            id_engagement: null,
+          };
+      
+      
+          this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+            (response) => {
+              console.log('Réponse sauvegardée avec succès pour Radio :', response);
+              const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+              this.clientReponses.push(reponse);
+            },
+            (error) => {
+              console.error('Erreur lors de la sauvegarde pour Radio :', error);
+            }
+          );
+        } 
+      }
       }
 
 
