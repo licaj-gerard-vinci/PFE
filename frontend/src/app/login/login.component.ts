@@ -24,7 +24,8 @@ import { CommonModule } from '@angular/common';
         (response) => {
           console.log('Login successful', response);
           if (response.access) {
-            this.authService.storeTokens({ access: response.access });
+            this.authService.storeTokens({ refresh: response.refresh });
+            //this.veryfyToken();
             window.location.href = '/'; // Redirect to home page
           }
         },
@@ -34,4 +35,17 @@ import { CommonModule } from '@angular/common';
         }
       );
     }
+
+    /*veryfyToken() {
+      this.authService.verifyToken({ token: this.authService.getAccessToken() }).subscribe(
+        (response) => {
+          console.log('Token verified', response);
+        },
+        (error) => {
+          console.error('Token verification failed', error);
+        }
+      );
+    }*/
   }
+
+  
