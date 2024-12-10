@@ -25,11 +25,27 @@ export class RegisterComponent {
         this.authService.register({ nom: this.nom, prenom: this.prenom, email: this.email, mdp: this.password }).subscribe(
             (response) => {
                 console.log('Registration successful', response);
-                window.location.href = '/';
+                this.loginAfterRegister();
             },
             (error) => {
                 console.error('Registration failed', error);
                 this.registerError = 'Erreur lors de l\'inscription';
+            }
+        );
+    }
+
+    private loginAfterRegister() {
+        this.authService.login({ email: this.email, mdp: this.password }).subscribe(
+            (loginResponse) => {
+                console.log('Login successful after registration', loginResponse);
+                if (loginResponse.access) {
+                    this.authService.storeTokens({ refresh: loginResponse.refresh });
+                    window.location.href = '/'; // Redirige vers la page d'accueil
+                }
+            },
+            (loginError) => {
+                console.error('Login failed after registration', loginError);
+                this.registerError = 'Inscription réussie, mais la connexion a échoué.';
             }
         );
     }
