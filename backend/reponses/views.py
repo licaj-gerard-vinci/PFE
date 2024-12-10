@@ -1,18 +1,15 @@
-from sys import modules
 
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import ReponseClient, Verification
-from authentication.models import Admin  # Si les Admins sont définis dans l'application `authentication`
+from backend.models import Admin, ReponseClient, Verifications, Reponses
 from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
 
 class AddVerificationView(APIView):
-    # todo: Add permission_classes to restrict access to only admins
     def post(self, request, client_id):
         '''
         Crée des vérifications pour toutes les réponses d'un client spécifié.
@@ -48,7 +45,7 @@ class AddVerificationView(APIView):
                 return Response({"error": "Aucune réponse trouvée pour ce client."}, status=status.HTTP_404_NOT_FOUND)
             # Créer les vérifications pour chaque réponse du client
             for reponse_client in reponses_clients:
-                Verification.objects.create(
+                Verifications.objects.create(
                     id_reponse_client=reponse_client,
                     est_valide=False,  # Par défaut non validé
                     id_admin=admin.id_admin
@@ -85,7 +82,7 @@ class ValidateQuestionView(APIView):
 
         try:
             # Récupérer la vérification spécifique
-            verification = get_object_or_404(Verification, id_reponse_client=verification_id)
+            verification = get_object_or_404(Verifications, id_reponse_client=verification_id)
 
             # Valider la vérification
             verification.est_valide = True
@@ -135,7 +132,7 @@ class GetVerificationsView(APIView):
             reponses_clients = ReponseClient.objects.filter(id_client=client_id)
             if not reponses_clients.exists():
                 return Response({"error": "Aucune réponse trouvée pour ce client."}, status=status.HTTP_404_NOT_FOUND)
-            verifications = Verification.objects.filter(id_reponse_client__in=reponses_clients)
+            verifications = Verifications.objects.filter(id_reponse_client__in=reponses_clients)
             if not verifications.exists():
                 return Response({"error": "Aucune vérification trouvée pour ce client."},
                                 status=status.HTTP_404_NOT_FOUND)
@@ -166,13 +163,10 @@ class DeleteReponseClientView(APIView):
         try:
             # Récupérer la réponse client spécifique
             reponse_client = get_object_or_404(ReponseClient, id_reponse_client=reponse_client_id)
-            print("1🟨 reponse_client: ", reponse_client)
             # Récupérer la question associée via la relation
             question = reponse_client.id_reponse.id_question
-            print("2🟨 question: ", question)
             # Récupérer toutes les réponses client pour cette question
             reponses_clients = ReponseClient.objects.filter(id_reponse__id_question=question.id_question)
-            print("3🟨 reponses_clients: ", reponses_clients)
 
             # Vérifier si la question a plus d'une réponse
             if reponses_clients.count() > 1:
@@ -180,7 +174,7 @@ class DeleteReponseClientView(APIView):
                 reponse_client.delete()
 
                 # Supprimer la vérification associée, si elle existe
-                verification = Verification.objects.filter(id_reponse_client=reponse_client_id).first()
+                verification = Verifications.objects.filter(id_reponse_client=reponse_client_id).first()
                 if verification:
                     verification.delete()
 
@@ -190,8 +184,9 @@ class DeleteReponseClientView(APIView):
                     status=status.HTTP_200_OK
                 )
             else:
-                return Response({"error": "Impossible de supprimer la réponse car la question n'a qu'une seule réponse."},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(
+                    {"error": "Impossible de supprimer la réponse car la question n'a qu'une seule réponse."},
+                    status=status.HTTP_400_BAD_REQUEST)
 
         except Http404:
             return Response({"error": "Réponse client non trouvée."}, status=status.HTTP_404_NOT_FOUND)
@@ -201,4 +196,64 @@ class DeleteReponseClientView(APIView):
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_412_PRECONDITION_FAILED)
 
 
+# Crée moi une classe qui me permet de modifier Le contenu de la réponse si un champ libre == True et de modifier le score_final de la réponse_client
 
+class UpdateReponseClientView(APIView):
+    def put(self, request, reponse_client_id):
+        '''
+        Modifie le contenu d'une réponse client si le champ libre est activé.
+        :param reponse_client_id: L'ID de la réponse client à modifier.
+        :param request: La requête HTTP.
+        :return: Un message de succès ou d'erreur.
+
+        Exemple de route:
+        PUT /reponse_client/1/update/
+        Exemple de corps de requête:
+        {
+            "contenu": "Nouveau contenu de la réponse",
+            "score_final": 10
+        }
+
+        Exemple de réponse:
+        {
+            "message": "Réponse client 1 modifiée avec succès."
+        }
+
+        '''
+
+        try:
+            # fixme: elle ne met pas à jour les données en base de données
+            # Vérifier si le contenu et le score_final sont présents dans la requête
+            if 'contenu' not in request.data or 'score_final' not in request.data:
+                print("🔴 BAD REQUEST: ", request.data)
+                return Response({"error": "Le contenu et le score final sont requis."},
+                                status=status.HTTP_400_BAD_REQUEST)
+            # Récupérer la réponse client spécifique
+            reponse_client = get_object_or_404(ReponseClient, id_reponse_client=reponse_client_id)
+            print("1🟨 reponse_client: ", reponse_client)
+
+            print(f"2🟨 Q{reponse_client.id_reponse.id_reponse} => ")
+            reponse = Reponses.objects.get(id_reponse=reponse_client.id_reponse.id_reponse)
+            print("3🟨 champ_libre: ", reponse.champ_libre)
+            # Vérifier si le champ libre est activé            # Vérifier si le champ libre est activé
+            if reponse.champ_libre:
+                # Modifier le contenu de la réponse client
+                reponse.texte = request.data.get('contenu')
+
+                # Modifier le score final de la réponse client
+                reponse_client.score_final = request.data.get('score_final')
+                reponse_client.save()
+
+                # Retourner un succès
+                return Response(
+                    {"message": f"Réponse client {reponse_client_id} modifiée avec succès."},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response({"error": "Impossible de modifier la réponse car le champ libre n'est pas activé."},
+                                status=status.HTTP_412_PRECONDITION_FAILED)
+
+        except Http404:
+            return Response({"error": "Réponse client non trouvée."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
