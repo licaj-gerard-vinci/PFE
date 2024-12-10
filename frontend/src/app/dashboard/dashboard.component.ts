@@ -13,6 +13,7 @@ import { CompanyDetailsDialogComponent } from '../company-details-dialog/company
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, ChartType, ChartData } from 'chart.js';
 import { Chart, registerables } from 'chart.js';
+import { ChangeDetectorRef } from '@angular/core';
 
 Chart.register(...registerables); // Register all necessary chart components
 
@@ -63,7 +64,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     },
   };
 
-  constructor(private http: HttpClient, public dialog: MatDialog) {}
+  constructor(private http: HttpClient, public dialog: MatDialog, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadCompanies();
@@ -77,21 +78,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loadCompanies(): void {
     this.http.get<any[]>('http://localhost:8000/api/companies/').subscribe((data) => {
       this.dataSource.data = data;
-
+  
       const validCount = data.filter((company) => company.est_valide === 'validée').length;
       const refusedCount = data.filter((company) => company.est_valide === 'refusée').length;
       const ndCount = data.filter((company) => company.est_valide === 'N/D').length;
-
+  
       this.chartData.datasets[0].data = [validCount, refusedCount, ndCount]; // Update chart data
       if (this.chart) {
         this.chart.update(); // Refresh chart
       }
-
-      // Ensure paginator and sort are assigned after data is loaded
+  
+      // Assign paginator and sort after data is set
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+  
+      // Trigger change detection
     });
   }
+  
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
