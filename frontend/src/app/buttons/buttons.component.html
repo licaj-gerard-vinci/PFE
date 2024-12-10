@@ -96,22 +96,29 @@
   
         <!-- Type Libre -->
         <div *ngIf="currentQuestion?.type === 'libre'">
+          <li *ngFor="let reponse of currentQuestion.reponses"> 
           <textarea
             placeholder="Votre réponse (max 50000 caractères)..."
-            [(ngModel)]="responses.aujourdhui"
+            (input)="onChampInput($event)"
           ></textarea>
         </div>
-      </div>
-  
-      <!-- Bouton Confirmer -->
+        <div class="comment-section">
+          <button class="addComment" type="button" (click)="toggleCommentField()">+</button>
+          <div *ngIf="showCommentField" class="comment-field">
+            <textarea
+              placeholder="Votre réponse (max 50000 caractères)..."
+              (input)="onCommentInput($event)"
+            ></textarea>
+          </div>
+        </div>
       <div class="confirm-button">
         <button type="button" (click)="confirmAnswer()">CONFIRMER</button>
       </div>
+      </div>
     </form>
-  
-    <!-- Flèche droite -->
     <button class="side-button right-button" (click)="nextQuestion()">></button>
   </div>
+  
 </div>
 </div>
 </body>

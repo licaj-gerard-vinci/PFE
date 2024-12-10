@@ -160,14 +160,14 @@ button img.icon {
     background: linear-gradient(to left, #769785, #93BDA6,#A5C9B6);
   }
   .info1{
-    width: 40px;
+    width: 35px;
     position: absolute;
     top : 29%;
     left : 85%;
     cursor: pointer;
   }
   .info2{
-    width: 40px;
+    width: 35px;
     position: absolute;
     top : 3%;
     left : 90%;
@@ -208,13 +208,12 @@ button img.icon {
     border-right: none;
   }
   
-  /* Onglet actif */
+
   .aujourdhui.active,
   .engagement.active {
     background-color: #DFD4FB;
   }
   
-  /* Responsive */
   @media (max-width: 768px) {
     .header-container {
       flex-direction: column;
@@ -227,47 +226,49 @@ button img.icon {
     }
   
     .engagement {
-      border-bottom: none; /* Supprimer la bordure du dernier élément en mode vertical */
+      border-bottom: none;
     }
   }
 
 
   .engagement {
-    flex: 1; /* Laisse l'espace occupé par l'onglet inchangé */
-    text-align: center; /* Centre uniquement le texte horizontalement */
-    padding: 10px 0; /* Ajoute un espace vertical */
-    background-color: #fff; /* Blanc par défaut */
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #fff;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
-  
+  .addComment{
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+  }
 
 
 
 
 
-
-/* Conteneur pour aligner numéro et texte */
 .question-container {
     display: flex;
-    justify-content: space-between; /* Ajuste l'espacement horizontal */
-    width: 100%; /* Prend toute la largeur disponible */
-    margin-bottom: 10px; /* Ajoute de l'espace sous la question */
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
     top: -10px; 
   }
   
-  /* Numéro de la question */
+ 
   .question-number {
     font-size: 1.8rem;
-    margin-right: 10px; /* Espacement entre le numéro et le texte */
+    margin-right: 10px;
     color: #013238;
     text-align: left;
   }
   
-  /* Texte de la question */
+  
   .question-text {
     font-size: 26px;
     font-weight: normal;
-    flex: 1; /* Permet au texte d'occuper tout l'espace disponible */
+    flex: 1; 
     color: #013238;
   }
   .logo {
@@ -283,7 +284,6 @@ button img.icon {
   
   
   
-  /* Confirm button */
   .confirm-button button {
     background-color: #ffffff;
     color: #000000;
@@ -301,7 +301,6 @@ button img.icon {
     transform: scale(1.05);
   }
   
-  /* Side buttons (left and right) */
   .side-button {
     background-color: #013238;
     color: white;
@@ -325,12 +324,11 @@ button img.icon {
     transform: scale(1.1);
   }
   
-  /* Left button specific */
   .left-button {
     margin-right: 10px;
   }
   
-  /* Right button specific */
+
   .right-button {
     margin-left: 10px;
   }
@@ -340,48 +338,47 @@ button img.icon {
 
 
 
-/* Styling response list */
 ul {
-  list-style-type: none; /* Supprime les puces */
+  list-style-type: none;
   padding: 0;
   margin: 0;
   text-align: left;
 }
 
 li {
-  margin: 10px 0; /* Ajoute de l'espace entre chaque option */
+  margin: 10px 0; 
   font-size: 20px;
   display: flex;
-  align-items: center; /* Centre verticalement le texte et le bouton */
+  align-items: center;
 }
 
 label {
   font-size: 20px;
-  margin-left: 10px; /* Ajoute de l'espace entre le bouton et le texte */
+  margin-left: 10px;
   cursor: pointer;
 }
 
 
 textarea {
-  resize: none; /* Empêche le redimensionnement */
-  width: 100%; /* Largeur relative à l'espace parent */
-  max-width: 1500px; /* Largeur maximale */
-  height: 200px; /* Hauteur fixe */
-  box-sizing: border-box; /* Gère les marges et les bordures pour correspondre à la largeur */
-  border: 2px solid #013238; /* Bordure fine bleue */
-  border-radius: 8px; /* Coins légèrement arrondis */
-  padding: 10px; /* Espacement intérieur */
-  background-color: #fff; /* Fond blanc */
-  font-family: Arial, sans-serif; /* Police propre et lisible */
-  font-size: 14px; /* Taille de texte */
-  color: #333; /* Couleur du texte */
-  outline: none; /* Supprime la bordure par défaut au focus */
-  transition: box-shadow 0.3s ease, border-color 0.3s ease; /* Animation fluide */
+  resize: none; 
+  width: 100%;
+  max-width: 1500px;
+  height: 200px;
+  box-sizing: border-box;
+  border: 2px solid #013238;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 textarea:focus {
-  border-color: #013238; /* Bordure bleue foncée au focus */
-  box-shadow: 0 0 10px rgba(0, 91, 187, 0.2); /* Ajoute une ombre légère au focus */
+  border-color: #013238;
+  box-shadow: 0 0 10px rgba(0, 91, 187, 0.2);
 }
 
 
@@ -399,7 +396,7 @@ textarea:focus {
 
 
   
-  /* Responsive adjustments */
+ 
   @media (max-width: 768px) {
     .simple-form {
       width: 90%;
@@ -412,7 +409,7 @@ textarea:focus {
   
   
     .side-button.left-button, .side-button.right-button {
-      margin: 0 5px; /* Adjust margin for smaller screens */
+      margin: 0 5px;
     }
   }
   

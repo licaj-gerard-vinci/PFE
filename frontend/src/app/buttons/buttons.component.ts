@@ -29,7 +29,41 @@ import { FormsModule } from '@angular/forms';
     showInfo: boolean = false;
     showInfo2: boolean = false;
     clientsTemplates: any[] = [];
+    champLibreAujourdhui: string = '';
+    champLibreEngagement: string = '';
+    selectedCheckboxeAujourdhui: { id: number; text: string }[] = [];
+    selectedCheckboxeEngagement: { id: number; text: string }[] = [];
+    showCommentField: boolean = false;
+    comment: string = '';
+    champLibre: string = '';
     constructor(private buttonsService: ButtonsService) {}
+
+    toggleCommentField(): void {
+
+      if(this.showCommentField == false){
+        this.showCommentField = true;
+      }else{
+        this.showCommentField = false; 
+      }
+
+    }
+
+    onCommentInput(event: Event): void {
+      this.comment = (event.target as HTMLTextAreaElement).value; // Met à jour manuellement
+      console.log('Valeur actuelle du commentaire :', this.comment);
+    }
+
+    onChampInput(event: Event): void {
+      const value = (event.target as HTMLTextAreaElement).value;
+      if (this.activeTab === 'aujourdhui') {
+        this.champLibreAujourdhui = value;
+        console.log('Valeur pour Aujourdhui :', this.champLibreAujourdhui);
+      } else if (this.activeTab === 'engagement') {
+        this.champLibreEngagement = value;
+        console.log('Valeur pour Engagement :', this.champLibreEngagement);
+      }
+    }
+
 
     ngOnInit(): void {
         this.getEnjeux();
@@ -277,6 +311,11 @@ import { FormsModule } from '@angular/forms';
     this.responses.aujourdhui = null;
     this.responses.engagement = null;
     this.selectedCheckboxes = []; // Réinitialiser les checkbox sélectionnées
+    this.selectedCheckboxeAujourdhui = [];
+    this.selectedCheckboxeEngagement = [];
+    this.champLibreAujourdhui = " ";
+    this.champLibreEngagement = " ";
+    this.showCommentField = false;
   }
 
   // Capturer la réponse sélectionnée pour les types 'radio' et 'libre'
@@ -288,64 +327,149 @@ import { FormsModule } from '@angular/forms';
     }
   }
 
-  // Gérer les changements pour les checkbox
   onCheckboxChange(event: Event, reponse: { id: number; text: string }): void {
     const checkbox = event.target as HTMLInputElement;
 
-    if (checkbox.checked) {
-      this.selectedCheckboxes.push(reponse.text); // Ajouter la réponse si elle est cochée
-    } else {
-      this.selectedCheckboxes = this.selectedCheckboxes.filter(
-        (r) => r !== reponse.text
-      ); // Supprimer si décochée
+    if (this.activeTab === 'aujourdhui') {
+      if (checkbox.checked) {
+        this.selectedCheckboxeAujourdhui.push({ id: reponse.id, text: reponse.text });
+      } else {
+        this.selectedCheckboxeAujourdhui = this.selectedCheckboxeAujourdhui.filter(
+          (r) => r.id !== reponse.id
+        );
+      }
+    } else if (this.activeTab === 'engagement') {
+      if (checkbox.checked) {
+        this.selectedCheckboxeEngagement.push({ id: reponse.id, text: reponse.text });
+      } else {
+        this.selectedCheckboxeEngagement = this.selectedCheckboxeEngagement.filter(
+          (r) => r.id !== reponse.id
+        );
+      }
     }
 
-    // Mettre à jour les réponses en fonction de l'onglet actif
-    if (this.activeTab === 'aujourdhui') {
-      this.responses.aujourdhui = this.selectedCheckboxes.join(', '); // Concaténer les réponses
-    } else if (this.activeTab === 'engagement') {
-      this.responses.engagement = this.selectedCheckboxes.join(', ');
-    }
   }
 
   // Confirmer les réponses pour les deux onglets
-  confirmAnswer(): void {
-    if (!this.currentQuestion) {
-      console.warn('Aucune question sélectionnée.');
-      return;
-    }
-    const reponseUtilisateur = {
-      id_client: 1, // ID client par défaut
-      id_question: this.currentQuestion.id, // ID de la question
-      id_reponse:
-        this.currentQuestion.type === 'radio' || this.currentQuestion.type === 'checkbox'
-          ? this.currentQuestion.reponses.find(
-              (r: any) => r.text === this.responses.aujourdhui
-            )?.id
-          : null, // Pour les radio/checkbox
-      commentaire:
-        this.currentQuestion.type === 'libre' ? this.responses.aujourdhui : null, // Réponse en texte libre
-      rep_aujourd_hui: this.responses.aujourdhui || null,
-      rep_dans_2_ans: this.responses.engagement || null,
-      score_final: 0, // Score final par défaut
-      sa_reponse:
-        this.currentQuestion.type === 'radio' || this.currentQuestion.type === 'checkbox'
-          ? this.currentQuestion.reponses.find(
-              (r: any) => r.text === this.responses.aujourdhui
-            )?.id
-          : null, // ID réponse pour radio/checkbox
-      id_engagement: null, // ID engagement par défaut
-    };
-    console.log('Données envoyées :', reponseUtilisateur);
-
-    this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-      (response) => {
-        console.log('Réponses sauvegardées avec succès', response);
-        this.nextQuestion();
-      },
-      (error) => {
-        console.error('Erreur lors de la sauvegarde des réponses :', error);
-      }
-    );
+  // Confirmer les réponses pour les deux onglets
+confirmAnswer(): void {
+  console.log('Réponses sélectionnées (commentaire) :', this.comment);
+  if (!this.currentQuestion) {
+    console.warn('Aucune question sélectionnée.');
+    return;
   }
+
+  // Gestion des checkboxes pour Aujourd'hui
+  if (this.currentQuestion.type === 'checkbox' && this.selectedCheckboxeAujourdhui.length > 0) {
+    this.selectedCheckboxeAujourdhui.forEach((reponse) => {
+      const reponseUtilisateur = {
+        id_client: this.id_client,
+        id_question: this.currentQuestion.id,
+        id_reponse: reponse.id,
+        commentaire: this.comment || null,
+        rep_aujourd_hui: reponse.text,
+        rep_dans_2_ans: null,
+        score_final: 0,
+        id_engagement: null,
+      };
+
+      console.log('Donnée envoyée pour aujourdhui :', reponseUtilisateur);
+
+      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+        (response) => {
+          console.log('Réponse sauvegardée avec succès pour Aujourd\'hui :', response);
+        },
+        (error) => {
+          console.error('Erreur lors de la sauvegarde pour Aujourd\'hui :', error);
+        }
+      );
+    });
+  }
+
+  // Gestion des checkboxes pour Engagement
+  if (this.currentQuestion.type === 'checkbox' && this.selectedCheckboxeEngagement.length > 0) {
+    this.selectedCheckboxeEngagement.forEach((reponse) => {
+      const reponseUtilisateur = {
+        id_client: this.id_client,
+        id_question: this.currentQuestion.id,
+        id_reponse: reponse.id,
+        commentaire: this.comment || null,
+        rep_aujourd_hui: null,
+        rep_dans_2_ans: reponse.text,
+        score_final: 0,
+        id_engagement: null,
+      };
+
+      console.log('Donnée envoyée pour Engagement :', reponseUtilisateur);
+
+      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+        (response) => {
+          console.log('Réponse sauvegardée avec succès pour Engagement :', response);
+        },
+        (error) => {
+          console.error('Erreur lors de la sauvegarde pour Engagement :', error);
+        }
+      );
+    });
+  }
+    // Gestion des réponses de type 'radio'
+    if (this.currentQuestion.type === 'radio') {
+      const selectedReponse = this.currentQuestion.reponses.find(
+        (r: { id: number; text: string }) => r.text === this.responses.aujourdhui
+      );
+      const reponseUtilisateur = {
+        id_client: this.id_client,
+        id_question: this.currentQuestion.id,
+        id_reponse: selectedReponse ? selectedReponse.id : null,
+        commentaire: this.comment || null,
+        rep_aujourd_hui: this.responses.aujourdhui || null,
+        rep_dans_2_ans: this.responses.engagement || null,
+        score_final: 0,
+        id_engagement: null,
+      };
+  
+      console.log('Donnée envoyée pour Radio :', reponseUtilisateur);
+  
+      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+        (response) => {
+          console.log('Réponse sauvegardée avec succès pour Radio :', response);
+        },
+        (error) => {
+          console.error('Erreur lors de la sauvegarde pour Radio :', error);
+        }
+      );
+    }
+
+
+    if (this.currentQuestion.type === 'libre') {
+      console.log(this.currentQuestion.reponses);
+      const reponseUtilisateur = {
+        id_client: this.id_client,
+        id_question: this.currentQuestion.id,
+        id_reponse: this.currentQuestion.reponses[0].id,
+        commentaire: this.comment || null,
+        rep_aujourd_hui: this.champLibreAujourdhui || null,
+        rep_dans_2_ans: this.champLibreEngagement || null,
+        score_final: 0,
+        id_engagement: null,
+      };
+    
+      console.log('Donnée envoyée pour champ texte:', reponseUtilisateur);
+    
+      this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+        (response) => {
+          console.log('Réponse sauvegardée avec succès :', response);
+        },
+        (error) => {
+          console.error('Erreur lors de la sauvegarde :', error);
+        }
+      );
+    }
+    
+    
+
+  // Réinitialiser après envoi
+  this.resetResponses();
+  this.nextQuestion();
+}
 }
