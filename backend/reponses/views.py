@@ -153,3 +153,52 @@ class GetVerificationsView(APIView):
         except Exception as e:
             print("2🔴 BAD REQUEST: ", e)
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteReponseClientView(APIView):
+    def delete(self, request, reponse_client_id):
+        '''
+        Supprime une réponse client et sa vérification associée si la question de la réponse client a au moins une autre réponse.
+        :param reponse_client_id: L'ID de la réponse client à supprimer.
+        :param request: La requête HTTP.
+        :return: Un message de succès ou d'erreur.
+        '''
+        try:
+            # Récupérer la réponse client spécifique
+            reponse_client = get_object_or_404(ReponseClient, id_reponse_client=reponse_client_id)
+            print("1🟨 reponse_client: ", reponse_client)
+            # Récupérer la question associée via la relation
+            question = reponse_client.id_reponse.id_question
+            print("2🟨 question: ", question)
+            # Récupérer toutes les réponses client pour cette question
+            reponses_clients = ReponseClient.objects.filter(id_reponse__id_question=question.id_question)
+            print("3🟨 reponses_clients: ", reponses_clients)
+
+            # Vérifier si la question a plus d'une réponse
+            if reponses_clients.count() > 1:
+                # Supprimer la réponse client
+                reponse_client.delete()
+
+                # Supprimer la vérification associée, si elle existe
+                verification = Verification.objects.filter(id_reponse_client=reponse_client_id).first()
+                if verification:
+                    verification.delete()
+
+                # Retourner un succès
+                return Response(
+                    {"message": f"Réponse client {reponse_client_id} supprimée avec succès."},
+                    status=status.HTTP_200_OK
+                )
+            else:
+                return Response({"error": "Impossible de supprimer la réponse car la question n'a qu'une seule réponse."},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        except Http404:
+            return Response({"error": "Réponse client non trouvée."}, status=status.HTTP_404_NOT_FOUND)
+        except AttributeError as e:
+            print("AttributeError: ", e)
+        except Exception as e:
+            return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_412_PRECONDITION_FAILED)
+
+
+
