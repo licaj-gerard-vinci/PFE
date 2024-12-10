@@ -3,79 +3,78 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Sum, F, Case, When, FloatField
-from backend.models import Clients, ReponseClient, Reponses, Enjeux, Engagements
+from backend.models import Clients, ReponseClient, Reponses, Enjeux, Engagements, Questions
 
 class RapportView(APIView):
     def get(self, request):
         try:
-            client_id = 1  # Static ID for testing purposes; replace as needed
+            client_id = 1  # Remplacer par l'ID dynamique
             client = Clients.objects.filter(id_client=client_id).first()
             if not client:
                 return Response({"error": "Client not found"}, status=status.HTTP_404_NOT_FOUND)
 
-            # Calculate the current score
-            reponse_client = ReponseClient.objects.filter(id_client=client_id)
-            score_actuel = reponse_client.aggregate(
-                total_score_actuel=Sum(F('score_final') / 2.0, output_field=FloatField())
-            )['total_score_actuel'] or 0.0
+            # Filtrer les enjeux liés au client
+            enjeux_ids = ReponseClient.objects.filter(id_client=client_id).values_list(
+                'id_reponse__id_question__id_enjeu', flat=True
+            ).distinct()
+            enjeux = Enjeux.objects.filter(id_enjeu__in=enjeux_ids)
 
-            # Calculate engagement score
-            score_engagement = reponse_client.aggregate(
-                total_score_engagement=Sum(
-                    Case(
-                        When(est_un_engagement=True, then=F('id_reponse__score_individuel') * 0.25),
-                        default=0,
-                        output_field=FloatField()
-                    )
+            # Récupérer les questions liées aux enjeux
+            questions = Questions.objects.filter(id_enjeu__in=enjeux)
+            
+            # Calcul des scores max par question
+            max_scores_by_question = {}
+            for question in questions:
+                max_score = Reponses.objects.filter(id_question=question.id_question).aggregate(
+                    max_score=Sum('score_individuel') / 2.0
+                )['max_score'] or 0.0
+                max_scores_by_question[question.id_question] = max_score
+                
+            print(max_scores_by_question, "max_scores_by_question")
+            print("----------------------------------------------------")
+            
+            # Calcul des scores clients par enjeu
+            scores_clients_by_enjeu = {}
+            for enjeu in enjeux:
+                scores_clients_by_enjeu[enjeu.id_enjeu] = ReponseClient.objects.filter(
+                    id_client=client_id,
+                    id_reponse__id_question__id_enjeu=enjeu.id_enjeu
+                ).aggregate(
+                    total_score=Sum('score_final')
+                )['total_score'] or 0.0
+                
+            print(scores_clients_by_enjeu, "scores_clients_by_enjeu")
+            print("----------------------------------------------------")
+
+            # Calcul des scores totaux et normalisation
+            score_total = 0.0
+            for enjeu_id in enjeux:
+                max_score = sum(
+                    max_scores_by_question.get(q.id_question, 0.0)
+                    for q in questions.filter(id_enjeu=enjeu_id)
                 )
-            )['total_score_engagement'] or 0.0
+                score_client = scores_clients_by_enjeu.get(enjeu_id, 0.0)
+                if max_score > 0:
+                    score_total += (score_client / max_score)
+            
+            print(score_total, "score_total")
+            print("----------------------------------------------------")
 
-            # Total score
-            score_total = score_actuel + score_engagement
+            score_final_percentage = (score_total / len(enjeux)) * 100
+            
+            print(score_final_percentage, "score_final_percentage")
+            print("----------------------------------------------------")
 
+            # Définir le niveau
             niveau = "Insuffisant"
-            if score_total >= 25:
+            if score_final_percentage >= 25:
                 niveau = "Bon"
-            if score_total >= 50:
+            if score_final_percentage >= 50:
                 niveau = "Très bon"
-            if score_total >= 75:
+            if score_final_percentage >= 75:
                 niveau = "Excellent"
 
-            # Collecting data for domains
-            domains = [
-                {"id": "E", "name": "Environnemental", "parent_ids": [1, 4, 7, 9]},
-                {"id": "S", "name": "Social", "parent_ids": [11, 14, 17, 20]},
-                {"id": "G", "name": "Gouvernance", "parent_ids": [23, 28, 32, 35]},
-            ]
-            domain_data = []
-
-            for domain in domains:
-                parent_ids = domain["parent_ids"]
-
-                # Retrieve all sub-enjeux for this domain
-                enjeux = Enjeux.objects.filter(enjeu_parent__in=parent_ids)
-
-                # Retrieve engagements linked to these enjeux
-                engagements = Engagements.objects.filter(id_enjeu__in=enjeux.values_list("id_enjeu", flat=True))
-
-                # Calculate scores for this domain
-                reponses = ReponseClient.objects.filter(id_client=client_id, id_engagement__in=engagements)
-                score_actuel_domain = reponses.aggregate(total_score=Sum("score_final"))["total_score"] or 0
-                score_engagement_domain = engagements.count() * 10  # Hypothèse : chaque engagement vaut 10 points
-
-                # Prepare engagements as a list
-                engagement_list = list(engagements.values_list("engagement", flat=True))
-
-                # Add data for the current domain
-                domain_data.append({
-                    "id": domain["id"],
-                    "name": domain["name"],
-                    "score_actuel": round(score_actuel_domain, 2),
-                    "score_engagement": round(score_engagement_domain, 2),
-                    "engagements": engagement_list,
-                })
-
-            # Return response
+            # Préparer la réponse
             rapport_data = {
                 "client": {
                     "prenom": client.prenom,
@@ -84,13 +83,11 @@ class RapportView(APIView):
                     "nom_entreprise": client.nom_entreprise,
                 },
                 "scores": {
-                    "score_actuel": round(score_actuel, 2),
-                    "score_engagement": round(score_engagement, 2),
-                    "score_total": round(score_total, 2),
+                    "score_total": round(score_final_percentage, 2),
                     "niveau": niveau,
                 },
-                "domains": domain_data,  # Ajout des données par domaine
             }
             return Response(rapport_data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
