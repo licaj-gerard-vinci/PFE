@@ -8,5 +8,6 @@ import { RouterModule } from '@angular/router';
   template: `
     <router-outlet></router-outlet>
   `,
+ styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {}
