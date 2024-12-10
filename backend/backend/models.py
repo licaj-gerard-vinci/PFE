@@ -25,9 +25,10 @@ class Clients(models.Model):
     id_client = models.AutoField(primary_key=True)
     prenom = models.CharField(max_length=255)
     nom = models.CharField(max_length=255)
-    adresse_mail = models.CharField(unique=True, max_length=255)
+    email = models.CharField(unique=True, max_length=255)
     fonction = models.CharField(max_length=255)
     nom_entreprise = models.CharField(max_length=255)
+    numero_tva = models.CharField(max_length=255)
     forme_juridique = models.CharField(max_length=5000)
     adresse_siege_social = models.CharField(max_length=5000)
     adresse_site_web = models.CharField(max_length=5000)
@@ -35,13 +36,15 @@ class Clients(models.Model):
     chiffre_affaire_du_dernier_exercice_fiscal = models.IntegerField()
     franchise = models.BooleanField()
     nombre_travailleurs = models.IntegerField()
+    raison_refus = models.CharField(max_length=5000, blank=True, null=True)
     litige_respect_loi_social_environnemental = models.BooleanField()
     honnete = models.BooleanField()
     soumission_demande_de_subside_pour_le_label = models.BooleanField()
+    partenaire_introduction = models.CharField(max_length=255)
     ajouter_autre_chose = models.BooleanField()
-    remaque_commentaire_precision = models.CharField(max_length=5000, blank=True, null=True)
+    remarque_commentaire_precision = models.CharField(max_length=5000, blank=True, null=True)
     date_de_soumission = models.DateField()
-    est_valide = models.BooleanField()
+    est_valide = models.CharField(max_length=255)
     mdp = models.CharField(max_length=5000, blank=True, null=True)
 
     class Meta:
@@ -87,14 +90,23 @@ class Glossaires(models.Model):
 
 class Questions(models.Model):
     id_question = models.AutoField(primary_key=True)
-    sujet = models.CharField(max_length=255)
+    sujet = models.CharField(max_length=500)
     statut = models.CharField(max_length=1)
     id_enjeu = models.ForeignKey(Enjeux, models.DO_NOTHING, db_column='id_enjeu')
-    est_ouverte = models.BooleanField()
+    type = models.CharField(max_length=255)
 
     class Meta:
         managed = False
         db_table = 'questions'
+
+
+class QuestionsOnboarding(models.Model):
+    id_questions_onboarding = models.AutoField(primary_key=True)
+    question = models.CharField(max_length=5000)
+
+    class Meta:
+        managed = False
+        db_table = 'questions_onboarding'
 
 
 class Recaps(models.Model):
@@ -117,8 +129,7 @@ class ReponseClient(models.Model):
     id_client = models.ForeignKey(Clients, models.DO_NOTHING, db_column='id_client')
     id_reponse = models.ForeignKey('Reponses', models.DO_NOTHING, db_column='id_reponse')
     commentaire = models.CharField(max_length=5000, blank=True, null=True)
-    rep_aujourd_hui = models.CharField(max_length=255, blank=True, null=True)
-    rep_dans_2_ans = models.CharField(max_length=255, blank=True, null=True)
+    est_un_engagement = models.BooleanField()
     score_final = models.IntegerField()
     sa_reponse = models.CharField(max_length=255, blank=True, null=True)
     id_engagement = models.ForeignKey(Engagements, models.DO_NOTHING, db_column='id_engagement', blank=True, null=True)
@@ -126,13 +137,14 @@ class ReponseClient(models.Model):
     class Meta:
         managed = False
         db_table = 'reponse_client'
+        unique_together = (('id_reponse', 'id_client'),)
 
 
 class Reponses(models.Model):
     id_reponse = models.AutoField(primary_key=True)
     id_question = models.ForeignKey(Questions, models.DO_NOTHING, db_column='id_question')
     texte = models.CharField(max_length=50000, blank=True, null=True)
-    score_individuelle = models.IntegerField()
+    score_individuel = models.IntegerField()
     id_template = models.ForeignKey('Templates', models.DO_NOTHING, db_column='id_template')
     champ_libre = models.BooleanField()
     score_engagement = models.IntegerField()
@@ -163,7 +175,7 @@ class Templates(models.Model):
 
 
 class TemplatesClients(models.Model):
-    id_template = models.OneToOneField(Templates, models.DO_NOTHING, db_column='id_template', primary_key=True)  # The composite primary key (id_template, id_client) found, that is not supported. The first column is selected.
+    id_template = models.ForeignKey(Templates, models.DO_NOTHING, db_column='id_template')
     id_client = models.ForeignKey(Clients, models.DO_NOTHING, db_column='id_client')
 
     class Meta:
@@ -174,8 +186,7 @@ class TemplatesClients(models.Model):
 
 class Verifications(models.Model):
     id_reponse_client = models.OneToOneField(ReponseClient, models.DO_NOTHING, db_column='id_reponse_client', primary_key=True)
-    module_esg = models.CharField(max_length=255)
-    module_pacte_engagement = models.CharField(max_length=255)
+    est_valide = models.BooleanField()
     id_admin = models.ForeignKey(Admin, models.DO_NOTHING, db_column='id_admin')
 
     class Meta:

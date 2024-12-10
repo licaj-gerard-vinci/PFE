@@ -1,60 +1,251 @@
 .rapport-container {
   font-family: 'Arial', sans-serif;
-  margin: 20px;
-  padding: 20px;
-  background-color: #f5f5f5;
+  color: #013238; // Texte principal en vert foncé
+  background: linear-gradient(135deg, #f6fafd, #b5cdbf); // Dégradé doux entre aigue-marine et vert d'eau
+  padding: 55px; // Réduit le padding global
+  border-radius: 10px; // Coins arrondis réduits
+  max-width: 800px; // Réduction de la largeur maximale
+  margin: auto;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2); // Ombre adoucie
+}
 
-  .rapport-header {
+.rapport-header {
+  text-align: center;
+  margin-bottom: 20px; // Réduction de l'espace entre le header et le reste de la page
+
+  h1 {
+    font-size: 2rem; // Réduction de la taille du titre principal
+    color: #013238; // Vert foncé
+  }
+
+  .subtitle {
+    font-size: 1.1rem; // Réduction de la taille du sous-titre
+    font-weight: bold;
+    color: #08ac99; // Vert d'eau
+  }
+}
+
+.rapport-body {
+  background: #0e403d; // Fond vert foncé
+  padding: 15px; // Réduction du padding interne
+  border-radius: 20px; // Coins légèrement arrondis
+  display: flex;
+  flex-direction: column;
+  gap: 15px; // Réduction de l'espacement entre les éléments internes
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); // Ombre allégée
+}
+
+.graph-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px; // Réduction de l'espace entre les colonnes
+  align-items: center;
+  justify-content: space-between;
+
+  .graph {
+    width: 300px; /* Largeur réduite */
+    height: 150px; /* Hauteur réduite */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    canvas {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .text {
+    flex: 1;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h2.score-title {
+      color: #3cd4c2;
+      font-size: 1.5rem; // Réduction de la taille des titres
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 5px; // Réduction de l'espace entre les éléments de la liste
+        font-size: 0.9rem; // Réduction de la taille du texte
+        color: #cef0f4;
+      }
+    }
+  }
+}
+
+.graph-container-second {
+  background: #2a8f88; // Fond vert clair
+  padding: 15px; // Réduction du padding interne
+  border-radius: 20px; // Coins légèrement arrondis
+  margin-top: 15px; // Réduction de l'espace entre les sections
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; // Réduction de l'espacement interne
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
+  .graph {
+    margin: 0 auto;
+    width: 200px; // Réduction de la taille du graphique
+    height: 200px;
+
+    canvas {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .score-title {
+    font-size: 1.3rem; // Réduction de la taille du texte
+    color: #cef0f4;
+    margin-bottom: 10px;
     text-align: center;
-    margin-bottom: 40px;
+  }
 
-    h1 {
-      color: #004a6b;
-      font-size: 2em;
+  p {
+    font-size: 0.9rem; // Réduction de la taille du texte
+    color: #eae3e2;
+    text-align: center;
+    margin-bottom: 0;
+  }
+}
+
+.domain-switch-container {
+  background: #0e403d;
+  padding: 15px; // Réduction du padding interne
+  border-radius: 20px; // Coins légèrement arrondis
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; // Réduction de l'espacement interne
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+
+  .domain-title {
+    font-size: 1.3rem; // Réduction de la taille des titres
+    color: #cef0f4;
+    text-align: center;
+  }
+
+  .navigation-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; // Réduction de l'espace entre les boutons et le graphique
+
+    button {
+      background: #013238;
+      color: #cef0f4;
+      border: none;
+      padding: 8px 10px; // Taille compacte des boutons
+      border-radius: 8px;
+      cursor: pointer;
+
+      &:hover {
+        background: #cef0f4;
+        color: #013238;
+      }
     }
 
-    .subtitle {
-      color: #00897b;
-      font-size: 1.2em;
-      font-weight: bold;
+    .graph {
+      width: 200px; // Réduction de la taille du graphique des domaines
+      height: 200px;
+
+      canvas {
+        max-width: 100%;
+        max-height: 100%;
+      }
     }
   }
 
-  .section {
-    margin-bottom: 30px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  .engagement-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
 
-    h2 {
-      color: #004a6b;
-      border-bottom: 2px solid #00897b;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-
-      th {
-        text-align: left;
-        padding: 10px;
-        background-color: #004a6b;
-        color: #ffffff;
-      }
-
-      td {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-      }
+    li {
+      color: #cef0f4;
+      font-size: 0.9rem; // Réduction de la taille du texte
+      margin-bottom: 5px;
     }
   }
 
-  .error-message {
-    color: red;
+  p {
+    color: #cef0f4;
+    font-size: 1rem; // Réduction de la taille du texte
+    margin-bottom: 5px; 
+  }
+
+  .engagement-table {
+    width: 100%;
+    margin-top: 15px; /* Espacement par rapport au graphique */
+    border-collapse: collapse;
+    background-color: #f8f9fa; /* Fond clair */
+    color: #013238; /* Couleur du texte */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Effet d'ombre */
+    border-radius: 10px; /* Coins arrondis */
+    overflow: hidden;
+  }
+  
+  .engagement-table thead {
+    background-color: #2a8f88; /* Fond vert foncé */
+    color: #fff; /* Texte blanc */
+  }
+  
+  .engagement-table th,
+  .engagement-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* Lignes de séparation */
+  }
+  
+  .engagement-table th {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+  
+  .engagement-table tr:last-child td {
+    border-bottom: none; /* Pas de bordure pour la dernière ligne */
+  }
+  
+  .engagement-table tbody tr:hover {
+    background-color: #e9f5f2; /* Effet survol */
+  }
+  
+
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; // Réduction de l'espace avec le graphique
+  gap: 5px; // Réduction de l'espace entre les éléments de la légende
+
+  .legend-item {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 4px 10px; // Taille compacte des éléments
+    font-size: 0.9rem; // Réduction de la taille du texte
+    border-radius: 10px;
+    color: #0e403d;
     font-weight: bold;
     text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
+}
+
+footer {
+  text-align: center;
+  color: #012f2f; // Vert d'eau
+  margin-top: 10px; // Réduction de l'espace avant le footer
+  font-size: 0.8rem; // Réduction de la taille du texte
 }

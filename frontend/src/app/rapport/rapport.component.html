@@ -1,65 +1,99 @@
-<div class="rapport-container" *ngIf="!isLoading && !errorMessage; else loadingOrError">
+<div class="rapport-container">
+  <!-- En-tête -->
   <div class="rapport-header">
     <h1>Rapport d'impact et Pacte d'engagement</h1>
     <p class="subtitle">Entreprise : {{ rapportData.client.nom_entreprise }}</p>
   </div>
 
-  <div class="section client-info" *ngIf="rapportData?.client">
-    <h2>Informations Client</h2>
-    <p><strong>Nom :</strong> {{ rapportData.client.nom }} {{ rapportData.client.prenom }}</p>
-    <p><strong>Email :</strong> {{ rapportData.client.adresse_mail }}</p>
-    <p><strong>Entreprise :</strong> {{ rapportData.client.nom_entreprise }}</p>
-    <p><strong>Code NACE :</strong> {{ rapportData.client.code_nace_activite_principal }}</p>
-    <p><strong>Chiffre d'affaires :</strong> {{ rapportData.client.chiffre_affaire_du_dernier_exercice_fiscal | currency:'EUR' }}</p>
-    <p><strong>Nombre de travailleurs :</strong> {{ rapportData.client.nombre_travailleurs }}</p>
+  <!-- Bloc principal -->
+  <div class="rapport-body">
+    <div class="graph-container">
+      <!-- Graphique -->
+      <div class="graph">
+        <canvas id="gaugeChart"></canvas>
+      </div>
+
+      <!-- Texte explicatif -->
+      <div class="text">
+        <h2 class="score-title">Score {{rapportData.client.nom_entreprise}} : {{ rapportData.scores.score_total }}</h2>
+        <ul>
+          <li>Les pratiques environnementales, sociales et de gouvernance (ESG) au sein de l’entreprise.</li>
+          <li>Le Pacte d’engagement composé des actions que l’entreprise s’est engagée à mettre en place d’ici 2 ans.</li>
+        </ul>
+      </div>
+    </div>
+    <!-- Légende -->
+    <div class="legend">
+      <span class="legend-item" style="background-color: #A6B1E1">Insuffisant</span>
+      <span class="legend-item" style="background-color: #88CCF1">Bon</span>
+      <span class="legend-item" style="background-color: #B8E986">Très bon</span>
+      <span class="legend-item" style="background-color: #6ACD8D">Excellent</span>
+    </div>
+    
   </div>
 
-  <div class="section engagements" *ngIf="rapportData?.engagements?.length > 0; else noEngagements">
-    <h2>Engagements</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Engagement</th>
-          <th>Commentaire</th>
-          <th>KPI</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let engagement of rapportData.engagements">
-          <td>{{ engagement.engagement }}</td>
-          <td>{{ engagement.commentaire }}</td>
-          <td>{{ engagement.kpi }}</td>
-          <td>{{ engagement.date }}</td>
-        </tr>
-      </tbody>
-    </table>
+
+  <!-- Nouveau graphique -->
+  <div class="graph-container-second">
+    <h2 class="score-title">Pratiques et engagements ESG</h2>
+    <div class="graph">
+      <canvas id="engagementChart"></canvas>
+    </div>
+ 
+   <!-- Légende personnalisée -->
+   <div class="legend">
+    <span class="legend-item" style="background-color: #88CCF1">Score ESG actuel</span>
+    <span class="legend-item" style="background-color: #B8E986">Score d’engagement</span>
+    
+  </div>
+  <p>**Poser la souris sur le graphique pour voir les différents résultat<p>
+
   </div>
 
-  <ng-template #noEngagements>
-    <p>Aucun engagement disponible pour ce client.</p>
-  </ng-template>
 
-  <div class="section scores" *ngIf="rapportData?.scores">
-    <h2>Scores</h2>
-    <p><strong>Score total :</strong> {{ rapportData.scores.score_total }}</p>
-    <p><strong>Nombre de réponses :</strong> {{ rapportData.scores.total_reponses }}</p>
+<!-- Section pour les domaines (E, S, G) -->
+<div class="domain-switch-container">
+  <h2 class="domain-title">
+    Pratiques et engagements - {{ rapportData?.domains[currentDomainIndex]?.name }}
+  </h2>
+
+  <div class="navigation-buttons">
+    <!-- Boutons pour changer de domaine -->
+    <button (click)="switchDomain('prev')">←</button>
+    <div class="graph">
+      <canvas id="domainSwitchChart"></canvas>
+    </div>
+    <button (click)="switchDomain('next')">→</button>
   </div>
 
-  <div class="section recaps" *ngIf="rapportData?.recaps">
-    <h2>Résumé</h2>
-    <ul>
-      <li>Métrique : {{ rapportData.recaps.est_metrique ? 'Oui' : 'Non' }}</li>
-      <li>Formalisation : {{ rapportData.recaps.est_formalisation ? 'Oui' : 'Non' }}</li>
-      <li>Pratique : {{ rapportData.recaps.est_pratique ? 'Oui' : 'Non' }}</li>
-      <li>Sensible : {{ rapportData.recaps.est_sensible ? 'Oui' : 'Non' }}</li>
-      <li>Reporting : {{ rapportData.recaps.est_reporting ? 'Oui' : 'Non' }}</li>
-    </ul>
+  <div class="legend">
+    <span class="legend-item" style="background-color: #88CCF1">Score ESG actuel</span>
+    <span class="legend-item" style="background-color: #B8E986">Score d’engagement</span>
+    
   </div>
+  <p>**Poser la souris sur le graphique pour voir les différents résultat<p>
+
+
+  <!-- Tableau des engagements du domaine actuel -->
+  <table class="engagement-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Engagements de {{ rapportData.client.nom_entreprise }} : {{ getEngagementPeriod() }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let engagement of rapportData?.domains[currentDomainIndex]?.engagements; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ engagement }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
-<!-- Gestion du chargement ou des erreurs -->
-<ng-template #loadingOrError>
-  <div *ngIf="isLoading">Chargement du rapport en cours...</div>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-</ng-template>
+
+  <!-- Pied de page -->
+  <footer>
+    <p>Date du rapport : {{ currentDate | date: 'dd/MM/yyyy' }}</p>
+  </footer>
+</div>
