@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:8000
+
+### register dans admin
+POST {{baseUrl}}/auth/register/
+Content-Type: application/json
+
+{
+  "nom":"testNom",
+  "prenom":"testPrenom",
+  "email":"julien@admin.com",
+  "mdp":"ipl"
+}
+
+### Login avec Julien
+POST {{baseUrl}}/auth/login/
+Content-Type: application/json
+
+{
+  "email":"julien@admin.com",
+  "mdp":"ipl"
+}
+> {%
+  client.global.set("julienToken", response.body.access);
+%}
+
+### vérifie le token
+POST {{baseUrl}}/auth/verify-token/
+Content-Type: application/json
+
+{
+  "token":"{{julienToken}}"
+}
+
+### get un admin
+GET {{baseUrl}}/auth/admin/julien@admin.com/
+
+### get un clent
+GET {{baseUrl}}/auth/client/jean.dupont@example.com/
+
+### Login un client
+POST {{baseUrl}}/auth/login/
+Content-Type: application/json
+
+{
+  "email":"jean.dupont@example.com",
+  "mdp":"ipl"
+}
+> {%
+  client.global.set("clientToken", response.body.access);
+%}
+
