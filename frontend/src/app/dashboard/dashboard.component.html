@@ -1,77 +1,55 @@
-<div class="container mt-5" style="background-color: #b5cdbf; padding: 20px; border-radius: 10px;">
-  <h2 class="mb-4" style="color: #013238;">Tableau de bord des entreprises</h2>
+<div class="dashboard-container">
+  <h2 class="dashboard-title">Tableau de bord des entreprises</h2>
 
-  <div class="dashboard-container" style="display: flex; flex-direction: column; align-items: center;">
-    <div class="chart-container">
-      <canvas
-        baseChart
-        [data]="chartData"
-        [type]="chartType"
-        [options]="chartOptions">
-      </canvas>
-    </div>
-
-    <!-- Search Field -->
-    <div class="search-container" style="margin-top: 20px; width: 100%; max-width: 600px;">
-      <mat-form-field class="search-field" appearance="outline" style="width: 100%;">
-        <mat-icon matPrefix style="color: #013238;">search</mat-icon>
-        <mat-label style="color: #013238;">Rechercher</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Nom ou Email" />
-      </mat-form-field>
-    </div>
-
-    <!-- Check if data is available -->
-    <div *ngIf="dataSource && dataSource.data.length > 0; else noDataTemplate" style="width: 100%; max-width: 900px; margin-top: 20px;">
-      <div class="table-container" style="width: 100%; margin: 0 auto;">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort style="width: 100%;">
-          <!-- Company Name Column -->
-          <ng-container matColumnDef="nom">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #013238; color: white;">
-              Nom de l'entreprise
-            </th>
-            <td mat-cell *matCellDef="let company">{{ company.nom_entreprise }}</td>
-          </ng-container>
-      
-          <!-- Email Column -->
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #013238; color: white;">
-              Email
-            </th>
-            <td mat-cell *matCellDef="let company">{{ company.email }}</td>
-          </ng-container>
-      
-          <!-- Number of Workers Column -->
-          <ng-container matColumnDef="travailleurs">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header style="background-color: #013238; color: white;">
-              Nombre de travailleurs
-            </th>
-            <td mat-cell *matCellDef="let company">{{ company.nombre_travailleurs }}</td>
-          </ng-container>
-      
-          <!-- Actions Column -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="actions-cell" style="background-color: #013238; color: white;">
-              Actions
-            </th>
-            <td mat-cell *matCellDef="let company" class="actions-cell">
-              <button mat-raised-button color="primary" style="background-color: #fdef91; color: #013238;" (click)="openDetails(company.id_client)">
-                <mat-icon>visibility</mat-icon>
-                Détails
-              </button>
-            </td>
-          </ng-container>
-      
-          <!-- Header and Row Definitions -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-      </div>
-    </div>
-
-    <!-- Template for No Data -->
-    <ng-template #noDataTemplate>
-      <p class="no-data-message" style="color: #013238; font-weight: bold;">Aucune entreprise disponible pour le moment.</p>
-    </ng-template>
+  <div class="chart-section">
+    <canvas
+      baseChart
+      [data]="chartData"
+      [type]="chartType"
+      [options]="chartOptions"
+      class="dashboard-chart"
+    ></canvas>
   </div>
+
+  <div class="search-section">
+    <mat-form-field class="search-field" appearance="outline">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Rechercher</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Nom ou Email" />
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="dataSource && dataSource.data.length > 0; else noDataTemplate" class="table-section">
+    <table mat-table [dataSource]="dataSource" matSort class="company-table">
+      <ng-container matColumnDef="nom">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom de l'entreprise</th>
+        <td mat-cell *matCellDef="let company">{{ company.nom_entreprise }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let company">{{ company.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="travailleurs">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre de travailleurs</th>
+        <td mat-cell *matCellDef="let company">{{ company.nombre_travailleurs }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
+        <td mat-cell *matCellDef="let company" class="actions-cell">
+          <button mat-raised-button color="primary" (click)="openDetails(company.id_client)">Détails</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <ng-template #noDataTemplate>
+    <p class="no-data-message">Aucune entreprise disponible pour le moment.</p>
+  </ng-template>
 </div>
