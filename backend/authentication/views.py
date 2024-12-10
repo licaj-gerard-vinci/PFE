@@ -65,7 +65,7 @@ class VerifyTokenView(APIView):
 
         try:
             # Décoder et vérifier le token
-            access_token = AccessToken(token)
+            access_token = RefreshToken(token)
             email = access_token["user_id"]  # Extraire l'email depuis le payload
             return Response({"email": email}, status=status.HTTP_200_OK)
 

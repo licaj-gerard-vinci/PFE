@@ -15,6 +15,8 @@ import { CommonModule } from '@angular/common';
     email: string = '';
     password: string = '';
     loginError: string = '';
+    token: string = '';
+    email2: string = '';
   
     constructor(private authService: AuthService) {}
   
@@ -24,7 +26,7 @@ import { CommonModule } from '@angular/common';
         (response) => {
           console.log('Login successful', response);
           if (response.access) {
-            this.authService.storeTokens({ access: response.access });
+            this.authService.storeTokens({ refresh: response.refresh });
             window.location.href = '/'; // Redirect to home page
           }
         },

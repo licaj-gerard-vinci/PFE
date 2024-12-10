@@ -18,19 +18,23 @@ export class AuthService {
         return this.http.post(`${this.baseUrl}/login/`, data);
     }
 
+    verifyToken(data: any): Observable<any> {
+        return this.http.post(`${this.baseUrl}/verify-token/`, data);
+    }
+
     // Fonction pour récupérer le token d'accès (access token) stocké
   getAccessToken(): string | null {
-    return sessionStorage.getItem('access_token');
+    return sessionStorage.getItem('token');
   }
 
   // Fonction pour stocker les tokens dans la session
-  storeTokens(tokens: { access: string }): void {
-    sessionStorage.setItem('access_token', tokens.access);
+  storeTokens(tokens: { refresh: string }): void {
+    sessionStorage.setItem('token', tokens.refresh);
   }
 
   // Fonction pour supprimer le token
   clearToken(): void {
-    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('token');
   }
 
     // Fonction pour vérifier si l'utilisateur est connecté
