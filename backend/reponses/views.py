@@ -47,7 +47,7 @@ class AddVerificationView(APIView):
                 Verifications.objects.create(
                     id_reponse_client=reponse_client,
                     est_valide=False,  # Par défaut non validé
-                    id_admin=admin.id_admin
+                    id_admin=admin
                 )
 
             return Response(
@@ -144,7 +144,7 @@ class GetVerificationsView(APIView):
                     "id_verification": verification.id_reponse_client.id_reponse_client,
                     "id_reponse_client": verification.id_reponse_client.id_reponse_client,
                     "est_valide": verification.est_valide,
-                    "id_admin": verification.id_admin
+                    "id_admin": verification.id_admin.id_admin
                 })
 
             return Response(data, status=status.HTTP_200_OK)
