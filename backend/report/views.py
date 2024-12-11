@@ -3,18 +3,33 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Sum, F, Case, When, FloatField
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from backend.models import Clients, ReponseClient, Reponses, Enjeux, Engagements
 
 class RapportView(APIView):
     def get(self, request):
         try:
-            client_id = 9  # Remplacer par un ID dynamique
-            client = Clients.objects.filter(id_client=client_id).first()
+            auth_header = request.headers.get("Authorization")
+            if not auth_header or not auth_header.startswith("Bearer "):
+                return Response({"error": "Token manquant ou invalide"},
+                                status=401)
+
+            token = auth_header.split(" ")[1]
+
+            # Décodage du token en utilisant la logique de VerifyTokenView
+            try:
+                access_token = RefreshToken(token)
+                email = access_token["user_id"]
+            except TokenError:
+                return Response({"error": "Token invalide ou expiré"}, status=401)
+
+             # Remplacer par un ID dynamique
+            client = Clients.objects.filter(email=email).first()
             if not client:
                 return Response({"error": "Client not found"}, status=status.HTTP_404_NOT_FOUND)
 
             # Récupérer les réponses associées au client et exclure celles avec texte="N/A"
-            reponse_clients = ReponseClient.objects.filter(id_client=client_id).filter(
+            reponse_clients = ReponseClient.objects.filter(id_client=client.id_client).filter(
                 id_reponse__texte__isnull=False
             ).exclude(id_reponse__texte="N/A")
 

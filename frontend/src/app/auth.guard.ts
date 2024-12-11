@@ -21,4 +21,15 @@ export class AuthGuard implements CanActivate {
       return false;
     }
   }
+
+  canDeactivate(): boolean {
+    if (!this.authService.isLoggedIn()) {
+      // L'utilisateur est connecté, autoriser l'accès à la page
+      return true;
+    } else {
+      // L'utilisateur n'est pas connecté, rediriger vers la page de login
+      this.router.navigate(['/home']); // Ou la route de ton choix
+      return false;
+    }
+  }
 }

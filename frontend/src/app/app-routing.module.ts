@@ -19,7 +19,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'formulaire', component: FormulaireComponent},
   { path: 'report/:clientId', component: RapportComponent, canActivate: [AuthGuard]},
-  { path: 'onboarding', component: OnboardingComponent },
+  { path: 'onboarding', component: OnboardingComponent, canDeactivate: [AuthGuard]}, // Route pour la page d'onboarding
   { path: 'rapport', component: RapportComponent, canActivate: [ClientGuard] }, // Route pour la page du rapport
   { path: '**', redirectTo: 'onboarding' }
 ];
