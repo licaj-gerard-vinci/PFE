@@ -46,8 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
-    'buttons'
-    'question',
+    'buttons',
 ]
 
 # Configuration REST Framework

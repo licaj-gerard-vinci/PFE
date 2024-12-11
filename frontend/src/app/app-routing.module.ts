@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { FormulaireQ } from './formulaire/formulaire.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormulaireComponent } from './buttons/buttons.component';
 import { RapportComponent } from './rapport/rapport.component';
@@ -20,7 +19,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'formulaire', component: FormulaireComponent},
   { path: 'report/:clientId', component: RapportComponent, canActivate: [AuthGuard]},
-  { path: '**', redirectTo: 'login' },
   { path: 'onboarding', component: OnboardingComponent },
   { path: 'rapport', component: RapportComponent, canActivate: [ClientGuard] }, // Route pour la page du rapport
   { path: '**', redirectTo: 'onboarding' }
