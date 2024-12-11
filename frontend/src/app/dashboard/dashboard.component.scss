@@ -33,8 +33,10 @@
 
   .search-section {
     display: flex;
+    align-items: center;
     justify-content: center;
     margin-bottom: 20px;
+    
 
     .search-field {
       width: 100%;
@@ -45,6 +47,18 @@
         color: #013238;
       }
     }
+  }
+  
+  button.mat-icon-button {
+    margin-left: 10px; /* Adjust the spacing as needed */
+    border: 1px solid #ccc; /* Add a border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a shadow */
+    border-radius: 4px; /* Optional: Add border radius for rounded corners */
+    background-color: white; /* Set background color */
+  }
+  
+  button.mat-icon-button:hover {
+    background-color: #f0f0f0; 
   }
 
   .table-section {
@@ -92,4 +106,13 @@
     font-size: 1.2rem;
     font-weight: bold;
   }
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+}
+
+.status-container mat-icon {
+  margin-right: 4px;
 }

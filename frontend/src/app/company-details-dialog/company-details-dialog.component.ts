@@ -44,10 +44,10 @@ export class CompanyDetailsDialogComponent implements OnInit {
     chiffre_affaire_du_dernier_exercice_fiscal: 0,
     nombre_travailleurs: 0,
     est_valide: 'N/D',
-    id_templates: [], // Initialize as an empty array for multiple templates
-    raison_refus: '' // Initialize the reason for refusal
-  }; // Initialize the company object with default values
-  templates: any[] = []; // Initialize the templates array
+    id_templates: [],
+    raison_refus: ''
+  }; 
+  templates: any[] = [];
   editMode: { [key in EditModeFields]: boolean } = {
     nom_entreprise: false,
     adresse_mail: false,
