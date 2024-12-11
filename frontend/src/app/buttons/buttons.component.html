@@ -72,8 +72,8 @@
       <div *ngIf="getExistingAnswer(currentQuestion.id); else answerForm">
         <p>Réponse(s) :</p>
         <ul>
-          <li *ngFor="let reponseClient of getClientAnswer(currentQuestion.id)">
-            {{ reponseClient.texte }}
+          <li *ngFor="let reponseClient of getClientAnswer(currentQuestion.id, activeTab)">
+            - {{ reponseClient.texte }} {{reponseClient.rep_aujourd_hui}}{{reponseClient.rep_dans_2_ans}}
           </li>
         </ul>
       </div>

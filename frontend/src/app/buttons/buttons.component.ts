@@ -3,6 +3,7 @@ import { ButtonsService } from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-try',
@@ -11,7 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     templateUrl: './buttons.component.html',
     styleUrls: ['./buttons.component.scss'],
   })
-  export class Formulaire implements OnInit{
+  export class FormulaireComponent implements OnInit{
     activeTab: 'aujourdhui' | 'engagement' = 'aujourdhui';
     currentQuestionIndex = 0;
     enjeux: any[] = [];
@@ -37,20 +38,28 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     comment: string = '';
     champLibre: string = '';
     reponseQuestionClient: any[] = [];
-    constructor(private buttonsService: ButtonsService) {}
+    constructor(private buttonsService: ButtonsService, private route: ActivatedRoute) {}
 
     ngOnInit(): void {
-      this.buttonsService.getSimulatedLogin().subscribe(
+      const urlParams = new URLSearchParams(window.location.search);
+      const tokenFromUrl = urlParams.get('token');
+      if (tokenFromUrl) {
+
+          sessionStorage.setItem('token', tokenFromUrl);
+      }
+      this.buttonsService.getQuestionsUser().subscribe(
           (response) => {
-              this.id_client = response.id_client;
-              console.log('ID Client récupéré :', this.id_client);
+              console.log('Utilisateur connecté (objet complet) :', response.client);
 
-              console.log('Informations complètes du client connecté :', {
-                  prenom: response.prenom,
-                  nom: response.nom,
-                  email: response.adresse_mail
+              this.id_client = response.client.id_client;
+              console.log('ID_USER :', this.id_client);
+
+              const token = sessionStorage.getItem('token');
+              console.log('Utilisateur connecté :', {
+                  prenom: response.client.prenom,
+                  nom: response.client.nom,
+                  token: token
               });
-
               this.getEnjeux();
               this.getQuestions();
               this.getClientResponses();
@@ -63,6 +72,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
               alert('Vous devez être connecté pour accéder à ce formulaire.');
           }
       );
+      this.route.queryParamMap.subscribe(params => {
+        const idClientStr = params.get('id_client');
+        this.id_client = idClientStr ? parseInt(idClientStr, 10) : 0; 
+        console.log('ID Client:', this.id_client);
+      });
   }
 
     getProgressPercentage(): number {
@@ -167,7 +181,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         this.getGoodQuestion(questionId);
         console.log(this.currentQuestionIndex);
     }
-    getResponseById(_id_reponse : number): any {
+    getResponseById(_id_reponse : any): any {
         this.buttonsService.getReponse(_id_reponse).subscribe(
             (response) => {
                 this.Responses.push(response);
@@ -177,8 +191,46 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             }
         );
     }
-    getClientAnswer(questionId: number): any[] {
-      return this.Responses.filter(res => res.id_question === questionId) || [];
+    getClientAnswer(questionId: number, activeTab: String): any[] {
+      if (this.currentQuestion.type === 'libre'){
+        console.log(activeTab);
+        let aujourdhui = true;
+        if (activeTab === "aujourdhui"){
+          aujourdhui = false;
+        }
+        let tableau: any[] = [];
+        const test = this.clientReponses.filter(res => res.est_un_engagement === aujourdhui) || [];
+        test.forEach(reponse => {
+          const valeur = this.Responses.find(res => res.id_reponse === reponse.id_reponse && res.id_question === questionId)
+          if (valeur){
+            tableau.push(valeur);
+          }
+          })
+        let tableauFinal: any[] = [];
+        console.log(this.clientReponses);
+        tableau.forEach(response => {
+           const valeur = this.clientReponses.find(res => res.id_reponse === response.id_reponse && res.est_un_engagement === aujourdhui);
+           if (valeur){
+            tableauFinal.push(valeur)
+           }
+        })
+        console.log(tableauFinal);
+        return tableauFinal;
+      } else {
+        let aujourdhui = true;
+      if (activeTab === "aujourdhui"){
+        aujourdhui = false;
+      }
+      let tableauFinal: any[] = [];
+      const test = this.clientReponses.filter(res => res.est_un_engagement === aujourdhui) || [];
+      test.forEach(reponse => {
+        const valeur = this.Responses.find(res => res.id_reponse === reponse.id_reponse && res.id_question === questionId)
+        if (valeur){
+          tableauFinal.push(valeur);
+        }
+      })
+      return tableauFinal;
+      }
     }
     
 
@@ -194,7 +246,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
     getReelReponses(): any {
         this.clientReponses.forEach(reponse => {
-            this.getResponseById(reponse.id_reponse);
+          
+            this.getResponseById(reponse.id_reponse)
+            
         })
     }
     hasAllResponses(_id_enjeu: any): boolean {
@@ -380,7 +434,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
           id_reponse: reponse.id,
           commentaire: this.comment || null,
           rep_aujourd_hui: reponse.text,
-          rep_dans_2_ans: null,
+          rep_dans_2_ans: " ",
           est_engagement: false,
           score_final: reponse.score,
           id_engagement: null,
@@ -396,7 +450,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
           id_question: this.currentQuestion.id,
           id_reponse: reponse.id,
           commentaire: this.comment || null,
-          rep_aujourd_hui: null,
+          rep_aujourd_hui: " ",
           rep_dans_2_ans: reponse.text,
           est_engagement: true,
           score_final: reponse.score_engagement,
@@ -420,8 +474,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_question: this.currentQuestion.id,
             id_reponse: selectedReponse ? selectedReponse.id : null,
             commentaire: this.comment || null,
-            rep_aujourd_hui: this.responses.aujourdhui || null,
-            rep_dans_2_ans: null,
+            rep_aujourd_hui: this.responses.aujourdhui || ' ',
+            rep_dans_2_ans: ' ',
             est_engagement: false,
             score_final: selectedReponse.score,
             id_engagement: null,
@@ -431,8 +485,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_question: this.currentQuestion.id,
             id_reponse: selectedReponse2 ? selectedReponse2.id : null,
             commentaire: this.comment || null,
-            rep_aujourd_hui: null,
-            rep_dans_2_ans: this.responses.engagement || null,
+            rep_aujourd_hui: ' ',
+            rep_dans_2_ans: this.responses.engagement || ' ',
             est_engagement: true,
             score_final: selectedReponse2.score_engagement,
             id_engagement: null,
@@ -462,8 +516,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_question: this.currentQuestion.id,
             id_reponse: selectedReponse ? selectedReponse.id : null,
             commentaire: this.comment || null,
-            rep_aujourd_hui: this.responses.aujourdhui || null,
-            rep_dans_2_ans: this.responses.engagement || null,
+            rep_aujourd_hui: this.responses.aujourdhui || ' ',
+            rep_dans_2_ans: this.responses.engagement || ' ',
             est_engagement: est_enga,
             score_final: score_final,
             id_engagement: null,
@@ -477,8 +531,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_question: this.currentQuestion.id,
             id_reponse: selectedReponse ? selectedReponse.id : null,
             commentaire: this.comment || null,
-            rep_aujourd_hui: this.responses.aujourdhui || null,
-            rep_dans_2_ans: this.responses.engagement || null,
+            rep_aujourd_hui: this.responses.aujourdhui || ' ',
+            rep_dans_2_ans: this.responses.engagement || ' ',
             est_engagement: est_enga,
             score_final: score_final,
             id_engagement: null,
@@ -488,7 +542,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
       }
       }
 
-
       if (this.currentQuestion.type === 'libre') {
         if (this.champLibreAujourdhui !== " " && this.champLibreEngagement !== " "){
           const reponseUtilisateur = {
@@ -496,8 +549,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_question: this.currentQuestion.id,
             id_reponse: this.currentQuestion.reponses[0].id,
             commentaire: this.comment || null,
-            rep_aujourd_hui: this.champLibreAujourdhui || null,
-            rep_dans_2_ans: null,
+            rep_aujourd_hui: this.champLibreAujourdhui || ' ',
+            rep_dans_2_ans: ' ',
             est_engagement: false,
             score_final: 0,
             id_engagement: null,
@@ -507,8 +560,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_question: this.currentQuestion.id,
             id_reponse: this.currentQuestion.reponses[0].id,
             commentaire: this.comment || null,
-            rep_aujourd_hui: null,
-            rep_dans_2_ans: this.champLibreEngagement || null,
+            rep_aujourd_hui: " ",
+            rep_dans_2_ans: this.champLibreEngagement || ' ',
             est_engagement: true,
             score_final: 0,
             id_engagement: null,
@@ -526,8 +579,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_question: this.currentQuestion.id,
             id_reponse: this.currentQuestion.reponses[0].id,
             commentaire: this.comment || null,
-            rep_aujourd_hui: this.champLibreAujourdhui || null,
-            rep_dans_2_ans: this.champLibreEngagement || null,
+            rep_aujourd_hui: this.champLibreAujourdhui || ' ',
+            rep_dans_2_ans: this.champLibreEngagement || ' ',
             est_engagement: est_enga,
             score_final: 0,
             id_engagement: null,
@@ -551,8 +604,7 @@ enregistrerReponse(reponseUtilisateur:any){
   this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
     (response) => {
       console.log('Réponse sauvegardée avec succès:', response);
-      const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-      this.clientReponses.push(reponse);
+      this.getClientResponses();
     },
     (error) => {
       console.error('Erreur lors de la sauvegarde:', error);
@@ -583,10 +635,20 @@ getExistingAnswer(questionId: number) {
   return true;
 }
 copyLink() {
-  const currentUrl = window.location.href; // Obtient l'URL actuelle
-  navigator.clipboard.writeText(currentUrl)
+  const currentUrl = window.location.href; 
+  const token = sessionStorage.getItem('token'); // Récupérer le token
+
+  if (!token) {
+    alert('Aucun token disponible. Connectez-vous d’abord.');
+    return;
+  }
+
+  const urlWithToken = `${currentUrl}?token=${token}`;
+
+
+  navigator.clipboard.writeText(urlWithToken)
     .then(() => {
-      alert('Lien copié dans le presse-papier !'); // Message de confirmation
+      alert('Lien copié avec le token dans le presse-papier !');
     })
     .catch(err => {
       console.error('Erreur lors de la copie du lien :', err);

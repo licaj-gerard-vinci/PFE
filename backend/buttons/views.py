@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework import status
 from .models import Enjeux
 from .models import Question
@@ -26,7 +27,7 @@ class Questionss(APIView):
 class ResponsessClient(APIView):
     def get(self, request):
         _id_client= int(request.query_params.get('id_client'))
-        responses_client = ReponseClient.objects.filter(id_client = _id_client).values("id_reponse_client","id_client","id_reponse", "rep_aujourd_hui")
+        responses_client = ReponseClient.objects.filter(id_client = _id_client).values("id_reponse_client","id_client","id_reponse", "rep_aujourd_hui", "rep_dans_2_ans", "est_un_engagement")
         responses_client_list = list(responses_client)
         return JsonResponse(responses_client_list, safe=False)
 
@@ -117,18 +118,52 @@ class TemplatessClients(APIView):
             templates_client_list = list(templates_client)
             return JsonResponse(templates_client_list, safe=False)
 
-class SimulateLogin(APIView):
+class getQuestionsUser(APIView):
     def get(self, request):
-        # Récupérer le dernier utilisateur
-        last_user = Client.objects.order_by('-id_client').values('id_client', 'prenom', 'nom', 'email').first()
+        # Récupération du token depuis l'entête Authorization
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            return Response({"error": "Token manquant ou invalide"}, status=401)
 
-        if not last_user:
-            return Response({"error": "Aucun utilisateur trouvé"}, status=404)
+        token = auth_header.split(" ")[1]
 
-        return Response({
-            "id_client": last_user['id_client'],
-            "prenom": last_user['prenom'],
-            "nom": last_user['nom'],
-            "adresse_mail": last_user['email']
-        }, status=200)
+        # Décodage du token en utilisant la logique de VerifyTokenView
+        try:
+            access_token = RefreshToken(token)
+            email = access_token["user_id"]  
+        except TokenError:
+            return Response({"error": "Token invalide ou expiré"}, status=401)
 
+        # Récupération du client à partir de l'email
+        client = Client.objects.filter(email=email).first()
+        if not client:
+            return Response({"error": "Client not found"}, status=404)
+
+        # Retourner les données du client
+        client_data = {
+            "id_client": client.id_client,
+            "prenom": client.prenom,
+            "nom": client.nom,
+            "email": client.email,
+            "fonction": client.fonction,
+            "nom_entreprise": client.nom_entreprise,
+            "numero_tva": client.numero_tva,
+            "forme_juridique": client.forme_juridique,
+            "adresse_siege_social": client.adresse_siege_social,
+            "adresse_site_web": client.adresse_site_web,
+            "code_nace_activite_principal": client.code_nace_activite_principal,
+            "chiffre_affaire_du_dernier_exercice_fiscal": client.chiffre_affaire_du_dernier_exercice_fiscal,
+            "franchise": client.franchise,
+            "nombre_travailleurs": client.nombre_travailleurs,
+            "raison_refus": client.raison_refus,
+            "litige_respect_loi_social_environnemental": client.litige_respect_loi_social_environnemental,
+            "honnete": client.honnete,
+            "soumission_demande_de_subside_pour_le_label": client.soumission_demande_de_subside_pour_le_label,
+            "partenaire_introduction": client.partenaire_introduction,
+            "ajouter_autre_chose": client.ajouter_autre_chose,
+            "remarque_commentaire_precision": client.remarque_commentaire_precision,
+            "date_de_soumission": client.date_de_soumission,
+            "est_valide": client.est_valide
+        }
+
+        return Response({"client": client_data}, status=200)

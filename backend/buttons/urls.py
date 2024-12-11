@@ -4,7 +4,7 @@ from .views import Questionss
 from .views import ResponsessClient
 from .views import Responses
 from .views import TemplatessClients
-from .views import GetQuestionsAndReponsesView, SauvegardeReponseClientView, SimulateLogin
+from .views import GetQuestionsAndReponsesView, SauvegardeReponseClientView, getQuestionsUser
 
 urlpatterns = [
     path('enjeux/', Enjeuxx.as_view(), name="enjeux"),
@@ -14,5 +14,5 @@ urlpatterns = [
     path('questionsReponses/', GetQuestionsAndReponsesView.as_view(), name='get_questions_and_reponses'),
     path('sauvegarderReponse/', SauvegardeReponseClientView.as_view(), name='sauvegarder_reponse_client'),
     path('templates/', TemplatessClients.as_view(), name='templates_client'),
-    path('testLogin/', SimulateLogin.as_view(), name='testLogin'),
+    path('questionsUser/', getQuestionsUser.as_view(), name='questions_user'),
 ]
