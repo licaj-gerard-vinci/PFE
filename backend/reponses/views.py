@@ -152,7 +152,6 @@ class GetVerificationsView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-#todo: à retester
 class DeleteReponseClientView(APIView):
     def delete(self, request, reponse_client_id):
         '''
