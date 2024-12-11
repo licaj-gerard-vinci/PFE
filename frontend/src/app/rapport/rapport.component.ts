@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RapportService } from '../rapport.service';
 import { Chart, ChartOptions, registerables } from 'chart.js';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-rapport',
@@ -21,7 +22,7 @@ export class RapportComponent implements OnInit {
   currentDomainIndex: number = 0; // Index du domaine actuellement affiché
   currentDate: Date = new Date(); // Date actuelle
 
-  constructor(private rapportService: RapportService) {
+  constructor(private rapportService: RapportService, private authService: AuthService) {
     Chart.register(...registerables); // Enregistrement de Chart.js
   }
 
