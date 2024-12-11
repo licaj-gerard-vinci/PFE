@@ -11,7 +11,7 @@ export const routes: Routes = [
   { path: '', component: HomeComponent }, // Route pour la page d'accueil
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'formulaire', component: Formulaire}
+  { path: 'formulaire', component: Formulaire},
   { path: 'report/:clientId', component: RapportComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: 'login' } 
 ];

@@ -329,6 +329,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     this.champLibreAujourdhui = " ";
     this.champLibreEngagement = " ";
     this.showCommentField = false;
+    this.comment = '';
   }
 
   onReponseSelected(reponse: { id: number; text: string; score: number; score_engagement: number}): void {
