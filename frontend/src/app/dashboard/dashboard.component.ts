@@ -16,7 +16,7 @@ import { ChartConfiguration, ChartOptions, ChartType, ChartData } from 'chart.js
 import { Chart, registerables } from 'chart.js';
 import { ChangeDetectorRef } from '@angular/core';
 
-Chart.register(...registerables); // Register all necessary chart components
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
@@ -46,7 +46,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   newCompaniesCount: number = 0;
 
-  // Chart configuration
   chartLabels: string[] = ['Valides', 'Refusée', 'N/D'];
   chartData: ChartData<'pie', number[], string> = {
     labels: this.chartLabels,
@@ -86,16 +85,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       const validCount = data.filter((company) => company.est_valide === 'validée').length;
       const refusedCount = data.filter((company) => company.est_valide === 'refusée').length;
       const ndCount = data.filter((company) => company.est_valide === 'N/D').length;
-      this.chartData.datasets[0].data = [validCount, refusedCount, ndCount]; // Update chart data
+      this.chartData.datasets[0].data = [validCount, refusedCount, ndCount];
       if (this.chart) {
-        this.chart.update(); // Refresh chart
+        this.chart.update();
       }
 
-      // Assign paginator and sort after data is set
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      setTimeout(() => {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
 
-      // Trigger change detection
       this.cdr.detectChanges();
     });
   }
@@ -118,7 +117,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   reloadCompanies(): void {
     this.loadCompanies();
-    this.newCompaniesCount = 0; // Reset the badge count after reloading
+    this.newCompaniesCount = 0;
   }
 
   checkForNewCompanies(): void {
@@ -130,6 +129,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           this.newCompaniesCount = newCount - currentCount;
         }
       });
-    }, 60000); // Check every 60 seconds
+    }, 30000); // Check every 60 seconds
   }
 }
