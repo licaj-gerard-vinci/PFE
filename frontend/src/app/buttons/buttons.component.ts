@@ -42,18 +42,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     ngOnInit(): void {
       this.buttonsService.getSimulatedLogin().subscribe(
           (response) => {
-              // Mettre uniquement l'ID du client dans id_client
               this.id_client = response.id_client;
               console.log('ID Client récupéré :', this.id_client);
 
-              // Afficher d'autres informations dans la console
               console.log('Informations complètes du client connecté :', {
                   prenom: response.prenom,
                   nom: response.nom,
                   email: response.adresse_mail
               });
 
-              // L'utilisateur est connecté, charger les données
               this.getEnjeux();
               this.getQuestions();
               this.getClientResponses();
@@ -63,7 +60,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
           (error) => {
               console.error('Utilisateur non connecté ou erreur :', error);
 
-              // Affichez un popup ou un message pour indiquer que l'utilisateur n'est pas connecté
               alert('Vous devez être connecté pour accéder à ce formulaire.');
           }
       );
@@ -341,6 +337,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   }
 
   onCheckboxChange(event: Event, reponse: { id: number; text: string; score: number; score_engagement:number}): void {
+    console.log(this.selectedCheckboxeAujourdhui);
+    console.log(this.selectedCheckboxeEngagement);
     const checkbox = event.target as HTMLInputElement;
     if (this.activeTab === 'aujourdhui') {
       if (checkbox.checked) {
@@ -364,6 +362,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   isAnswered(questionId: number): boolean {
     return this.Responses.some(response => response.id_question === questionId);
   }
+  getText(table: any[],text: string){
+    return table.some(r => r.text === text);
+  }
 
   confirmAnswer(): void {
     if (!this.currentQuestion) {
@@ -384,17 +385,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
           score_final: reponse.score,
           id_engagement: null,
         };
-
-        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-          (response) => {
-            console.log('Réponse sauvegardée avec succès pour Aujourd\'hui :', response);
-            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-            this.clientReponses.push(reponse);
-          },
-          (error) => {
-            console.error('Erreur lors de la sauvegarde pour Aujourd\'hui :', error);
-          }
-        );
+        this.enregistrerReponse(reponseUtilisateur);
       });
     }
 
@@ -411,19 +402,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
           score_final: reponse.score_engagement,
           id_engagement: null,
         };
-
         console.log('Donnée envoyée pour Engagement :', reponseUtilisateur);
-
-        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-          (response) => {
-            console.log('Réponse sauvegardée avec succès pour Engagement :', response);
-            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-            this.clientReponses.push(reponse);
-          },
-          (error) => {
-            console.error('Erreur lors de la sauvegarde pour Engagement :', error);
-          }
-        );
+        this.enregistrerReponse(reponseUtilisateur);
       });
     }
       if (this.currentQuestion.type === 'radio') {
@@ -458,26 +438,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             id_engagement: null,
           };
       
-          this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-            (response) => {
-              console.log('Réponse sauvegardée avec succès pour Radio :', response);
-              const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-              this.clientReponses.push(reponse);
-            },
-            (error) => {
-              console.error('Erreur lors de la sauvegarde pour Radio :', error);
-            }
-          );
-          this.buttonsService.saveReponseClient(reponseUtilisateur2).subscribe(
-            (response) => {
-              console.log('Réponse sauvegardée avec succès pour Radio :', response);
-              const reponse = this.getResponseById(reponseUtilisateur2.id_reponse)
-              this.clientReponses.push(reponse);
-            },
-            (error) => {
-              console.error('Erreur lors de la sauvegarde pour Radio :', error);
-            }
-          );
+          this.enregistrerReponse(reponseUtilisateur);
+          this.enregistrerReponse(reponseUtilisateur2);
         } else{
         let selectedReponse = this.currentQuestion.reponses.find(
           (r: { id: number; text: string; score:number; score_engagement:number }) => r.text === this.responses.aujourdhui
@@ -506,18 +468,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             score_final: score_final,
             id_engagement: null,
           };
-      
-      
-          this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-            (response) => {
-              console.log('Réponse sauvegardée avec succès pour Radio :', response);
-              const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-              this.clientReponses.push(reponse);
-            },
-            (error) => {
-              console.error('Erreur lors de la sauvegarde pour Radio :', error);
-            }
-          );
+          this.enregistrerReponse(reponseUtilisateur);
         }
         if (this.responses.engagement === null){
           score_final = selectedReponse.score;
@@ -532,50 +483,57 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
             score_final: score_final,
             id_engagement: null,
           };
-      
-      
-          this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-            (response) => {
-              console.log('Réponse sauvegardée avec succès pour Radio :', response);
-              const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-              this.clientReponses.push(reponse);
-            },
-            (error) => {
-              console.error('Erreur lors de la sauvegarde pour Radio :', error);
-            }
-          );
+          this.enregistrerReponse(reponseUtilisateur);
         } 
       }
       }
 
 
       if (this.currentQuestion.type === 'libre') {
-        let est_enga = false;
-        if (this.responses.aujourdhui === null){
-          est_enga = true;
-        }
-        const reponseUtilisateur = {
-          id_client: this.id_client,
-          id_question: this.currentQuestion.id,
-          id_reponse: this.currentQuestion.reponses[0].id,
-          commentaire: this.comment || null,
-          rep_aujourd_hui: this.champLibreAujourdhui || null,
-          rep_dans_2_ans: this.champLibreEngagement || null,
-          est_engagement: est_enga,
-          score_final: 0,
-          id_engagement: null,
-        };
-        
-        this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
-          (response) => {
-            console.log('Réponse sauvegardée avec succès :', response);
-            const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
-            this.clientReponses.push(reponse);
-          },
-          (error) => {
-            console.error('Erreur lors de la sauvegarde :', error);
+        if (this.champLibreAujourdhui !== " " && this.champLibreEngagement !== " "){
+          const reponseUtilisateur = {
+            id_client: this.id_client,
+            id_question: this.currentQuestion.id,
+            id_reponse: this.currentQuestion.reponses[0].id,
+            commentaire: this.comment || null,
+            rep_aujourd_hui: this.champLibreAujourdhui || null,
+            rep_dans_2_ans: null,
+            est_engagement: false,
+            score_final: 0,
+            id_engagement: null,
+          };
+          const reponseUtilisateur2 = {
+            id_client: this.id_client,
+            id_question: this.currentQuestion.id,
+            id_reponse: this.currentQuestion.reponses[0].id,
+            commentaire: this.comment || null,
+            rep_aujourd_hui: null,
+            rep_dans_2_ans: this.champLibreEngagement || null,
+            est_engagement: true,
+            score_final: 0,
+            id_engagement: null,
+          };
+          
+          this.enregistrerReponse(reponseUtilisateur);
+          this.enregistrerReponse(reponseUtilisateur2);
+        } else {
+          let est_enga = false;
+          if (this.champLibreAujourdhui === " "){
+              est_enga = true;
           }
-        );
+          const reponseUtilisateur = {
+            id_client: this.id_client,
+            id_question: this.currentQuestion.id,
+            id_reponse: this.currentQuestion.reponses[0].id,
+            commentaire: this.comment || null,
+            rep_aujourd_hui: this.champLibreAujourdhui || null,
+            rep_dans_2_ans: this.champLibreEngagement || null,
+            est_engagement: est_enga,
+            score_final: 0,
+            id_engagement: null,
+          };
+          this.enregistrerReponse(reponseUtilisateur);
+        }
       }
     this.resetResponses();
     this.nextQuestion();
@@ -588,6 +546,18 @@ toggleCommentField(): void {
     this.showCommentField = false; 
   }
 
+}
+enregistrerReponse(reponseUtilisateur:any){
+  this.buttonsService.saveReponseClient(reponseUtilisateur).subscribe(
+    (response) => {
+      console.log('Réponse sauvegardée avec succès:', response);
+      const reponse = this.getResponseById(reponseUtilisateur.id_reponse)
+      this.clientReponses.push(reponse);
+    },
+    (error) => {
+      console.error('Erreur lors de la sauvegarde:', error);
+    }
+  );
 }
 
 onCommentInput(event: Event): void {

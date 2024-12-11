@@ -87,6 +87,7 @@
               <input 
                 type="radio"
                 [value]="reponse.text"
+                [checked]="activeTab === 'aujourdhui' ? responses.aujourdhui === reponse.text : responses.engagement === reponse.text" 
                 name="answer"
                 (change)="onReponseSelected(reponse)"
               />
@@ -104,7 +105,8 @@
             <label *ngIf="checkTemplatesReponses(reponse); else elseBlock1">
               <input
                 type="checkbox"
-                [value]="reponse.text"
+                [value]="reponse.text" 
+                [checked]="activeTab === 'aujourdhui' ? getText(selectedCheckboxeAujourdhui,reponse.text) : getText(selectedCheckboxeEngagement,reponse.text)" 
                 (change)="onCheckboxChange($event, reponse)"
               />
               {{ reponse.text }}
@@ -117,26 +119,26 @@
   
         <!-- Type Libre -->
         <div *ngIf="currentQuestion?.type === 'libre'">
-          <li *ngFor="let reponse of currentQuestion.reponses"> 
           <textarea
             placeholder="Votre réponse (max 50000 caractères)..."
+            [value]="activeTab === 'aujourdhui' ? champLibreAujourdhui : champLibreEngagement"
             (input)="onChampInput($event)"
           ></textarea>
         </div>
-        <div class="comment-section">
-          <button *ngIf="checkIfCanAnswer(currentQuestion.id)" class="addComment" type="button" (click)="toggleCommentField()">+</button>
-          <div *ngIf="showCommentField" class="comment-field">
-            <textarea
-              placeholder="Votre réponse (max 50000 caractères)..."
-              (input)="onCommentInput($event)"
-            ></textarea>
-          </div>
-        </div>
-      <div *ngIf="checkIfCanAnswer(currentQuestion.id)">
-        <button type="button" class="confirm-button" (click)="confirmAnswer()">CONFIRMER</button>
-      </div>
       </div>
     </ng-template>
+    <div class="comment-section">
+      <button *ngIf="checkIfCanAnswer(currentQuestion.id)" class="addComment" type="button" (click)="toggleCommentField()">+</button>
+      <div *ngIf="showCommentField" class="comment-field">
+        <textarea
+          placeholder="Votre réponse (max 50000 caractères)..."
+          (input)="onCommentInput($event)"
+        ></textarea>
+      </div>
+    </div>
+  <div *ngIf="checkIfCanAnswer(currentQuestion.id)">
+    <button type="button" class="confirm-button" (click)="confirmAnswer()">CONFIRMER</button>
+  </div>
     </form>
     <button class="side-button right-button" (click)="nextQuestion()">></button>
   </div>
