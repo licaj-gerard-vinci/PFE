@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
           if (response.access) {
             this.authService.storeTokens({ refresh: response.refresh });
             //this.veryfyToken();
-            window.location.href = '/'; // Redirect to home page
+            window.location.href = '/home'; // Redirect to home page
           }
         },
         (error) => {
