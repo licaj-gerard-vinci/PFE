@@ -59,7 +59,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       },
     ],
   };
-  chartType: ChartType = 'pie';
+  chartType: ChartType = 'bar';
   chartOptions: ChartOptions = {
     responsive: true,
     plugins: {
@@ -109,6 +109,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.http.get<any[]>('http://localhost:8000/api/companies/').subscribe((data) => {
       this.dataSource.data = data;
 
+      
       const validCount = data.filter((company) => company.est_valide === 'validée').length;
       const refusedCount = data.filter((company) => company.est_valide === 'refusée').length;
       const ndCount = data.filter((company) => company.est_valide === 'N/D').length;
@@ -142,8 +143,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-
-
   reloadCompanies(): void {
     this.loadCompanies();
     this.newCompaniesCount = 0;
@@ -157,7 +156,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         if (newCount > currentCount) {
           this.newCompaniesCount = newCount - currentCount;
         }
+  
+        data.forEach((newCompany) => {
+          const existingCompany = this.dataSource.data.find(company => company.id_client === newCompany.id_client);
+          if (existingCompany && existingCompany.est_termine !== newCompany.est_termine) {
+            existingCompany.est_termine = newCompany.est_termine;
+            existingCompany.formFinished = newCompany.est_termine;
+          }
+        });
+  
+        this.cdr.detectChanges();
       });
-    }, 30000); // Check every 60 seconds
+    }, 30000); 
   }
 }
