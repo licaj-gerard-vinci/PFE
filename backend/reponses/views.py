@@ -2,7 +2,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from backend.models import Admin, ReponseClient, Verifications, Reponses, Clients
+from backend.models import Admin, ReponseClient, Verifications, Reponses, Clients, Engagements
 from django.shortcuts import get_object_or_404
 
 
@@ -152,6 +152,7 @@ class GetVerificationsView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+#todo: à retester
 class DeleteReponseClientView(APIView):
     def delete(self, request, reponse_client_id):
         '''
@@ -193,7 +194,7 @@ class DeleteReponseClientView(APIView):
         except Exception as e:
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_412_PRECONDITION_FAILED)
 
-
+#todo: à retester
 class UpdateReponseClientView(APIView):
     def put(self, request, reponse_client_id):
         '''
@@ -252,6 +253,7 @@ class UpdateReponseClientView(APIView):
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+#todo: à retester
 class AddReponseClientView(APIView):
     def post(self, request):
         """
@@ -334,3 +336,104 @@ class AddReponseClientView(APIView):
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class GetEngagementsView(APIView):
+    def get(self, request, client_id):
+        '''
+        Récupère tous les engagements pour un client spécifié.
+        :param client_id: L'ID du client pour lequel les engagements doivent être récupérés.
+        :return: Une liste des engagements pour le client spécifié.
+
+        Exemple de route:
+        GET /engagements/client/1/
+
+        Exemple de réponse:
+        [
+            {
+                "id_engagement": 1,
+                "id_enjeu": 1,
+                "engagement": "Engagement 1",
+                "commentaire": "Commentaire 1",
+                "kpis": "KPI 1",
+                "date": "2024-01-01"
+            },
+            {
+                "id_engagement": 2,
+                "id_enjeu": 2,
+                "engagement": "Engagement 2",
+                "commentaire": "Commentaire 2",
+                "kpis": "KPI 2",
+                "date": "2024-01-02"
+            }
+        ]
+        '''
+        try:
+            print(f"🛠️ Vérification des engagements pour le client {client_id}.")
+
+            # Vérifier les vérifications du client
+            if not self.are_all_verifications_valid(client_id):
+                print("❌ Toutes les vérifications ne sont pas valides pour ce client.")
+                return Response({
+                    "error": "Impossible de récupérer les engagements car toutes les vérifications ne sont pas valides pour ce client."
+                }, status=status.HTTP_412_PRECONDITION_FAILED)
+
+            print("✅ Toutes les vérifications sont valides pour ce client.")
+
+            # Récupérer les engagements
+            engagements = Engagements.objects.filter(
+                id_engagement__in=ReponseClient.objects.filter(id_client=client_id, est_un_engagement=True).values_list(
+                    'id_reponse__id_engagement', flat=True)
+            )
+            print(f"Engagements trouvés : {engagements}")
+
+            if not engagements.exists():
+                print(f"⚠️ Aucun engagement trouvé pour le client {client_id}.")
+                return Response({"error": "Aucun engagement trouvé pour ce client."}, status=status.HTTP_404_NOT_FOUND)
+
+            # Construire la liste des engagements
+            engagements_list = []
+            for engagement in engagements:
+                engagement_data = {
+                    "id_engagement": engagement.id_engagement,
+                    "id_enjeu": engagement.id_enjeu.id_enjeu if engagement.id_enjeu else None,
+                    "engagement": engagement.engagement,
+                    "commentaire": engagement.commentaire,
+                    "kpis": engagement.kpis,
+                    "date": engagement.date
+                }
+                engagements_list.append(engagement_data)
+                print(f"Engagement ajouté : {engagement_data}")
+
+            return Response(engagements_list, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(f"Erreur inattendue : {e}")
+            return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    ##############################################
+    @staticmethod
+    def are_all_verifications_valid(client_id):
+        """
+        Vérifie si toutes les vérifications d'un client sont valides.
+        :param client_id: L'ID du client
+        :return: True si toutes les vérifications sont valides, False sinon
+        """
+        try:
+            # Récupérer toutes les réponses clients pour le client donné
+            reponses_clients = ReponseClient.objects.filter(id_client=client_id)
+            if not reponses_clients.exists():
+                print(f"Aucune réponse trouvée pour le client {client_id}.")
+                return False
+
+            # Récupérer toutes les vérifications liées aux réponses clients
+            verifications = Verifications.objects.filter(id_reponse_client__in=reponses_clients)
+            if not verifications.exists():
+                print(f"Aucune vérification trouvée pour le client {client_id}.")
+                return False
+
+            # Vérifier si toutes les vérifications sont valides
+            all_valid = verifications.filter(est_valide=False).count() == 0
+            return all_valid
+
+        except Exception as e:
+            print(f"Erreur inattendue dans are_all_verifications_valid : {e}")
+            return False
