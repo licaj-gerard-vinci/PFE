@@ -17,4 +17,28 @@ export class AuthService {
     login(data: any): Observable<any> {
         return this.http.post(`${this.baseUrl}/login/`, data);
     }
+
+    verifyToken(data: any): Observable<any> {
+        return this.http.post(`${this.baseUrl}/verify-token/`, data);
+    }
+
+    // Fonction pour récupérer le token d'accès (access token) stocké
+  getAccessToken(): string | null {
+    return sessionStorage.getItem('token');
+  }
+
+  // Fonction pour stocker les tokens dans la session
+  storeTokens(tokens: { refresh: string }): void {
+    sessionStorage.setItem('token', tokens.refresh);
+  }
+
+  // Fonction pour supprimer le token
+  clearToken(): void {
+    sessionStorage.removeItem('token');
+  }
+
+    // Fonction pour vérifier si l'utilisateur est connecté
+    isLoggedIn(): boolean {
+        return !!this.getAccessToken();
+    }
 }
