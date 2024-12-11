@@ -19,8 +19,9 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'formulaire', component: FormulaireQ},
   { path: 'onboarding', component: OnboardingComponent },
-  { path: 'report/:clientId', component: RapportComponent, canActivate: [ClientGuard]},
-  { path: '**', redirectTo: 'onboarding' } 
+  { path: 'rapport', component: RapportComponent, canActivate: [ClientGuard] }, // Route pour la page du rapport
+  { path: '**', redirectTo: 'onboarding' }
+
 ];
 
 @NgModule({
