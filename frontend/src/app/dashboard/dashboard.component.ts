@@ -59,7 +59,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       },
     ],
   };
-  chartType: ChartType = 'bar';
+  chartType: ChartType = 'pie';
   chartOptions: ChartOptions = {
     responsive: true,
     plugins: {
