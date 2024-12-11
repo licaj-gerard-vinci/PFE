@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ButtonsService } from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
     selector: 'app-try',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, MatProgressBarModule],
     templateUrl: './buttons.component.html',
     styleUrls: ['./buttons.component.scss'],
   })
@@ -69,6 +69,13 @@ import { FormsModule } from '@angular/forms';
       );
   }
 
+    getProgressPercentage(): number {
+      if (this.questions2.length === 0) {
+        return 0;
+      }
+      return ((this.currentQuestionIndex + 1) / this.questions2.length) * 100;
+    }
+  
     getEnjeux() {
         this.buttonsService.getEnjeux().subscribe(
             (response) =>  {

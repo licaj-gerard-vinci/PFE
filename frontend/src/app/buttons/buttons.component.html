@@ -31,7 +31,16 @@
     </div>
   </div>
   <div class="right">
+
+    <div class="progress-bar-container">
+      <div class="progress-text">{{ getProgressPercentage() | number:'1.0-0' }}%</div>
+      <div class="progress-bar">
+        <div class="progress-bar-fill" [style.width.%]="getProgressPercentage()"></div>
+      </div>
+    </div>
+  
 <div class="form-container">
+  
     <!-- Flèche gauche -->
     <button class="side-button left-button" (click)="previousQuestion()"><</button>
   
