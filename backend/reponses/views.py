@@ -164,20 +164,28 @@ class DeleteReponseClientView(APIView):
         try:
             # Récupérer la réponse client spécifique
             reponse_client = get_object_or_404(ReponseClient, id_reponse_client=reponse_client_id)
+            print(f"🛠️ Suppression de la réponse client {reponse_client_id}.")
             # Récupérer la question associée via la relation
             question = reponse_client.id_reponse.id_question
+            print(f"🛠️ Question associée : {question}")
             # Récupérer toutes les réponses client pour cette question
             reponses_clients = ReponseClient.objects.filter(id_reponse__id_question=question.id_question)
+            print(f"🛠️ Réponses clients trouvées : {reponses_clients}")
 
             # Vérifier si la question a plus d'une réponse
             if reponses_clients.count() > 1:
                 # Supprimer la réponse client
-                reponse_client.delete()
-
-                # Supprimer la vérification associée, si elle existe
                 verification = Verifications.objects.filter(id_reponse_client=reponse_client_id).first()
+                print(f"🛠️ Vérification associée : {verification}")
                 if verification:
                     verification.delete()
+                    print(f"🛠️ Vérification associée supprimée avec succès.")
+
+                reponse_client.delete()
+                print(f"🛠️ Réponse client {reponse_client_id} supprimée avec succès.")
+
+                # Supprimer la vérification associée, si elle existe
+
 
                 # Retourner un succès
                 return Response(
@@ -194,7 +202,6 @@ class DeleteReponseClientView(APIView):
         except Exception as e:
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_412_PRECONDITION_FAILED)
 
-#todo: à retester
 class UpdateReponseClientView(APIView):
     def put(self, request, reponse_client_id):
         '''
@@ -220,7 +227,7 @@ class UpdateReponseClientView(APIView):
 
         try:
             # Vérifier si le contenu et le score_final sont présents dans la requête
-            if 'contenu' not in request.data or 'score_final' not in request.data:
+            if  'score_final' not in request.data:
                 return Response({"error": "Le contenu et le score final sont requis."},
                                 status=status.HTTP_400_BAD_REQUEST)
             # Récupérer la réponse client spécifique
@@ -230,13 +237,18 @@ class UpdateReponseClientView(APIView):
             # Vérifier si le champ libre est activé
             if reponse.champ_libre:
                 # Modifier le contenu de la réponse client
-                reponse.texte = request.data.get('contenu')
+                if 'contenu' in request.data:
+                    reponse.texte = request.data.get('contenu')
 
                 # Modifier le score final de la réponse client
-                reponse.score_final = request.data.get('score_final')
+                reponse_client.score_final = request.data.get('score_final')
 
                 reponse.save()
                 reponse_client.save()
+
+                print(f"🛠️ Réponse client {reponse_client_id} modifiée avec succès.")
+                print(f"🛠️ Nouveau contenu de la réponse : {reponse.texte}")
+                print(f"🛠️ Nouveau score final de la réponse : {reponse_client.score_final}")
 
                 # Retourner un succès
                 return Response(
@@ -253,7 +265,6 @@ class UpdateReponseClientView(APIView):
             return Response({"error": f"Erreur inattendue : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-#todo: à retester
 class AddReponseClientView(APIView):
     def post(self, request):
         """
