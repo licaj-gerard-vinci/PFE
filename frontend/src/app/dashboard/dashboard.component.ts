@@ -34,7 +34,7 @@ Chart.register(...registerables);
     MatInputModule,
     MatBadgeModule,
     BaseChartDirective,
-    IncompleteFormDialogComponent
+    IncompleteFormDialogComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -47,6 +47,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['nom', 'email', 'travailleurs', 'est_valide', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   newCompaniesCount: number = 0;
+  hiddenBadges: { [key: string]: boolean } = {};
 
   chartLabels: string[] = ['Valides', 'Refusée', 'N/D'];
   chartData: ChartData<'pie', number[], string> = {
@@ -88,21 +89,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadCompanies();
     this.checkForNewCompanies();
+    this.checkForCompletedForms();
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  goToFormulaire(company: any): void {
-    if (!company.est_termine) {
-      this.dialog.open(IncompleteFormDialogComponent, {
-        width: '400px',
-      });
-    } else {
-      this.router.navigate(['/formulaire'], { queryParams: { id: company.id_client } });
-    }
   }
 
   loadCompanies(): void {
@@ -126,6 +118,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     });
   }
+
+  goToFormulaire(company: any): void {
+    // Hide the badge for the specific company
+    this.hiddenBadges[company.id_client] = true;
+  
+    // Optionally navigate or perform any additional actions
+    if (!company.est_termine) {
+      this.dialog.open(IncompleteFormDialogComponent, {
+        width: '400px',
+      });
+    } else {
+      this.router.navigate(['/formulaire'], { queryParams: { id: company.id_client } });
+    }
+  
+    // Trigger change detection to update the UI
+    this.cdr.detectChanges();
+  }
+  
+  
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -156,17 +167,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         if (newCount > currentCount) {
           this.newCompaniesCount = newCount - currentCount;
         }
-  
-        data.forEach((newCompany) => {
-          const existingCompany = this.dataSource.data.find(company => company.id_client === newCompany.id_client);
-          if (existingCompany && existingCompany.est_termine !== newCompany.est_termine) {
-            existingCompany.est_termine = newCompany.est_termine;
-            existingCompany.formFinished = newCompany.est_termine;
-          }
-        });
-  
         this.cdr.detectChanges();
       });
     }, 30000); 
   }
+
+  checkForCompletedForms(): void {
+    setInterval(() => {
+      this.http.get<any[]>('http://localhost:8000/api/companies/').subscribe((data) => {
+        let updated = false;
+  
+        this.dataSource.data.forEach((company, index) => {
+          const updatedCompany = data.find(c => c.id_client === company.id_client);
+          if (updatedCompany && updatedCompany.est_termine !== company.est_termine) {
+            this.dataSource.data[index].est_termine = updatedCompany.est_termine;
+            updated = true;
+          }
+        });
+  
+        if (updated) {
+          this.dataSource.data = [...this.dataSource.data]; // Force table refresh
+          this.cdr.detectChanges(); // Trigger change detection
+        }
+      });
+    }, 30000);
+  }
+  
+
+
 }
