@@ -5,12 +5,18 @@ from rest_framework import status
 from django.db.models import Sum, F, Case, When, FloatField
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from backend.models import Clients, ReponseClient, Reponses, Enjeux, Engagements
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class RapportView(APIView):
     def get(self, request):
         try:
             auth_header = request.headers.get("Authorization")
             if not auth_header or not auth_header.startswith("Bearer "):
+                logger.error("Token manquant ou invalide")  
+                print(auth_header,"Token manquant ou invalide")
                 return Response({"error": "Token manquant ou invalide"}, status=401)
 
             token = auth_header.split(" ")[1]
@@ -20,11 +26,14 @@ class RapportView(APIView):
                 access_token = RefreshToken(token)
                 email = access_token["user_id"]
             except TokenError:
+                logger.error("Token invalide ou expiré")
+                print(email,"Token invalide ou expiré")
                 return Response({"error": "Token invalide ou expiré"}, status=401)
 
             # Remplacer par un ID dynamique
             client = Clients.objects.filter(email=email).first()
             if not client:
+                logger.error("Client non trouvé")
                 return Response({"error": "Client not found"}, status=status.HTTP_404_NOT_FOUND)
 
             # Récupérer les réponses associées au client et exclure celles avec texte="N/A"
@@ -44,6 +53,9 @@ class RapportView(APIView):
                 "S": {"range": range(34, 65), "name": "Social"},
                 "G": {"range": range(65, 91), "name": "Gouvernance"},
             }
+
+            # Stockage des engagements par domaine
+            engagements_by_domain = {"E": [], "S": [], "G": []}
 
             # Parcourir les réponses client et calculer les scores
             for reponse_client in reponse_clients:
@@ -69,6 +81,12 @@ class RapportView(APIView):
                 if reponse_client.est_un_engagement:
                     score_engagement[module] += reponse_client.id_reponse.score_engagement
 
+
+                # Récupérer les engagements liés à cette réponse
+                engagement = reponse_client.id_reponse.id_engagement
+                if engagement:
+                    engagements_by_domain[module].append(engagement.engagement)
+
             # Construire les données par domaine
             for module, details in modules.items():
                 domain_data.append({
@@ -77,6 +95,7 @@ class RapportView(APIView):
                     "score_actuel": round(score_actuel[module], 2),
                     "score_engagement": round(score_engagement[module], 2),
                     "score_max": round(max_scores[module], 2),
+                    "engagements": engagements_by_domain[module],
                 })
 
             # Calculer le total des scores
@@ -85,8 +104,11 @@ class RapportView(APIView):
             total_score_engagement = sum(score_engagement.values())
 
             # Score total normalisé (limité à 100%)
+            
             if total_max > 0:
                 score_total_percentage = ((total_score_actuel + total_score_engagement) / total_max) * 100
+                while score_total_percentage > 100:
+                    score_total_percentage *= 0.5  # Réduire de moitié si supérieur à 100%
                 score_total_percentage = min(score_total_percentage, 100)  # Limiter à 100%
             else:
                 score_total_percentage = 0
