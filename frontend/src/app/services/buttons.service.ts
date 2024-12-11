@@ -72,4 +72,8 @@ export class ButtonsService {
             })
         );
     }
+    updateClient(id_client: number): Observable<any> {
+        return this.http.post(`${this.baseUrl}/set_client_termine/`, id_client);
+    }
+    
 }

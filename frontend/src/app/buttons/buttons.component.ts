@@ -291,7 +291,16 @@ import { ActivatedRoute } from '@angular/router';
     }
     
     confirmValidation(): void {
-        this.showModal = false;
+
+      this.buttonsService.updateClient(this.id_client).subscribe(
+        (response: any) => {
+          console.log(response.message);
+          this.showModal = false; // Fermer le modal après validation
+        },
+        (error) => {
+          console.error('Erreur lors de la mise à jour du client:', error);
+        }
+      );
     }
 
     openInfo1(): void {
@@ -655,4 +664,5 @@ copyLink() {
       alert('Impossible de copier le lien.');
     });
 }
+
 }

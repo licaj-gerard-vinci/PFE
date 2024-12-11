@@ -167,3 +167,17 @@ class getQuestionsUser(APIView):
         }
 
         return Response({"client": client_data}, status=200)
+    
+class SetClientTermineView(APIView):
+    def post(self, request):
+        id_client = request.data.get('id_client')
+        if not id_client:
+            return Response({"error": "L'identifiant du client est requis."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        try:
+            client = Client.objects.get(id_client=id_client)
+            client.est_termine = True
+            client.save()
+            return Response({"message": "Client mis à jour avec succès."}, status=status.HTTP_200_OK)
+        except Client.DoesNotExist:
+            return Response({"error": "Client introuvable."}, status=status.HTTP_404_NOT_FOUND)
