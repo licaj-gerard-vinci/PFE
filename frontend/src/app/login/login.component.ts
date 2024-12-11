@@ -32,10 +32,10 @@ export class LoginComponent {
 
             if (this.isAdminEmail(payload.email)) {
               // Redirige vers le tableau de bord si c'est un admin
-              window.location.href = '/home';
+              window.location.href = '/dashboard';
             } else {
               // Redirige vers la page d'accueil si c'est un client
-              window.location.href = '/dashboard';
+              window.location.href = '/home';
             }
           } else {
             console.error('Payload is null or invalid');
