@@ -35,6 +35,7 @@ class Client(models.Model):
     ajouter_autre_chose = models.BooleanField()
     remarque_commentaire_precision = models.CharField(max_length=5000, null=True)
     date_de_soumission = models.DateField()
+    est_termine = models.BooleanField()
     est_valide = models.CharField(max_length=255, choices=[('validée', 'Validée'), ('refusée', 'Refusée'), ('N/D', 'N/D')], default='N/D')
     mdp = models.CharField(max_length=5000, null=True)
     templates = models.ManyToManyField(Template, through='TemplateClient')
