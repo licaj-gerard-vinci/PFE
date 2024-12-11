@@ -11,24 +11,24 @@ export class AdminGuard implements CanActivate {
   canActivate(): boolean {
     const token = this.authService.getAccessToken();
     if (token) {
-      const email = this.decodeToken(token).email; // Récupère l'email du token
+      const email = this.decodeToken(token)?.email;
       if (this.isAdminEmail(email)) {
-        return true; // Autorisé si l'email appartient à un administrateur
+        return true; // Autorise l'accès si l'utilisateur est un administrateur
       }
     }
-    this.router.navigate(['/login']); // Rediriger si ce n'est pas un admin
+
+    this.router.navigate(['/login']); // Redirige vers la page de connexion si non autorisé
     return false;
   }
 
   private isAdminEmail(email: string): boolean {
-    return /@admin|BetterBusiness/i.test(email);
+    return /@admin|@betterbusiness/i.test(email); // Vérifie si l'email contient admin ou betterbusiness
   }
 
   private decodeToken(token: string): any {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload;
-    } catch (e) {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch {
       return null;
     }
   }

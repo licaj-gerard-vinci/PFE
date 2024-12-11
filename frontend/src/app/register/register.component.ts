@@ -40,7 +40,7 @@ export class RegisterComponent {
                 console.log('Login successful after registration', loginResponse);
                 if (loginResponse.access) {
                     this.authService.storeTokens({ refresh: loginResponse.refresh });
-                    window.location.href = '/'; // Redirige vers la page d'accueil
+                    window.location.href = '/login'; // Redirige vers la page d'accueil
                 }
             },
             (loginError) => {

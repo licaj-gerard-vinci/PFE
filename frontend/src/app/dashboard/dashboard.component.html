@@ -1,0 +1,55 @@
+<div class="dashboard-container">
+  <h2 class="dashboard-title">Tableau de bord des entreprises</h2>
+
+  <div class="chart-section">
+    <canvas
+      baseChart
+      [data]="chartData"
+      [type]="chartType"
+      [options]="chartOptions"
+      class="dashboard-chart"
+    ></canvas>
+  </div>
+
+  <div class="search-section">
+    <mat-form-field class="search-field" appearance="outline">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Rechercher</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Nom ou Email" />
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="dataSource && dataSource.data.length > 0; else noDataTemplate" class="table-section">
+    <table mat-table [dataSource]="dataSource" matSort class="company-table">
+      <ng-container matColumnDef="nom">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nom de l'entreprise</th>
+        <td mat-cell *matCellDef="let company">{{ company.nom_entreprise }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let company">{{ company.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="travailleurs">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre de travailleurs</th>
+        <td mat-cell *matCellDef="let company">{{ company.nombre_travailleurs }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
+        <td mat-cell *matCellDef="let company" class="actions-cell">
+          <button mat-raised-button color="primary" (click)="openDetails(company.id_client)">Détails</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <ng-template #noDataTemplate>
+    <p class="no-data-message">Aucune entreprise disponible pour le moment.</p>
+  </ng-template>
+</div>
