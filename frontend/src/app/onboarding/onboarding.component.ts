@@ -56,6 +56,12 @@ export class OnboardingComponent implements OnInit {
     }
   }
 
+  isQuestion19Visible(): boolean {
+    const question18 = this.questions[18]?.answer;
+    return question18 === true || question18 === 'true' || question18 === 'Oui';
+  }
+  
+
   submitForm(): void {
     const formattedDate = new Date().toISOString().split('T')[0];
 

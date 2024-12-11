@@ -11,8 +11,7 @@ class RapportView(APIView):
         try:
             auth_header = request.headers.get("Authorization")
             if not auth_header or not auth_header.startswith("Bearer "):
-                return Response({"error": "Token manquant ou invalide"},
-                                status=401)
+                return Response({"error": "Token manquant ou invalide"}, status=401)
 
             token = auth_header.split(" ")[1]
 
@@ -23,7 +22,7 @@ class RapportView(APIView):
             except TokenError:
                 return Response({"error": "Token invalide ou expiré"}, status=401)
 
-             # Remplacer par un ID dynamique
+            # Remplacer par un ID dynamique
             client = Clients.objects.filter(email=email).first()
             if not client:
                 return Response({"error": "Client not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -64,7 +63,7 @@ class RapportView(APIView):
                 max_scores[module] += max_score_question
 
                 # Ajouter au score actuel
-                score_actuel[module] += reponse_client.score_final
+                score_actuel[module] += reponse_client.id_reponse.score_individuel
 
                 # Calculer le score d'engagement
                 if reponse_client.est_un_engagement:
@@ -92,6 +91,9 @@ class RapportView(APIView):
             else:
                 score_total_percentage = 0
 
+            # Calculer le pourcentage restant
+            remaining_percentage = 100 - score_total_percentage
+
             # Définir le niveau
             niveau = "Insuffisant"
             if score_total_percentage >= 25:
@@ -117,6 +119,7 @@ class RapportView(APIView):
                     "score_actuel": round(total_score_actuel, 2),
                     "score_engagement": round(total_score_engagement, 2),
                     "score_total": round(score_total_percentage, 2),
+                    "remaining_percentage": round(remaining_percentage, 2),
                     "niveau": niveau,
                 },
                 "domains": domain_data

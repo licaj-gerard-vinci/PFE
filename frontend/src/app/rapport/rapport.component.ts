@@ -220,9 +220,9 @@ export class RapportComponent implements OnInit {
         },
       };
 
-      /*if (this.domainChart) {
+      if(this.domainChart) {
         this.domainChart.destroy();
-      }*/
+      }
 
       this.domainChart = new Chart(ctx, {
         type: 'doughnut',

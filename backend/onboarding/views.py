@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.contrib.auth.hashers import make_password
 from onboarding.models import Client, QuestionsOnboarding
 
 from rest_framework.exceptions import ValidationError
@@ -47,7 +47,7 @@ class OnboardingView(APIView):
                 remarque_commentaire_precision=data['remarque_commentaire_precision'],
                 date_de_soumission=data['date_de_soumission'],
                 est_valide='N/D',
-                mdp="test132"
+                mdp=make_password("test123")
             )
             return Response("Le client a bien été enregistré!",status=status.HTTP_201_CREATED)
         except ValidationError as e:
