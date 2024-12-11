@@ -14,36 +14,38 @@
         <div class="question-text">{{ question.question }}</div>
       </div>
 
-      <input
-        *ngIf="currentPage * pageSize + i === 10 || currentPage * pageSize + i === 12"
-        type="number"
-        [id]="'question-' + (currentPage * pageSize + i)"
-        [(ngModel)]="question.answer"
-        name="question-{{ currentPage * pageSize + i }}"
-        class="question-input"
-        placeholder="Entrez un nombre"
-      />
+      <ng-container *ngIf="!(currentPage * pageSize + i === 19 && !isQuestion19Visible())">
+        <input
+          *ngIf="currentPage * pageSize + i === 10 || currentPage * pageSize + i === 12"
+          type="number"
+          [id]="'question-' + (currentPage * pageSize + i)"
+          [(ngModel)]="question.answer"
+          name="question-{{ currentPage * pageSize + i }}"
+          class="question-input"
+          placeholder="Entrez un nombre"
+        />
 
-      <select
-        *ngIf="currentPage * pageSize + i === 11 || currentPage * pageSize + i === 13 || currentPage * pageSize + i === 14 || currentPage * pageSize + i === 15 || currentPage * pageSize + i === 17"
-        [id]="'question-' + (currentPage * pageSize + i)"
-        [(ngModel)]="question.answer"
-        name="question-{{ currentPage * pageSize + i }}"
-        class="question-select"
-      >
-        <option [value]="true">Oui</option>
-        <option [value]="false">Non</option>
-      </select>
+        <select
+          *ngIf="currentPage * pageSize + i === 11 || currentPage * pageSize + i === 13 || currentPage * pageSize + i === 14 || currentPage * pageSize + i === 15 || currentPage * pageSize + i === 17"
+          [id]="'question-' + (currentPage * pageSize + i)"
+          [(ngModel)]="question.answer"
+          name="question-{{ currentPage * pageSize + i }}"
+          class="question-select"
+        >
+          <option [value]="true">Oui</option>
+          <option [value]="false">Non</option>
+        </select>
 
-      <input
-        *ngIf="currentPage * pageSize + i !== 10 && currentPage * pageSize + i !== 12 && currentPage * pageSize + i !== 11 && currentPage * pageSize + i !== 13 && currentPage * pageSize + i !== 14 && currentPage * pageSize + i !== 15 && currentPage * pageSize + i !== 17"
-        type="text"
-        [id]="'question-' + (currentPage * pageSize + i)"
-        [(ngModel)]="question.answer"
-        name="question-{{ currentPage * pageSize + i }}"
-        class="question-input"
-        placeholder="Votre réponse"
-      />
+        <input
+          *ngIf="currentPage * pageSize + i !== 10 && currentPage * pageSize + i !== 12 && currentPage * pageSize + i !== 11 && currentPage * pageSize + i !== 13 && currentPage * pageSize + i !== 14 && currentPage * pageSize + i !== 15 && currentPage * pageSize + i !== 17"
+          type="text"
+          [id]="'question-' + (currentPage * pageSize + i)"
+          [(ngModel)]="question.answer"
+          name="question-{{ currentPage * pageSize + i }}"
+          class="question-input"
+          placeholder="Votre réponse"
+        />
+      </ng-container>
     </div>
 
     <!-- Pagination Buttons -->

@@ -23,6 +23,9 @@ button img.check-icon {
   height: 100vh;
 }
 
+.enjeux-container button {
+  width: 100%;            /* S'étendent sur la largeur du conteneur */
+}
 .button:hover {
     background-color: #e0f7fa;
     color: #00796b;
@@ -39,6 +42,11 @@ button img.check-icon {
     width: 100%;
     height: 100%;
     margin-left: 5px;
+}
+.enjeux-container {
+  background-color: #B5CDBF; /* Couleur de fond souhaitée */
+  border-radius: 2px;      /* Optionnel : arrondir les bords */
+  padding: 5px 5px;
 }
 
 .questions-container {
@@ -129,7 +137,7 @@ button img.check-icon {
     flex: 1; /* Largeur de la colonne gauche */
     max-width: 29%; /* Limite la largeur à 30% */
     padding: 10px;
-    margin-top: 14.5%;
+    margin-top: 16%;
     margin-left: 1%;
   }
   
@@ -151,7 +159,7 @@ button img.check-icon {
   /* Formulaire */
   
   .simple-form {
-    border-radius: 5px;
+    border-radius: 3px;
     padding: 30px; /* Augmente l'espace intérieur */
     width: 90%; /* Augmente la largeur relative à l'écran */
     max-width: 850px; /* Limite la largeur maximale */
@@ -164,8 +172,8 @@ button img.check-icon {
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    background: linear-gradient(110deg, #b5cdbf,#f6fafd, #b5cdbf); /* Dégradé similaire */
-
+    background: #ffffff;
+    border: 5px solid #B5CDBF;
   }
   .info1{
     width: 35px;
@@ -206,9 +214,9 @@ button img.check-icon {
     cursor: pointer;
     padding: 10px 0;
     margin: 2px;
-    background-color: #fff; /* Blanc par défaut */
     transition: background-color 0.3s ease, color 0.3s ease;
     border-radius: 5px;
+    background-color: #dad5d581;
   }
   .answered{
     background-color: #769785;
@@ -222,6 +230,7 @@ button img.check-icon {
   .aujourdhui.active,
   .engagement.active {
     background-color: #DFD4FB;
+    border: 1px solid #000;
   }
   
   @media (max-width: 768px) {
@@ -245,7 +254,6 @@ button img.check-icon {
     flex: 1;
     text-align: center;
     padding: 10px 0;
-    background-color: #fff;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   .addComment{
@@ -303,11 +311,8 @@ button img.check-icon {
 
 
   
-  
-  
   .confirm-button {
-
-    background-color: #ffffff;
+    background-color: #DFD4FB;
     color: #000000;
     font-weight: bold;
     border: none;
@@ -322,7 +327,7 @@ button img.check-icon {
   }
   
   .side-button {
-    background-color: #013238;
+    background-color: #B5CDBF;
     color: white;
     border: none;
     border-radius: 50%;
@@ -468,7 +473,7 @@ textarea:focus {
   }
 
   .share-button {
-    background-color: #007bff;
+    background-color: #013238;
     color: white;
     border: none;
     border-radius: 5px;
@@ -480,6 +485,358 @@ textarea:focus {
   }
 
   .share-button:hover {
-    background-color: #0056b3;
+    background-color: #084d57;
   }
   
+  
+/* Button SHARE */
+
+.share-button-container {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.share-button {
+  background: linear-gradient(135deg, #007bff, #0056b3); 
+  color: white;
+  border: none;
+  border-radius: 50px; 
+  padding: 12px 25px; 
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(0, 123, 255, 0.3); 
+  transition: all 0.3s ease-in-out; 
+  text-transform: uppercase; 
+  letter-spacing: 1px; 
+  position: relative;
+  overflow: hidden; 
+}
+
+.share-button:hover {
+  background: linear-gradient(135deg, #0056b3, #003f7f); 
+  transform: translateY(-2px); 
+  box-shadow: 0 12px 20px rgba(0, 86, 179, 0.4); 
+}
+
+.share-button:active {
+  transform: translateY(2px); 
+  box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); 
+}
+
+
+.share-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 200%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: skewX(-45deg);
+  transition: all 0.5s ease-in-out;
+}
+
+.share-button:hover::before {
+  left: 125%;
+}
+
+
+
+
+
+
+
+
+
+
+/* INFOS */
+
+.popup-overlay {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup-content {
+  background: #fff; 
+  padding: 25px 30px; 
+  border-radius: 10px;
+  max-width: 550px; 
+  width: 90%; 
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); 
+  animation: fadeIn 0.3s ease-in-out; 
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+.popup-content h3 {
+  margin-top: 0; 
+  margin-bottom: 20px; 
+  font-size: 24px; 
+  color: #333;
+  font-weight: bold;
+  text-align: center; 
+}
+
+
+.popup-content p {
+  margin: 15px 0; 
+  line-height: 1.6; 
+  color: #555;
+}
+
+
+.info-section {
+  margin: 20px 0; 
+  padding: 15px;
+  background-color: #f9f9f9; 
+  border-left: 5px solid #007bff; 
+  border-radius: 8px;
+}
+
+.info-section .info-title {
+  font-size: 18px; 
+  font-weight: bold;
+  color: #007bff; 
+  margin-bottom: 8px;
+}
+
+.info-section .info-text {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Bouton */
+.popup-content button {
+  display: block;
+  margin: 20px auto; 
+  padding: 12px 25px; 
+  background-color: #007bff; 
+  color: white;
+  border: none;
+  border-radius: 8px; 
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.popup-content button:hover {
+  background-color: #0056b3; 
+}
+
+.popup-content button:active {
+  transform: scale(0.95); 
+}
+
+
+.logo {
+  cursor: pointer;
+}
+
+
+
+
+
+
+/* Ajouter commentaire */
+
+.comment-section {
+  margin-top: 20px; 
+}
+
+.comment-container {
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
+
+.comment-text {
+  font-size: 16px; 
+  color: #555; 
+  margin: 0; 
+}
+
+.addComment {
+  background-color: #007bff;
+  color: white; 
+  border: none;
+  border-radius: 50%; 
+  width: 40px; 
+  height: 40px; 
+  font-size: 24px; 
+  font-weight: bold;
+  cursor: pointer; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.addComment:hover {
+  background-color: #0056b3;
+  transform: scale(1.1); 
+}
+
+.addComment:active {
+  transform: scale(0.9); 
+}
+
+
+
+
+/* Bouton Validation */
+
+
+
+.validation-button {
+  background-color: #4caf50; 
+  color: white; 
+  font-weight: bold; 
+  text-transform: uppercase; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  text-align: center; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
+
+
+.validation-button:hover {
+  background-color: #388e3c; 
+}
+
+
+.validation-button:active {
+  background-color: #2e7d32;
+  transform: scale(0.98); 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*popUP click Validation */
+
+
+  
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+
+.custom-modal-content {
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  width: 400px;
+  animation: fadeIn 0.3s ease;
+}
+
+
+.custom-modal-message {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.custom-modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+
+.custom-modal-cancel-button {
+  padding: 10px 20px;
+  background-color: #f44336; 
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-modal-cancel-button:hover {
+  background-color: #d32f2f; 
+}
+
+
+.custom-modal-confirm-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-modal-confirm-button:hover {
+  background-color: #388e3c; 
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

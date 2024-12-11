@@ -60,6 +60,7 @@ class Client(models.Model):
     ajouter_autre_chose = models.BooleanField()
     remarque_commentaire_precision = models.CharField(max_length=5000, null=True)
     date_de_soumission = models.DateField()
+    est_termine = models.BooleanField()
     est_valide = models.CharField(max_length=255)
     mdp = models.CharField(max_length=5000, null=True)
 

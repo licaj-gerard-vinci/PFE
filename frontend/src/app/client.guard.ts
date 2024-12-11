@@ -21,8 +21,6 @@ export class ClientGuard implements CanActivate {
     return false;
   }
 
-  
-
   private isAdminEmail(email: string): boolean {
     return /@admin|@betterbusiness/i.test(email); // Vérifie si l'email contient admin ou betterbusiness
   }

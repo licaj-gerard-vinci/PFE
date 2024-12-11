@@ -8,8 +8,6 @@ $primary-color: #b5cdbf; // Couleur principale pour contraste du texte
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* Ajout de l'image en fond */
   background: url('../../assets/images/background.png') no-repeat center center;
   background-size: cover; /* S'assure que l'image couvre toute la page */
   background-color: #013238;

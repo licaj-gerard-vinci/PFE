@@ -6,7 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormulaireComponent } from './buttons/buttons.component';
 import { RapportComponent } from './rapport/rapport.component';
 import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard, RedirectGuard } from './auth.guard';
 import { OnboardingComponent } from './onboarding/onboarding.component';
 import { AdminGuard } from './admin.guard';
 import { ClientGuard } from './client.guard';
@@ -14,12 +14,11 @@ import { ClientGuard } from './client.guard';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [ClientGuard] }, // Route pour la page d'accueil
-  { path: 'dashboard', component: DashboardComponent /*, canActivate: [AdminGuard]*/ }, // Route pour le tableau de bord
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'formulaire', component: FormulaireComponent},
-  { path: 'report/:clientId', component: RapportComponent, canActivate: [AuthGuard]},
-  { path: 'onboarding', component: OnboardingComponent, canDeactivate: [AuthGuard]}, // Route pour la page d'onboarding
+  { path: 'dashboard', component: DashboardComponent  }, // Route pour le tableau de bord
+  { path: 'login', component: LoginComponent, canActivate: [RedirectGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [RedirectGuard] },
+  { path: 'formulaire', component: FormulaireComponent, canActivate: [AuthGuard] },
+  { path: 'onboarding', component: OnboardingComponent, canActivate: [RedirectGuard] }, // Route pour la page d'onboarding
   { path: 'rapport', component: RapportComponent, canActivate: [ClientGuard] }, // Route pour la page du rapport
   { path: '**', redirectTo: 'onboarding' }
 ];
