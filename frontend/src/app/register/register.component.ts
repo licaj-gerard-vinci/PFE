@@ -29,7 +29,7 @@ export class RegisterComponent {
             },
             (error) => {
                 console.error('Registration failed', error);
-                this.registerError = 'Erreur lors de l\'inscription';
+                this.registerError = 'Erreur: vous n\'êtes autorisé à vous inscrire en tant qu\'admin.';
             }
         );
     }
