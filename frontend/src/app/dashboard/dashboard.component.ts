@@ -8,6 +8,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatBadgeModule } from '@angular/material/badge';
 import { CommonModule } from '@angular/common';
 import { CompanyDetailsDialogComponent } from '../company-details-dialog/company-details-dialog.component';
 import { BaseChartDirective } from 'ng2-charts';
@@ -15,7 +16,7 @@ import { ChartConfiguration, ChartOptions, ChartType, ChartData } from 'chart.js
 import { Chart, registerables } from 'chart.js';
 import { ChangeDetectorRef } from '@angular/core';
 
-Chart.register(...registerables); // Register all necessary chart components
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +31,7 @@ Chart.register(...registerables); // Register all necessary chart components
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatBadgeModule,
     BaseChartDirective,
   ],
   templateUrl: './dashboard.component.html',
@@ -40,10 +42,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
-  displayedColumns: string[] = ['nom', 'email', 'travailleurs', 'actions'];
+  displayedColumns: string[] = ['nom', 'email', 'travailleurs', 'est_valide', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  newCompaniesCount: number = 0;
 
-  // Chart configuration
   chartLabels: string[] = ['Valides', 'Refusée', 'N/D'];
   chartData: ChartData<'pie', number[], string> = {
     labels: this.chartLabels,
@@ -68,6 +70,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadCompanies();
+    this.checkForNewCompanies();
   }
 
   ngAfterViewInit(): void {
@@ -78,24 +81,23 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loadCompanies(): void {
     this.http.get<any[]>('http://localhost:8000/api/companies/').subscribe((data) => {
       this.dataSource.data = data;
-  
+
       const validCount = data.filter((company) => company.est_valide === 'validée').length;
       const refusedCount = data.filter((company) => company.est_valide === 'refusée').length;
       const ndCount = data.filter((company) => company.est_valide === 'N/D').length;
-  
-      this.chartData.datasets[0].data = [validCount, refusedCount, ndCount]; // Update chart data
+      this.chartData.datasets[0].data = [validCount, refusedCount, ndCount];
       if (this.chart) {
-        this.chart.update(); // Refresh chart
+        this.chart.update();
       }
-  
-      // Assign paginator and sort after data is set
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-  
-      // Trigger change detection
+
+      setTimeout(() => {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
+
+      this.cdr.detectChanges();
     });
   }
-  
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -111,5 +113,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     dialogRef.componentInstance.companyUpdated.subscribe(() => {
       this.loadCompanies();
     });
+  }
+
+  reloadCompanies(): void {
+    this.loadCompanies();
+    this.newCompaniesCount = 0;
+  }
+
+  checkForNewCompanies(): void {
+    setInterval(() => {
+      this.http.get<any[]>('http://localhost:8000/api/companies/').subscribe((data) => {
+        const currentCount = this.dataSource.data.length;
+        const newCount = data.length;
+        if (newCount > currentCount) {
+          this.newCompaniesCount = newCount - currentCount;
+        }
+      });
+    }, 30000); // Check every 60 seconds
   }
 }
