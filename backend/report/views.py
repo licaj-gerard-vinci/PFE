@@ -8,7 +8,7 @@ from backend.models import Clients, ReponseClient, Reponses, Enjeux, Engagements
 class RapportView(APIView):
     def get(self, request):
         try:
-            client_id = 1  # Remplacer par un ID dynamique
+            client_id = 9  # Remplacer par un ID dynamique
             client = Clients.objects.filter(id_client=client_id).first()
             if not client:
                 return Response({"error": "Client not found"}, status=status.HTTP_404_NOT_FOUND)
