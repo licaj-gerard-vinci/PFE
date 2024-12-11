@@ -170,7 +170,7 @@ class getQuestionsUser(APIView):
     
 class SetClientTermineView(APIView):
     def post(self, request):
-        id_client = request.data.get('id_client')
+        id_client = request.data
         if not id_client:
             return Response({"error": "L'identifiant du client est requis."}, status=status.HTTP_400_BAD_REQUEST)
             

@@ -3,7 +3,7 @@ import { ButtonsService } from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-try',
@@ -38,7 +38,7 @@ import { ActivatedRoute } from '@angular/router';
     comment: string = '';
     champLibre: string = '';
     reponseQuestionClient: any[] = [];
-    constructor(private buttonsService: ButtonsService, private route: ActivatedRoute) {}
+    constructor(private buttonsService: ButtonsService, private route: ActivatedRoute, private router: Router) {}
 
     ngOnInit(): void {
       const urlParams = new URLSearchParams(window.location.search);
@@ -283,7 +283,7 @@ import { ActivatedRoute } from '@angular/router';
         return true;
     }
     openModal(): void {
-        this.showModal = true;
+      this.showModal = true;
     }
     
     closeModal(): void {
@@ -291,7 +291,6 @@ import { ActivatedRoute } from '@angular/router';
     }
     
     confirmValidation(): void {
-
       this.buttonsService.updateClient(this.id_client).subscribe(
         (response: any) => {
           console.log(response.message);
@@ -664,5 +663,7 @@ copyLink() {
       alert('Impossible de copier le lien.');
     });
 }
-
+goHome(): void {
+  this.router.navigate(['/home']);
+}
 }
