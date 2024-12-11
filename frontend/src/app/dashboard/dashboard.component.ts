@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,8 @@ import { CompanyDetailsDialogComponent } from '../company-details-dialog/company
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, ChartType, ChartData } from 'chart.js';
 import { Chart, registerables } from 'chart.js';
-import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { IncompleteFormDialogComponent } from '../incomplete-form-dialog/incomplete-form-dialog.component';
 
 Chart.register(...registerables);
 
@@ -33,6 +34,7 @@ Chart.register(...registerables);
     MatInputModule,
     MatBadgeModule,
     BaseChartDirective,
+    IncompleteFormDialogComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -51,22 +53,37 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     labels: this.chartLabels,
     datasets: [
       {
+        label: 'Company Status',
         data: [0, 0, 0],
         backgroundColor: ['#4caf50', '#013238', '#9e9e9e'],
       },
     ],
   };
-  chartType: ChartType = 'pie';
+  chartType: ChartType = 'bar';
   chartOptions: ChartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        display: false,
+        labels: {
+          usePointStyle: false, 
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+      },
+      y: {
+        beginAtZero: true,
       },
     },
   };
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, public dialog: MatDialog, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.loadCompanies();
@@ -76,6 +93,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  goToFormulaire(company: any): void {
+    if (!company.est_termine) {
+      this.dialog.open(IncompleteFormDialogComponent, {
+        width: '400px',
+      });
+    } else {
+      this.router.navigate(['/formulaire'], { queryParams: { id: company.id_client } });
+    }
   }
 
   loadCompanies(): void {
@@ -114,6 +141,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.loadCompanies();
     });
   }
+
+
 
   reloadCompanies(): void {
     this.loadCompanies();
