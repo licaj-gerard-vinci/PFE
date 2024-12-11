@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +14,8 @@ import { CompanyDetailsDialogComponent } from '../company-details-dialog/company
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions, ChartType, ChartData } from 'chart.js';
 import { Chart, registerables } from 'chart.js';
-import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { IncompleteFormDialogComponent } from '../incomplete-form-dialog/incomplete-form-dialog.component';
 
 Chart.register(...registerables);
 
@@ -33,6 +34,7 @@ Chart.register(...registerables);
     MatInputModule,
     MatBadgeModule,
     BaseChartDirective,
+    IncompleteFormDialogComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -45,32 +47,49 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['nom', 'email', 'travailleurs', 'est_valide', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   newCompaniesCount: number = 0;
+  hiddenBadges: { [key: string]: boolean } = {};
 
   chartLabels: string[] = ['Valides', 'Refusée', 'N/D'];
   chartData: ChartData<'pie', number[], string> = {
     labels: this.chartLabels,
     datasets: [
       {
+        label: 'Company Status',
         data: [0, 0, 0],
         backgroundColor: ['#4caf50', '#013238', '#9e9e9e'],
       },
     ],
   };
-  chartType: ChartType = 'pie';
+  chartType: ChartType = 'bar';
   chartOptions: ChartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        display: false,
+        labels: {
+          usePointStyle: false, 
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+      },
+      y: {
+        beginAtZero: true,
       },
     },
   };
 
-  constructor(private http: HttpClient, public dialog: MatDialog, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, public dialog: MatDialog, private cdr: ChangeDetectorRef, private router: Router) {}
 
   ngOnInit(): void {
     this.loadCompanies();
     this.checkForNewCompanies();
+    this.checkForCompletedForms();
   }
 
   ngAfterViewInit(): void {
@@ -82,6 +101,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.http.get<any[]>('http://localhost:8000/api/companies/').subscribe((data) => {
       this.dataSource.data = data;
 
+      
       const validCount = data.filter((company) => company.est_valide === 'validée').length;
       const refusedCount = data.filter((company) => company.est_valide === 'refusée').length;
       const ndCount = data.filter((company) => company.est_valide === 'N/D').length;
@@ -98,6 +118,25 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     });
   }
+
+  goToFormulaire(company: any): void {
+    // Hide the badge for the specific company
+    this.hiddenBadges[company.id_client] = true;
+  
+    // Optionally navigate or perform any additional actions
+    if (!company.est_termine) {
+      this.dialog.open(IncompleteFormDialogComponent, {
+        width: '400px',
+      });
+    } else {
+      this.router.navigate(['/formulaire'], { queryParams: { id: company.id_client } });
+    }
+  
+    // Trigger change detection to update the UI
+    this.cdr.detectChanges();
+  }
+  
+  
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -128,7 +167,32 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         if (newCount > currentCount) {
           this.newCompaniesCount = newCount - currentCount;
         }
+        this.cdr.detectChanges();
       });
-    }, 30000); // Check every 60 seconds
+    }, 30000); 
   }
+
+  checkForCompletedForms(): void {
+    setInterval(() => {
+      this.http.get<any[]>('http://localhost:8000/api/companies/').subscribe((data) => {
+        let updated = false;
+  
+        this.dataSource.data.forEach((company, index) => {
+          const updatedCompany = data.find(c => c.id_client === company.id_client);
+          if (updatedCompany && updatedCompany.est_termine !== company.est_termine) {
+            this.dataSource.data[index].est_termine = updatedCompany.est_termine;
+            updated = true;
+          }
+        });
+  
+        if (updated) {
+          this.dataSource.data = [...this.dataSource.data]; // Force table refresh
+          this.cdr.detectChanges(); // Trigger change detection
+        }
+      });
+    }, 30000);
+  }
+  
+
+
 }

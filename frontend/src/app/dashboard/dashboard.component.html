@@ -66,7 +66,21 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
         <td mat-cell *matCellDef="let company" class="actions-cell">
-          <button mat-raised-button color="primary" (click)="openDetails(company.id_client)">Détails</button>
+          <button mat-raised-button color="primary" (click)="openDetails(company.id_client)" style="margin-right: 10px;">Détails</button>
+          <button
+          mat-raised-button
+          color="primary"
+          (click)="goToFormulaire(company)"
+          [matBadge]="company.est_termine ? '!' : ''"
+          matBadgeColor="accent"
+          [matBadgeHidden]="hiddenBadges[company.id_client] || !company.est_termine"
+          style="background: linear-gradient(135deg, #caced1, #92a69a);"
+        >
+          Formulaire
+        </button>
+        
+        
+          
         </td>
       </ng-container>
 
