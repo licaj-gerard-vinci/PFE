@@ -2,18 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonsService } from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.component.html',
-  imports: [CommonModule],
+  imports: [CommonModule, HttpClient],
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   id_client: number = 0;
   est_termine: boolean = false;
-  constructor(private router: Router, private buttonsService: ButtonsService) {}
+  allAnswersValidated: boolean = false;
+  constructor(private router: Router, private buttonsService: ButtonsService, private http: HttpClient) {}
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = urlParams.get('token');
@@ -40,6 +42,17 @@ export class HomeComponent implements OnInit {
 
             alert('Vous devez être connecté pour accéder à ce formulaire.');
         }
+    );
+  }
+
+  checkAllAnswersValidated(clientId: number) {
+    this.http.get<{ all_valid: boolean }>(`/verifications/client/${clientId}/status/`).subscribe(
+      (data) => {
+        this.allAnswersValidated = data.all_valid;
+      },
+      (error) => {
+        console.error('Error fetching validation status:', error);
+      }
     );
   }
 

@@ -447,3 +447,11 @@ class GetEngagementsView(APIView):
         except Exception as e:
             print(f"Erreur inattendue dans are_all_verifications_valid : {e}")
             return False
+        
+    class CheckAllVerificationsValidView(APIView):
+        def get(self, client_id):
+            try:
+                is_valid = GetEngagementsView.are_all_verifications_valid(client_id)
+                return Response({"all_valid": is_valid}, status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
