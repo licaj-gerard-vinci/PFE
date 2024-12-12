@@ -47,7 +47,7 @@ class OnboardingView(APIView):
                 remarque_commentaire_precision=data['remarque_commentaire_precision'],
                 date_de_soumission=data['date_de_soumission'],
                 est_valide='N/D',
-                mdp=make_password("test123")
+                mdp=make_password("ipl")
             )
             return Response("Le client a bien été enregistré!",status=status.HTTP_201_CREATED)
         except ValidationError as e:

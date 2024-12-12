@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   id_client: number = 0;
   est_termine: boolean = false;
   allAnswersValidated: boolean = false;
+  raison_refus: string = '';
   estValide: string = '';
   constructor(private router: Router, private buttonsService: ButtonsService, private http: HttpClient, private formValidationService: FormValidationService) {}
   ngOnInit(): void {
@@ -32,6 +33,7 @@ export class HomeComponent implements OnInit {
             this.est_termine = response.client.est_termine;
             this.id_client = response.client.id_client;
             this.estValide = response.client.est_valide;
+            this.raison_refus = response.client.raison_refus;
             console.log('ID_USER :', this.id_client);
 
             const token = sessionStorage.getItem('token');
