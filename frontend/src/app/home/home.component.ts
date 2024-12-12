@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonsService } from '../services/buttons.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.component.html',
+  imports: [CommonModule],
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   id_client: number = 0;
+  est_termine: boolean = false;
   constructor(private router: Router, private buttonsService: ButtonsService) {}
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
@@ -21,7 +24,7 @@ export class HomeComponent implements OnInit {
     this.buttonsService.getQuestionsUser().subscribe(
         (response) => {
             console.log('Utilisateur connecté (objet complet) :', response.client);
-
+            this.est_termine = response.client.est_termine;
             this.id_client = response.client.id_client;
             console.log('ID_USER :', this.id_client);
 
@@ -47,5 +50,4 @@ export class HomeComponent implements OnInit {
   navigateToFormulaire() {
     this.router.navigate(['/formulaire'], { queryParams: { id_client: this.id_client } });
   }
-
 }

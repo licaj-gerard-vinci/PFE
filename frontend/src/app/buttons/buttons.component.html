@@ -28,12 +28,12 @@
   
             <div class="info-section">
               <span class="info-title">Aujourd'hui :</span>
-              <span class="info-text">Indiquez ce que vous faites actuellement (par exemple, "Je ne regarde pas mon compteur d'eau").</span>
+              <span class="info-text"> Indiquez ce que vous faites actuellement</span>
             </div>
   
             <div class="info-section">
-              <span class="info-title">Dans 2 ans :</span>
-              <span class="info-text">Prenez un engagement sur ce que vous allez faire dans le futur (par exemple, "Oui, je regarderai mon compteur d'eau").</span>
+              <span class="info-title">Pacte d'engagment (dans les 2 ans) :</span>
+              <span class="info-text"> Prenez un engagement sur ce que vous allez faire dans le futur</span>
             </div>
   
             <p>Cela vous permet de planifier des actions concrètes pour améliorer vos habitudes ou vos engagements à l'avenir.</p>
@@ -45,11 +45,10 @@
         <div class="popup-overlay" *ngIf="showInfo2" (click)="closeInfo2()">
           <div class="popup-content" (click)="$event.stopPropagation()">
             <h3>Comment fonctionne la barre de progression ?</h3>
-            <p>La barre de progression montre votre avancement dans le formulaire. Plus vous complétez les étapes, plus la barre se remplit.</p>
-            <p>Par exemple : Si vous avez complété 4 étapes sur 10, la barre affichera 40%.</p>
+            <p>La barre de progression montre votre avancement dans le formulaire.</p>
   
             <h3>À quoi sert le bouton de partage ?</h3>
-            <p>Le bouton de partage vous permet de partager votre progression avec vos collègues. Cela peut être utile pour collaborer sur les étapes restantes.</p>
+            <p>Le bouton de partage vous permet de partager votre progression avec vos collègues.</p>
             <button (click)="closeInfo2()">Fermer</button>
           </div>
         </div>

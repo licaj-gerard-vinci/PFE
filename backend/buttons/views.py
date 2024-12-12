@@ -162,7 +162,8 @@ class getQuestionsUser(APIView):
             "ajouter_autre_chose": client.ajouter_autre_chose,
             "remarque_commentaire_precision": client.remarque_commentaire_precision,
             "date_de_soumission": client.date_de_soumission,
-            "est_valide": client.est_valide
+            "est_valide": client.est_valide,
+            "est_termine": client.est_termine,
         }
 
         return Response({"client": client_data}, status=200)

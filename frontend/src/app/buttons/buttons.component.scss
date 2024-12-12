@@ -200,8 +200,9 @@ button img.check-icon {
   .info2{
     width: 35px;
     position: absolute;
-    top: 14%;
+    top: 21%;
     left: 83%;
+    cursor: pointer;
   }
   
 
@@ -442,7 +443,7 @@ textarea:focus {
   border-radius: 12px; 
   padding: 2em 6em; 
   background: linear-gradient(to left,#769785, #93BDA6,#A5C9B6);
-  height :50em;
+  height :60em;
   margin-top: 8em;
 
 }
