@@ -7,10 +7,7 @@
   
   <button *ngIf="est_termine"
   class="btn" 
-  [disabled]="!allAnswersValidated" 
-  (click)="navigateToPacte()" 
-  matTooltip="Votre Pacte est en cours de verification" 
-  [matTooltipDisabled]="allAnswersValidated">
+  (click)="navigateToPacte()" >
   Pacte d'Engagement
 </button>
   
