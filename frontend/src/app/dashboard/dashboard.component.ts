@@ -34,7 +34,7 @@ Chart.register(...registerables);
     MatInputModule,
     MatBadgeModule,
     BaseChartDirective,
-    IncompleteFormDialogComponent,
+    //IncompleteFormDialogComponent,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],

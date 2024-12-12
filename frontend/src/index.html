@@ -8,70 +8,93 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
   <script>
-    // Fonction pour vérifier l'état de connexion et gérer le bouton
     function updateLoginButton() {
-      const isLoggedIn = window.isLoggedIn && window.isLoggedIn(); // Appelle la méthode Angular
-      const currentPath = window.location.pathname; // Récupère la route active
+      const isLoggedIn = window.isLoggedIn && window.isLoggedIn();
+      const currentPath = window.location.pathname;
 
-      // Si on est sur la page login, on cache le bouton
-      if (currentPath === '/login') {
+      if (currentPath !== '/login' || currentPath !== '/register') {
         const button = document.getElementById('auth-button');
         if (button) {
-          button.style.display = 'none'; // Cache le bouton
+          button.style.display = 'none';
         }
         return;
       }
 
-      // Sélectionnez ou créez dynamiquement le bouton
+      // Add onboarding button
+      let onboardingButton = document.getElementById('onboarding-button');
+      if (!onboardingButton) {
+        onboardingButton = document.createElement('a');
+        onboardingButton.id = 'onboarding-button';
+        onboardingButton.className = 'onboarding-button';
+        onboardingButton.textContent = 'Onboarding';
+        onboardingButton.href = '/onboarding';
+        document.getElementById('navbar-left').appendChild(onboardingButton);
+      }
+      onboardingButton.style.display = 'block';
+
+      // Add formulaire button
+      let formulaireButton = document.getElementById('formulaire-button');
+      if (!formulaireButton) {
+        formulaireButton = document.createElement('a');
+        formulaireButton.id = 'formulaire-button';
+        formulaireButton.className = 'formulaire-button';
+        formulaireButton.textContent = 'Formulaire';
+        formulaireButton.href = '/formulaire';
+        document.getElementById('navbar-left').appendChild(formulaireButton);
+      }
+      formulaireButton.style.display = 'block';
+
+      // Add dashboard button
+      let dashboardButton = document.getElementById('dashboard-button');
+      if (!dashboardButton) {
+        dashboardButton = document.createElement('a');
+        dashboardButton.id = 'dashboard-button';
+        dashboardButton.className = 'dashboard-button';
+        dashboardButton.textContent = 'Dashboard';
+        dashboardButton.href = '/dashboard';
+        document.getElementById('navbar-right').appendChild(dashboardButton);
+      }
+      dashboardButton.style.display = 'block';
+
       let button = document.getElementById('auth-button');
       if (!button) {
         button = document.createElement('a');
         button.id = 'auth-button';
         button.className = 'auth-button';
-        button.style.position = 'fixed';
-        button.style.top = '10px';
-        button.style.right = '20px';
-        button.style.padding = '10px 15px';
-        button.style.backgroundColor = '#013238';
-        button.style.color = '#fff';
-        button.style.borderRadius = '5px';
-        button.style.textDecoration = 'none';
-        button.style.cursor = 'pointer';
-        button.style.fontWeight = 'bold';
-        button.style.transition = 'background-color 0.3s ease';
-        document.body.appendChild(button);
+        document.getElementById('navbar-right').appendChild(button);
       }
 
-      // Mettez à jour le texte et les actions du bouton
       if (isLoggedIn) {
         button.textContent = 'Se déconnecter';
-        button.onclick = () => window.logout && window.logout(); // Déconnexion
-        button.href = 'javascript:void(0);'; // Désactive la navigation
-        button.style.display = 'block'; // Affiche le bouton
+        button.onclick = () => window.logout && window.logout();
+        button.href = 'javascript:void(0);';
+        button.style.display = 'block';
       } else {
         button.textContent = 'Se connecter';
-        button.href = '/login'; // Redirige vers la page de connexion
-        button.onclick = null; // Supprime tout gestionnaire d'événements
-        button.style.display = 'block'; // Affiche le bouton
+        button.href = '/login';
+        button.onclick = null;
+        button.style.display = 'block';
       }
     }
 
-    // Vérifiez si Angular est prêt avant d'appeler updateLoginButton
     function waitForAngular() {
       if (window.isLoggedIn) {
-        updateLoginButton(); // Appelle la mise à jour lorsque Angular est prêt
+        updateLoginButton();
       } else {
-        setTimeout(waitForAngular, 100); // Réessaye après 100 ms
+        setTimeout(waitForAngular, 100);
       }
     }
 
-    // Appelle la fonction après le chargement de la page
     document.addEventListener('DOMContentLoaded', waitForAngular);
   </script>
 </head>
 <body class="mat-typography">
-<body class="mat-typography">
+  <div id="navbar" class="navbar">
+    <div id="navbar-left" class="navbar-left"></div>
+    <div id="navbar-right" class="navbar-right"></div>
+  </div>
   <app-root></app-root>
 </body>
 </html>
