@@ -6,6 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EngagementService } from '../services/engagement.service';
 import { RapportService } from '../rapport.service'; // Import du RapportService
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 import SignaturePad from 'signature_pad';
 
@@ -38,7 +40,9 @@ export class EngagementComponent implements OnInit {
 
   constructor(
     private engagementService: EngagementService,
-    private rapportService: RapportService // Injection du RapportService
+    private rapportService: RapportService, // Injection du RapportService
+    private route: ActivatedRoute, 
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -110,7 +114,7 @@ export class EngagementComponent implements OnInit {
 
   saveSignature(): void {
     if (this.signaturePad.isEmpty()) {
-      alert('Veuillez ajouter une signature avant de sauvegarder.');
+      alert('Veuillez ajouter une signature avant de sauvegarder pour continuer.');
       return;
     }
 
@@ -120,8 +124,9 @@ export class EngagementComponent implements OnInit {
     // Stocker l'image dans le sessionStorage
     sessionStorage.setItem('signatureImage', signatureDataURL);
 
-    alert('Signature enregistrée avec succès dans le sessionStorage.');
+    alert('votre engagement a été enregistré avec succès !');
     console.log('Signature enregistrée :', signatureDataURL);
+    this.router.navigate(['/rapport']);
   }
 
   clearSignature(): void {
