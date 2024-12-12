@@ -10,6 +10,7 @@ import { AuthGuard, RedirectGuard } from './auth.guard';
 import { OnboardingComponent } from './onboarding/onboarding.component';
 import { AdminGuard } from './admin.guard';
 import { ClientGuard } from './client.guard';
+import { EngagementComponent} from './engagement/engagement.component';
 
 
 export const routes: Routes = [
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'formulaire', component: FormulaireComponent},
   { path: 'onboarding', component: OnboardingComponent, canActivate: [RedirectGuard] }, // Route pour la page d'onboarding
   { path: 'rapport', component: RapportComponent, canActivate: [ClientGuard] }, // Route pour la page du rapport
+  {path: 'engagement', component: EngagementComponent, canActivate : [ClientGuard]}, // Route pour la page d'engagement
   { path: '**', redirectTo: 'onboarding' }
 ];
 

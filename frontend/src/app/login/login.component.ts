@@ -19,6 +19,11 @@ export class LoginComponent {
 
   onSubmit() {
     this.loginError = '';
+    // Vérifie que les champs sont remplis
+    if (!this.email || !this.password) {
+      this.loginError = 'Erreur: tous les champs doivent être remplis.';
+      return;
+    }
     this.authService.login({ email: this.email, mdp: this.password }).subscribe(
       (response) => {
         console.log('Login successful', response);

@@ -22,6 +22,12 @@ export class RegisterComponent {
 
     onSubmit() {
         this.registerError = '';
+
+        // Vérifie que les champs sont remplis
+        if (!this.nom || !this.prenom || !this.email || !this.password) {
+            this.registerError = 'Erreur: tous les champs doivent être remplis.';
+            return;
+        }
         this.authService.register({ nom: this.nom, prenom: this.prenom, email: this.email, mdp: this.password }).subscribe(
             (response) => {
                 console.log('Registration successful', response);
