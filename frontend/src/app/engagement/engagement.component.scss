@@ -12,53 +12,61 @@
     flex: 1; /* Chaque colonne occupe la moitié de l'écran */
     max-width: 45%; /* Limite la largeur à 45% */
     height: 90%; /* Prend 90% de la hauteur disponible */
-    background-color: #ffffff;
+    background: linear-gradient(110deg, #b5cdbf, #f6fafd, #b5cdbf); /* Dégradé léger */
     border: 1px solid #ccc;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Ombre douce */
     overflow: hidden; /* Empêche les débordements */
   }
   
-  .pacte-engagement,
-  .engagement-list-container {
+  .pacte-engagement-wrapper .engagement-contract {
     padding: 20px;
-    overflow-y: auto; /* Ajoute un scroll si le contenu dépasse */
     height: 100%; /* Remplit la hauteur disponible */
+    overflow-y: auto; /* Ajoute un scroll si le contenu dépasse */
   }
   
-  .pacte-engagement h2 {
-    font-size: 24px;
+  .contract-title {
+    font-size: 2.4rem; /* Augmenté depuis 1.8rem */
     font-weight: bold;
-    color: #005a57;
+    color: #013238; /* Texte en vert foncé */
     text-align: center;
+    margin-bottom: 15px;
   }
   
-  .pacte-engagement h3 {
-    font-size: 20px;
-    margin: 10px 0;
-    color: #00796b;
+  .contract-subtitle {
+    font-size: 1.8rem; /* Augmenté depuis 1.3rem */
+    color: #08ac99; /* Vert d'eau */
     text-align: center;
-  }
-  
-  .pacte-engagement p {
-    font-size: 16px;
-    color: #333;
+    margin-bottom: 20px;
   }
   
   .engagement-details p {
-    margin: 10px 0;
+    font-size: 1.2rem; /* Augmenté depuis 1rem */
+    color: #013238;
+    line-height: 1.8; /* Légèrement augmenté pour une meilleure lisibilité */
+    margin-bottom: 15px;
   }
   
-  .signature-section {
-    margin-top: 20px;
+  .contract-table th,
+  .contract-table td {
+    font-size: 1.2rem; /* Augmenté depuis 1rem */
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* Lignes de séparation */
   }
   
-  .signature-box {
-    width: 100%;
-    height: 50px;
-    border: 2px solid #00796b;
+  .signature-placeholder {
+    border: 1px solid #013238; /* Bordure verte */
+    height: 60px;
+    margin-top: 10px;
     border-radius: 5px;
-    background-color: #e0f2f1;
+    background-color: #88d58b; /* Vert clair */
+  }
+  
+  .engagement-list-container {
+    padding: 20px;
+    height: 100%; /* Remplit la hauteur disponible */
+    overflow-y: auto; /* Ajoute un scroll si le contenu dépasse */
   }
   
   .engagement-list {
@@ -72,5 +80,24 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
+  }
+  
+  .engagement-card:hover {
+    transform: scale(1.02); /* Légère animation au survol */
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Centre le spinner verticalement et horizontalement */
+  }
+  
+  footer {
+    text-align: center;
+    color: #012f2f; /* Vert d'eau */
+    margin-top: 10px;
+    font-size: 0.8rem;
   }
   

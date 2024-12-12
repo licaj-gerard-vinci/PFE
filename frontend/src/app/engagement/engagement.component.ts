@@ -4,6 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EngagementService } from '../services/engagement.service';
+import { RapportService } from '../rapport.service'; // Import du RapportService
 
 @Component({
   selector: 'app-engagement',
@@ -20,105 +21,76 @@ import { EngagementService } from '../services/engagement.service';
 export class EngagementComponent implements OnInit {
   engagements: any[] = [];
   loading: boolean = true;
+  rapportData: any = {
+    client: {
+      nom_entreprise: '',
+      prenom: '',
+      nom: '',
+      fonction: '',
+    },
+  };
+  currentDate: Date = new Date(); // Date actuelle
 
-  constructor(private engagementService: EngagementService) {}
+  constructor(
+    private engagementService: EngagementService,
+    private rapportService: RapportService // Injection du RapportService
+  ) {}
 
-/*   ngOnInit(): void {
-    const clientId = 1; // Exemple d'ID client
+  ngOnInit(): void {
+    this.loadRapportData(); // Charger les données du pacte
+    this.loadEngagements(); // Charger la liste des engagements
+  }
 
-    this.engagementService.getEngagements(clientId).subscribe({
-      next: (data) => {
+  // Charger les données du Pacte d'Engagement via RapportService
+  loadRapportData(): void {
+    this.rapportService.getRapport().subscribe({
+      next: (data: any) => {
+        if (data && data.client) {
+          console.log('Données du Pacte d’Engagement :', data);
+          this.rapportData = data;
+        } else {
+          console.error('Données du Pacte invalides reçues.');
+        }
+      },
+      error: (err: any) => {
+        console.error('Erreur lors de la récupération des données du Pacte :', err);
+      }
+    });
+  }
+
+  // Charger la liste des engagements via EngagementService
+  loadEngagements(): void {
+    const id_client = 1; // Exemple d'ID client
+    this.engagementService.getEngagements(id_client).subscribe({
+      next: (data: any) => {
         this.engagements = data;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erreur lors de la récupération des engagements :', err);
         this.loading = false;
       }
     });
-  } */
+  }
 
-    ngOnInit(): void {
-      // Mock des engagements avec 9 entrées
-      setTimeout(() => {
-        this.engagements = [
-          {
-            id_engagement: 1,
-            id_enjeu: 1,
-            engagement: 'Améliorer la qualité de l\'air',
-            commentaire: 'Réduction des émissions de CO2',
-            kpis: '10% en moins',
-            date: '2024-12-12'
-          },
-          {
-            id_engagement: 2,
-            id_enjeu: 2,
-            engagement: 'Promouvoir l\'économie circulaire',
-            commentaire: null,
-            kpis: 'Augmentation du recyclage à 50%',
-            date: '2024-12-25'
-          },
-          {
-            id_engagement: 3,
-            id_enjeu: 3,
-            engagement: 'Réduire la consommation énergétique',
-            commentaire: 'Optimisation des processus industriels',
-            kpis: '15% en moins',
-            date: '2024-11-20'
-          },
-          {
-            id_engagement: 4,
-            id_enjeu: 4,
-            engagement: 'Encourager la mobilité douce',
-            commentaire: 'Construction de pistes cyclables',
-            kpis: null,
-            date: '2025-01-15'
-          },
-          {
-            id_engagement: 5,
-            id_enjeu: 5,
-            engagement: 'Réduction des déchets plastiques',
-            commentaire: 'Partenariat avec des entreprises locales',
-            kpis: '20% en moins',
-            date: '2024-10-10'
-          },
-          {
-            id_engagement: 6,
-            id_enjeu: 6,
-            engagement: 'Soutenir la biodiversité',
-            commentaire: null,
-            kpis: null,
-            date: '2025-02-01'
-          },
-          {
-            id_engagement: 7,
-            id_enjeu: 7,
-            engagement: 'Renforcer les formations écologiques',
-            commentaire: 'Lancement d\'un programme éducatif',
-            kpis: '100 personnes formées',
-            date: '2024-09-30'
-          },
-          {
-            id_engagement: 8,
-            id_enjeu: 8,
-            engagement: 'Investir dans les énergies renouvelables',
-            commentaire: 'Installation de panneaux solaires',
-            kpis: '30% d\'énergie renouvelable',
-            date: '2025-03-10'
-          },
-          {
-            id_engagement: 9,
-            id_enjeu: 9,
-            engagement: 'Favoriser le télétravail',
-            commentaire: 'Réduction des trajets domicile-travail',
-            kpis: null,
-            date: '2024-08-20'
-          }
-        ];
-        this.loading = false;
-      }, 100); // Simule un délai pour afficher le spinner
-    }
+  // Calculer la période des engagements dynamiquement
+  getEngagementPeriod(): string {
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setFullYear(startDate.getFullYear() + 2); // Ajouter 2 ans
 
-    
-  
+    // Format "Mois Année"
+    const options: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
+    const formattedStartDate = startDate.toLocaleDateString('fr-FR', options);
+    const formattedEndDate = endDate.toLocaleDateString('fr-FR', options);
+
+    return `${formattedStartDate} - ${formattedEndDate}`;
+  }
+
+  // Obtenir la date limite des engagements
+  getDateLimite(): string {
+    const dateLimite = new Date(this.currentDate);
+    dateLimite.setFullYear(dateLimite.getFullYear() + 2); // Ajouter 2 ans
+    return dateLimite.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
 }

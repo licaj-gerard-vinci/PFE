@@ -1,26 +1,50 @@
 <mat-toolbar color="primary">
-    <span>Pacte d’Engagement et Liste des Engagements Mock</span>
+    <span>Pacte d’Engagement et Liste des Engagements</span>
   </mat-toolbar>
   
   <div class="page-layout">
     <!-- Colonne gauche : Pacte d'Engagement -->
     <div class="pacte-engagement-wrapper">
-      <div class="pacte-engagement">
-        <h2>Test</h2>
-        <h3>Pacte d’Engagement</h3>
-        <p><strong>Engagements de Test :</strong> décembre 2024 - décembre 2026</p>
-        <p>J’engage ma responsabilité et celle de l’entreprise que je représente à tenir les engagements définis dans le présent document.</p>
-  
+      <div class="engagement-contract">
+        <h2 class="contract-title">{{ rapportData.client.nom_entreprise }}</h2>
+        <h3 class="contract-subtitle">Pacte d’Engagement</h3>
+        
         <div class="engagement-details">
-          <p><strong>Date limite pour la réalisation de tous les engagements :</strong> 12/12/2026</p>
-          <p><strong>Date du jour :</strong> 12/12/2024</p>
-          <p><strong>Représentant de l’entreprise :</strong> Jean Dupont</p>
-          <p><strong>Fonction dans l’entreprise :</strong> CEO</p>
+          <p>
+            <strong>Engagements de {{ rapportData.client.nom_entreprise }} :</strong>
+            {{ getEngagementPeriod() }}
+          </p>
+          <p>
+            J’engage ma responsabilité et celle de l’entreprise que je représente à tenir
+            les engagements définis dans le présent document.
+          </p>
+          <table class="contract-table">
+            <tbody>
+              <tr>
+                <td><strong>Date limite pour la réalisation de tous les engagements :</strong></td>
+                <td>{{ getDateLimite() }}</td>
+              </tr>
+              <tr>
+                <td><strong>Date du jour :</strong></td>
+                <td>{{ currentDate | date: 'dd/MM/yyyy' }}</td>
+              </tr>
+              <tr>
+                <td><strong>Représentant de l’entreprise :</strong></td>
+                <td>{{ rapportData.client.prenom }} {{ rapportData.client.nom }}</td>
+              </tr>
+              <tr>
+                <td><strong>Fonction dans l’entreprise :</strong></td>
+                <td>{{ rapportData.client.fonction }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-  
+        
         <div class="signature-section">
-          <p><strong>Signature :</strong></p>
-          <div class="signature-box"></div>
+          <strong>Signature :</strong>
+          <div class="signature-placeholder">
+            <!-- Placeholder for signature -->
+          </div>
         </div>
       </div>
     </div>
