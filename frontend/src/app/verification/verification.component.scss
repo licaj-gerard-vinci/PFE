@@ -878,3 +878,19 @@ textarea:focus {
     transform: scale(1);
   }
 }
+
+
+// validation
+.validation-button {
+  background-color: #4caf50; /* Vert */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.validation-button:hover {
+  background-color: #45a049;
+}

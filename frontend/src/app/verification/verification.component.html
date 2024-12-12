@@ -65,7 +65,7 @@
                 [ngClass]="{'selected': question.id_question === selectedQuestionId}"
                 (click)="selectQuestion(question.id_question)">
                 <button class="button">
-                  <img *ngIf="(isAnswered(question.id_question) || !checkIfCanAnswer(question.id_question))" src="/check.png" class="check" />
+                  <img *ngIf="validatedQuestions[question.id_question]" src="/check.png" class="check" />
                   {{i+1}}.{{j+1}} {{question.sujet}}
                 </button>
               </div>
@@ -120,6 +120,9 @@
                   - {{ reponseClient.texte }} {{reponseClient.rep_aujourd_hui}}{{reponseClient.rep_dans_2_ans}}
                 </li>
               </ul>
+                <!-- Nouveau bouton pour vérifier toutes les réponses -->
+                 <p>laal</p>
+               <button class="validation-button" type="button" (click)="validateCurrentQuestion()">VÉRIFIER TOUTES LES RÉPONSES</button>
             </div>
   
             <ng-template #answerForm>

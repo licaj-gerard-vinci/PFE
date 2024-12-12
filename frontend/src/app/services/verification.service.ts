@@ -38,7 +38,7 @@ export class VerificationService {
   }
 
   // Récupérer les vérifications pour un client
-  getVerifications(clientId: number): Observable<any> {
+  getVerificationsParClient(clientId: number): Observable<any> {
     const url = `${this.apiUrl}/verifications/client/${clientId}/`;
     return this.http.get(url).pipe(
       tap((response) => console.log(`[VerificationService] Vérifications récupérées:`, response)),

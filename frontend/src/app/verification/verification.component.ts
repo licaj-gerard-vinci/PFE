@@ -1,3 +1,4 @@
+import { VerificationService } from './../services/verification.service';
 import { Component, OnInit } from '@angular/core';
 import { ButtonsService} from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
@@ -38,7 +39,11 @@ import { ActivatedRoute, Router } from '@angular/router';
     comment: string = '';
     champLibre: string = '';
     reponseQuestionClient: any[] = [];
-    constructor(private buttonsService: ButtonsService, private route: ActivatedRoute, private router: Router) {}
+    // y17:  utile pour la validation 
+    validatedQuestions: { [key: number]: boolean } = {}; // Clé : ID de la question, Valeur : état de validation
+    
+
+    constructor(private buttonsService: ButtonsService, private route: ActivatedRoute, private router: Router, private verificationService : VerificationService) {}
 
     ngOnInit(): void {
       this.route.queryParamMap.subscribe(params => {
@@ -51,6 +56,51 @@ import { ActivatedRoute, Router } from '@angular/router';
       this.getClientResponses();
       this.loadQuestions();
       this.getTemplates();
+
+      let liste_id_reponse: number[] = [];
+
+      Promise.all([this.getQuestions(), this.getClientResponses()]).then(() => {
+        // Initialiser validatedQuestions à true pour chaque question
+        this.questions2.forEach((question) => {
+          this.validatedQuestions[question.id] = true; // Par défaut à true
+        });
+
+        this.clientReponses.forEach((clientReponse) => {
+          liste_id_reponse.push(clientReponse.id_reponse);
+        });
+        // Si une réponse existe pour une question, mettre validatedQuestions à false
+        this.clientReponses.forEach((client_rep) => {
+
+          
+          this.Responses.forEach((reponse) => {
+              console.log('🟢🟢🟢🟢🟢reponse :', reponse);
+            if (reponse.id_reponse === client_rep.id_reponse) {
+              
+              this.validatedQuestions[reponse.id_question] = false;
+            }
+          });
+
+
+        });
+    
+        console.log("Validated Questions après initialisation :", this.validatedQuestions);
+      }
+      );
+      setTimeout(() => {
+        this.Responses.forEach((reponse) => {
+          console.log('🟢🟢🟢🟢🟢reponse :', reponse);
+          // Si une réponse existe pour une question, mettre validatedQuestions à false
+          liste_id_reponse.forEach((id_reponse_client) => {
+            console.log('🔴🔴🔴🔴🔴🔴id_reponse_client :', id_reponse_client);
+            if (reponse.id_reponse === id_reponse_client) {
+              this.validatedQuestions[reponse.id_question] = false;
+            }
+          });
+        });
+      }, 3000);
+        
+  
+
   }
 
     getProgressPercentage(): number {
@@ -641,6 +691,69 @@ copyLink() {
 goHome(): void {
   this.router.navigate(['/home']);
 }
+// youss____________________________________________________________________________________________
+validateCurrentQuestion(): void {
+  const responses = this.getClientAnswer(this.currentQuestion.id, this.activeTab);
 
+  if (responses.length === 0) {
+    alert('Aucune réponse à valider pour cette question.');
+    this.validatedQuestions[this.currentQuestion.id] = true; // Marquer la question comme validée
+    return;
+  }
+
+  let allValid = false;
+
+  // Appeler le service pour chaque réponse
+  responses.forEach((response) => {
+    if(this.validatedQuestions[this.currentQuestion.id]){
+      alert('Cette question a déjà été validée.');
+      return
+    }
+
+    let listVericatationClient: any[] = [];
+    this.verificationService.getVerificationsParClient(this.id_client).subscribe(
+      (result) => {
+        listVericatationClient = result;
+      },
+      (error) => {
+        console.error(`Erreur lors de la récupération des vérifications pour le client ${this.id_client}:`, error);
+        allValid = false;
+      }
+    );
+
+    listVericatationClient = listVericatationClient.filter((verification) => verification.id_reponse_client === response.id);
+
+    let errorFlag = false;
+    listVericatationClient.forEach((verification) => {
+      console.log(`Vérification en cours pour la réponse client ${verification.id_reponse_client}...`); 
+      this.verificationService.validateReponse(verification.id, verification.id_admin).subscribe(
+        (result) => {
+          console.log(`Réponse client ${verification.id_reponse_client} validée avec succès.`, result);
+        },
+        (error) => {
+          console.error(`Erreur lors de la validation de la réponse client ${verification.id_reponse_client}:`, error);
+          errorFlag = true;
+        }
+      );
+      
+    });
+    if (errorFlag) {
+      alert('Une erreur s’est produite lors de la validation de certaines réponses.');
+      return;
+    }
+
+    allValid = true;
+
+
+    //filttrer les verifications pour avoir celle qui concerne la reponse
+    this.validatedQuestions[this.currentQuestion.id] = true; // Marquer la question comme validée
+
+  });
+
+}
+
+isQuestionValidated(questionId: number): boolean {
+  return this.validatedQuestions[questionId] || false;
+}
 
 }
