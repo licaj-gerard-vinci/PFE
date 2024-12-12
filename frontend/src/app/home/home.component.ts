@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 import { ButtonsService } from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.component.html',
-  imports: [CommonModule, HttpClient],
+  imports: [CommonModule, MatTooltipModule],
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
@@ -57,7 +59,7 @@ export class HomeComponent implements OnInit {
   }
 
   navigateToRapport() {
-    this.router.navigate([`/rapport`]); // Navigue vers la page du rapport
+    this.router.navigate([`/rapport`]);
   }
 
   navigateToFormulaire() {

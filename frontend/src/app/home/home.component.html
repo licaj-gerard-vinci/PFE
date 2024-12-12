@@ -3,7 +3,14 @@
   <p>
     Vous pouvez consulter vos rapports d'impact et vos engagements en cliquant sur le bouton ci-dessous.
   </p>
-  <button class="btn" [disabled]="!allAnswersValidated" (click)="navigateToRapport()">Voir mon rapport</button>
+  <button *ngIf="est_termine"
+  class="btn" 
+  [disabled]="!allAnswersValidated" 
+  (click)="navigateToRapport()" 
+  matTooltip="Votre Pacte est en cours de verification" 
+  [matTooltipDisabled]="allAnswersValidated">
+  Pacte d'Engagement
+</button>
   <div *ngIf="!est_termine">
     <button class="btn" (click)="navigateToFormulaire()">Accéder au formulaire</button>
   </div>
