@@ -1,0 +1,76 @@
+.page-layout {
+    display: flex;
+    gap: 20px; /* Espace entre les deux colonnes */
+    padding: 20px;
+    height: calc(100vh - 64px); /* Hauteur de la page moins la toolbar */
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .pacte-engagement-wrapper,
+  .engagement-list-wrapper {
+    flex: 1; /* Chaque colonne occupe la moitié de l'écran */
+    max-width: 45%; /* Limite la largeur à 45% */
+    height: 90%; /* Prend 90% de la hauteur disponible */
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Empêche les débordements */
+  }
+  
+  .pacte-engagement,
+  .engagement-list-container {
+    padding: 20px;
+    overflow-y: auto; /* Ajoute un scroll si le contenu dépasse */
+    height: 100%; /* Remplit la hauteur disponible */
+  }
+  
+  .pacte-engagement h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #005a57;
+    text-align: center;
+  }
+  
+  .pacte-engagement h3 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #00796b;
+    text-align: center;
+  }
+  
+  .pacte-engagement p {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .engagement-details p {
+    margin: 10px 0;
+  }
+  
+  .signature-section {
+    margin-top: 20px;
+  }
+  
+  .signature-box {
+    width: 100%;
+    height: 50px;
+    border: 2px solid #00796b;
+    border-radius: 5px;
+    background-color: #e0f2f1;
+  }
+  
+  .engagement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .engagement-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+  }
+  
