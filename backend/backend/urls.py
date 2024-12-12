@@ -28,4 +28,6 @@ urlpatterns = [
     path('reponses/', include('reponses.urls')),
     path('report/', include('report.urls')),
     path('glossaires/', include('glossaires.urls')),
+
+    path('standards/', include('standards.urls')),
 ]

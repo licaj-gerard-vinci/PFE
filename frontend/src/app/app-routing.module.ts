@@ -12,6 +12,7 @@ import { AdminGuard } from './admin.guard';
 import { ClientGuard } from './client.guard';
 import { EngagementComponent} from './engagement/engagement.component';
 import { GlossairesComponent } from './glossaires/glossaires.component';
+import { StandardsComponent } from './standards/standards.component';
 
 
 export const routes: Routes = [
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'rapport', component: RapportComponent, canActivate: [ClientGuard] }, // Route pour la page du rapport
   { path: 'engagement', component: EngagementComponent, canActivate : [ClientGuard]}, // Route pour la page d'engagement
   { path: 'glossaires', component: GlossairesComponent}, // Route pour la page des glossaires
+  { path: 'standards', component: StandardsComponent}, // Route pour la page des standards
   { path: '**', redirectTo: 'onboarding' }
 ];
 

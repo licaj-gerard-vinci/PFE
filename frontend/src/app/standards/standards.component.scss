@@ -1,0 +1,92 @@
+.glossaire-container {
+    margin: 50px auto; /* Espace vertical pour descendre le conteneur */
+    max-width: 800px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .standards-scrollable {
+    max-height: 400px;
+    overflow-y: auto; /* Ajoute une barre de défilement verticale si nécessaire */
+    padding-right: 10px; /* Espace entre le contenu et la barre */
+  }
+  
+  .standards-item {
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .standards-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .standards-definition {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .standards-link {
+    font-size: 0.9rem;
+    color: #0056b3;
+    text-decoration: underline;
+  
+    &:hover {
+      color: #003d80;
+    }
+  }
+  
+  .no-data-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+    margin-top: 20px;
+  }
+  
+
+  .search-container {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+  }
+  
+  .standards-scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+  

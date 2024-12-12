@@ -1,5 +1,5 @@
 <div class="glossaire-container">
-  <h1 class="title">Glossaire</h1>
+  <h1 class="title">Standards</h1>
 
   <!-- Champ de recherche -->
   <div class="search-container">
@@ -12,11 +12,12 @@
     />
   </div>
 
-  <div *ngIf="glossaires.length > 0; else noData">
-    <div class="glossaire-scrollable">
-      <div *ngFor="let item of filteredGlossaires" class="glossaire-item">
-        <h2 class="glossaire-title">{{ item.nom }}</h2>
-        <p class="glossaire-definition">{{ item.definition }}</p>
+  <div *ngIf="filteredStandards.length > 0; else noData">
+    <div class="standards-scrollable">
+      <div *ngFor="let item of filteredStandards" class="standards-item">
+        <h2 class="standards-title">{{ item.nom }}</h2>
+        <p class="standards-definition">{{ item.presentation }}</p>
+        <a href="{{ item.plus_info }}" class="standards-link" target="_blank">{{ item.plus_info }}</a>
       </div>
     </div>
   </div>

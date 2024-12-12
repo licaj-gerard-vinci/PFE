@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'reponses',
     'buttons',
     'glossaires',
+    'standards',
 ]
 
 # Configuration REST Framework
