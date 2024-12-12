@@ -1,10 +1,21 @@
 <div class="home-container">
+  <div class="main-container">
+    <div class="left">
+      <img src="/logoBlanc.png" class="logo" alt="Logo">
+    </div>
   <h1>Bienvenue sur votre espace entreprise</h1>
-  <p>
-    Vous pouvez consulter vos rapports d'impact et vos engagements en cliquant sur le bouton ci-dessous.
-  </p>
-  <button class="btn" (click)="navigateToRapport()">Voir mon rapport</button>
+  
+  <button *ngIf="est_termine"
+  class="btn" 
+  (click)="navigateToPacte()" >
+  Pacte d'Engagement
+</button>
+  
   <div *ngIf="!est_termine">
-    <button class="btn" (click)="navigateToFormulaire()">Accéder au formulaire</button>
-  </div>
+    <p *ngIf="estValide == 'N/D'">Votre entreprise est en cours de vérification</p>
+    <button *ngIf="estValide == 'validée'" class="btn" (click)="navigateToFormulaire()">Accéder au formulaire</button>
+    <p *ngIf="estValide == 'refusée'">
+      Votre entreprise a été refusée (Raison: {{ raison_refus }}). Pour en savoir plus veuillez contacter le support : contact&#64;shiftingpact.be
+    </p>
+      </div>
 </div>

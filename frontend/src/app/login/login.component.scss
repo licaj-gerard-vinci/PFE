@@ -2,6 +2,14 @@
 $input-bg: #b5cdbf;
 $primary-color: #3f4c76; // Couleur principale pour contraste du texte
 
+.logo {
+  position: absolute; /* Permet de positionner le logo par rapport à la fenêtre */
+  top: 10px; /* Distance par rapport au haut de la page */
+  left: 10px; /* Distance par rapport à la gauche de la page */
+  height: 80px; /* Ajuste la hauteur du logo */
+  z-index: 100; /* S'assure que le logo est au-dessus des autres éléments */
+}
+
 .login-container {
   position: relative;
   height: 100vh;
@@ -11,6 +19,9 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
   background: url('../../assets/images/background.png') no-repeat center center;
   background-size: cover; /* S'assure que l'image couvre toute la page */
   background-color: #013238;
+
+  
+  
 
   .login-form {
     position: relative;

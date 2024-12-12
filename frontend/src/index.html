@@ -8,87 +8,7 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  
-  <script>
-    function updateLoginButton() {
-      const isLoggedIn = window.isLoggedIn && window.isLoggedIn();
-      const currentPath = window.location.pathname;
-
-      if (currentPath === '/login' || currentPath === '/register') {
-        const button = document.getElementById('auth-button');
-        if (button) {
-          button.style.display = 'none';
-        }
-        return;
-      }
-
-      // Add onboarding button
-      let onboardingButton = document.getElementById('onboarding-button');
-      if (!onboardingButton) {
-        onboardingButton = document.createElement('a');
-        onboardingButton.id = 'onboarding-button';
-        onboardingButton.className = 'onboarding-button';
-        onboardingButton.textContent = 'Onboarding';
-        onboardingButton.href = '/onboarding';
-        document.getElementById('navbar-left').appendChild(onboardingButton);
-      }
-      onboardingButton.style.display = 'block';
-
-      // Add formulaire button
-      let formulaireButton = document.getElementById('formulaire-button');
-      if (!formulaireButton) {
-        formulaireButton = document.createElement('a');
-        formulaireButton.id = 'formulaire-button';
-        formulaireButton.className = 'formulaire-button';
-        formulaireButton.textContent = 'Formulaire';
-        formulaireButton.href = '/formulaire';
-        document.getElementById('navbar-left').appendChild(formulaireButton);
-      }
-      formulaireButton.style.display = 'block';
-
-      // Add dashboard button
-      let dashboardButton = document.getElementById('dashboard-button');
-      if (!dashboardButton) {
-        dashboardButton = document.createElement('a');
-        dashboardButton.id = 'dashboard-button';
-        dashboardButton.className = 'dashboard-button';
-        dashboardButton.textContent = 'Dashboard';
-        dashboardButton.href = '/dashboard';
-        document.getElementById('navbar-right').appendChild(dashboardButton);
-      }
-      dashboardButton.style.display = 'block';
-
-      let button = document.getElementById('auth-button');
-      if (!button) {
-        button = document.createElement('a');
-        button.id = 'auth-button';
-        button.className = 'auth-button';
-        document.getElementById('navbar-right').appendChild(button);
-      }
-
-      if (isLoggedIn) {
-        button.textContent = 'Se déconnecter';
-        button.onclick = () => window.logout && window.logout();
-        button.href = 'javascript:void(0);';
-        button.style.display = 'block';
-      } else {
-        button.textContent = 'Se connecter';
-        button.href = '/login';
-        button.onclick = null;
-        button.style.display = 'block';
-      }
-    }
-
-    function waitForAngular() {
-      if (window.isLoggedIn) {
-        updateLoginButton();
-      } else {
-        setTimeout(waitForAngular, 100);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', waitForAngular);
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </head>
 <body class="mat-typography">
   <div id="navbar" class="navbar">
@@ -96,5 +16,159 @@
     <div id="navbar-right" class="navbar-right"></div>
   </div>
   <app-root></app-root>
+
+  <script>
+    function initializeFromSessionStorage() {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('Token not found in sessionStorage');
+        return null;
+      }
+      return token;
+    }
+
+    function decodeToken(token) {
+      try {
+        const decodedToken = jwt_decode(token);
+        return decodedToken;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+
+    function isAdmin() {
+      const token = initializeFromSessionStorage();
+      if (!token) return false;
+
+      const decodedToken = decodeToken(token);
+      if (!decodedToken) return false;
+
+      const email = decodedToken.email || decodedToken.user_id || '';
+      const isAdmin = email.includes('@admin') || email.includes('@betterbusiness');
+      return isAdmin;
+    }
+
+    function updateUIBasedOnRole() {
+      const navbarRight = document.getElementById('navbar-right');
+      if (!navbarRight) {
+        console.error('Navbar-right element not found');
+        return;
+      }
+
+      if (isAdmin()) {
+        let dashboardButton = document.createElement('a');
+        dashboardButton.id = 'dashboard-button';
+        dashboardButton.textContent = 'Dashboard';
+        dashboardButton.href = '/dashboard';
+        dashboardButton.style.padding = '10px 20px';
+        dashboardButton.style.fontSize = '16px';
+        dashboardButton.style.cursor = 'pointer';
+        dashboardButton.style.marginLeft = '10px';
+        navbarRight.appendChild(dashboardButton);
+      } else {
+        let engagementButton = document.createElement('a');
+        engagementButton.id = 'engagement-button';
+        engagementButton.textContent = 'rapport';
+        engagementButton.href = '/rapport';
+        engagementButton.style.padding = '10px 20px';
+        engagementButton.style.fontSize = '16px';
+        engagementButton.style.cursor = 'pointer';
+        engagementButton.style.marginLeft = '10px';
+        navbarRight.appendChild(engagementButton);
+      }
+    }
+
+    function updateLoginButtons() {
+      const isLoggedIn = !!initializeFromSessionStorage(); // Est connecté si le token existe
+      const navbarRight = document.getElementById('navbar-right');
+      if (!navbarRight) {
+        console.error('Navbar-right element not found');
+        return;
+      }
+
+      if (!isLoggedIn) {
+        let loginButton = document.getElementById('login-button');
+        if (!loginButton) {
+          loginButton = document.createElement('a');
+          loginButton.id = 'login-button';
+          loginButton.textContent = 'Se connecter';
+          loginButton.href = '/login';
+          loginButton.style.padding = '10px 20px';
+          loginButton.style.fontSize = '16px';
+          loginButton.style.cursor = 'pointer';
+          loginButton.style.marginLeft = '10px';
+          navbarRight.appendChild(loginButton);
+        }
+        loginButton.style.display = 'block';
+
+        const logoutButton = document.getElementById('logout-button');
+        if (logoutButton) logoutButton.style.display = 'none';
+      } else {
+        // Bouton Se Déconnecter
+        let logoutButton = document.getElementById('logout-button');
+        if (!logoutButton) {
+
+          
+
+        // Bouton Glossaire
+        let glossaireButton = document.getElementById('glossaire-button');
+        if (!glossaireButton) {
+          glossaireButton = document.createElement('a');
+          glossaireButton.id = 'glossaire-button';
+          glossaireButton.textContent = 'Glossaire';
+          glossaireButton.href = '/glossaires';
+          glossaireButton.style.padding = '10px 20px';
+          glossaireButton.style.fontSize = '16px';
+          glossaireButton.style.cursor = 'pointer';
+          glossaireButton.style.marginLeft = '10px';
+          navbarRight.appendChild(glossaireButton);
+        }
+
+        // Bouton Standard
+        let standardButton = document.getElementById('standard-button');
+        if (!standardButton) {
+          standardButton = document.createElement('a');
+          standardButton.id = 'standard-button';
+          standardButton.textContent = 'Standard';
+          standardButton.href = '/standards';
+          standardButton.style.padding = '10px 20px';
+          standardButton.style.fontSize = '16px';
+          standardButton.style.cursor = 'pointer';
+          standardButton.style.marginLeft = '10px';
+          navbarRight.appendChild(standardButton);
+        }
+
+        const loginButton = document.getElementById('login-button');
+        if (loginButton) loginButton.style.display = 'none';
+
+        logoutButton = document.createElement('a');
+          logoutButton.id = 'logout-button';
+          logoutButton.textContent = 'Se déconnecter';
+          logoutButton.href = '/logout';
+          logoutButton.onclick = () => {
+            sessionStorage.removeItem('token');
+            window.location.reload();
+          };
+          logoutButton.style.padding = '10px 20px';
+          logoutButton.style.fontSize = '16px';
+          logoutButton.style.cursor = 'pointer';
+          logoutButton.style.marginLeft = '10px';
+          navbarRight.appendChild(logoutButton);
+        }
+        logoutButton.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = initializeFromSessionStorage();
+      if (token) {
+        updateUIBasedOnRole();
+      } else {
+        console.error('No token found, cannot update UI');
+      }
+      updateLoginButtons();
+    });
+  </script>
 </body>
 </html>

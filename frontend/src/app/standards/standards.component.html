@@ -1,0 +1,33 @@
+<div class="glossaire-container">
+  <div class="main-container">
+    <div class="left">
+      <img src="/logoBlanc.png" class="logo" (click)="goHome()" alt="Logo">
+    </div>
+    
+  <h1 class="title">Standards</h1>
+
+  <!-- Champ de recherche -->
+  <div class="search-container">
+    <input
+      type="text"
+      placeholder="Rechercher par nom, description ou lien..."
+      [(ngModel)]="searchQuery"
+      (input)="applyFilter()"
+      class="search-input"
+    />
+  </div>
+
+  <div *ngIf="filteredStandards.length > 0; else noData">
+    <div class="standards-scrollable">
+      <div *ngFor="let item of filteredStandards" class="standards-item">
+        <h2 class="standards-title">{{ item.nom }}</h2>
+        <p class="standards-definition">{{ item.presentation }}</p>
+        <a href="{{ item.plus_info }}" class="standards-link" target="_blank">{{ item.plus_info }}</a>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p class="no-data-message">Aucune donnée disponible.</p>
+  </ng-template>
+</div>

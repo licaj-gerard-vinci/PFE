@@ -11,6 +11,8 @@ import { OnboardingComponent } from './onboarding/onboarding.component';
 import { AdminGuard } from './admin.guard';
 import { ClientGuard } from './client.guard';
 import { EngagementComponent} from './engagement/engagement.component';
+import { GlossairesComponent } from './glossaires/glossaires.component';
+import { StandardsComponent } from './standards/standards.component';
 
 
 export const routes: Routes = [
@@ -18,10 +20,12 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent  }, // Route pour le tableau de bord
   { path: 'login', component: LoginComponent, canActivate: [RedirectGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [RedirectGuard] },
-  { path: 'formulaire', component: FormulaireComponent, canActivate: [AuthGuard] },
+  { path: 'formulaire', component: FormulaireComponent},
   { path: 'onboarding', component: OnboardingComponent, canActivate: [RedirectGuard] }, // Route pour la page d'onboarding
   { path: 'rapport', component: RapportComponent, canActivate: [ClientGuard] }, // Route pour la page du rapport
-  {path: 'engagement', component: EngagementComponent, canActivate : [ClientGuard]}, // Route pour la page d'engagement
+  { path: 'engagement', component: EngagementComponent, canActivate : [ClientGuard]}, // Route pour la page d'engagement
+  { path: 'glossaires', component: GlossairesComponent}, // Route pour la page des glossaires
+  { path: 'standards', component: StandardsComponent}, // Route pour la page des standards
   { path: '**', redirectTo: 'onboarding' }
 ];
 

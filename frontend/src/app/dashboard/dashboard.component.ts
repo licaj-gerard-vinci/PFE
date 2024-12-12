@@ -193,6 +193,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }, 30000);
   }
   
-
+  goHome(): void {
+    this.router.navigate(['/home']);
+  }  
 
 }

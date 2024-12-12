@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormValidationService } from '../services/form-validation.service';
 
 @Component({
     selector: 'app-try',
@@ -38,7 +39,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     comment: string = '';
     champLibre: string = '';
     reponseQuestionClient: any[] = [];
-    constructor(private buttonsService: ButtonsService, private route: ActivatedRoute, private router: Router) {}
+    constructor(private buttonsService: ButtonsService, private route: ActivatedRoute, private router: Router, private formValidationService : FormValidationService) {}
 
     ngOnInit(): void {
       this.route.queryParamMap.subscribe(params => {
@@ -268,6 +269,7 @@ import { ActivatedRoute, Router } from '@angular/router';
       this.buttonsService.updateClient(this.id_client).subscribe(
         (response: any) => {
           console.log(response.message);
+          this.formValidationService.setFormValidated(true); // Notify that the form is validated
           this.showModal = false; // Fermer le modal après validation
         },
         (error) => {
@@ -619,14 +621,8 @@ getExistingAnswer(questionId: number) {
 }
 copyLink() {
   const currentUrl = window.location.href; 
-  const token = sessionStorage.getItem('token'); // Récupérer le token
 
-  if (!token) {
-    alert('Aucun token disponible. Connectez-vous d’abord.');
-    return;
-  }
-
-  const urlWithToken = `${currentUrl}?token=${token}`;
+  const urlWithToken = `${currentUrl}`;
 
 
   navigator.clipboard.writeText(urlWithToken)

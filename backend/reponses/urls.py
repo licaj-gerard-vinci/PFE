@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import AddVerificationView, ValidateQuestionView, GetVerificationsView, DeleteReponseClientView, \
-    UpdateReponseClientView, AddReponseClientView, GetEngagementsView
+    UpdateReponseClientView, AddReponseClientView, GetEngagementsView, CheckAllVerificationsValidView
 
 urlpatterns = [
     path('verifications/<int:client_id>/add/', AddVerificationView.as_view(), name='add-verification'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('reponse_client/reponse_libre/<int:reponse_client_id>/update/', UpdateReponseClientView.as_view(), name='update-reponse-client'),
     path('reponse_client/reponse_verifier/add', AddReponseClientView.as_view(), name='add-reponse-verifier'),
     path('engagements/list_engagements/client/<int:client_id>/' , GetEngagementsView.as_view(), name='get-engagements'),
+    path('verifications/client/<int:client_id>/status/', CheckAllVerificationsValidView.as_view(), name='check-verifications-status'),
 ]
