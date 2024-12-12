@@ -41,11 +41,16 @@
         </div>
         
         <div class="signature-section">
-          <strong>Signature :</strong>
-          <div class="signature-placeholder">
-            <!-- Placeholder for signature -->
+            <strong>Signature :</strong>
+            <div class="signature-placeholder">
+              <div class="signature-pad-container">
+                <canvas id="signature-pad" width="400" height="200"></canvas>
+              </div>
+            </div>
+            <button mat-button color="primary" (click)="saveSignature()">Enregistrer la signature</button>
+            <button mat-button color="warn" (click)="clearSignature()">Effacer</button>
           </div>
-        </div>
+          
       </div>
     </div>
   

@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EngagementService } from '../services/engagement.service';
 import { RapportService } from '../rapport.service'; // Import du RapportService
+
+import SignaturePad from 'signature_pad';
 
 @Component({
   selector: 'app-engagement',
@@ -19,6 +22,8 @@ import { RapportService } from '../rapport.service'; // Import du RapportService
   styleUrls: ['./engagement.component.scss']
 })
 export class EngagementComponent implements OnInit {
+  private signaturePad!: SignaturePad;
+
   engagements: any[] = [];
   loading: boolean = true;
   rapportData: any = {
@@ -92,5 +97,34 @@ export class EngagementComponent implements OnInit {
     const dateLimite = new Date(this.currentDate);
     dateLimite.setFullYear(dateLimite.getFullYear() + 2); // Ajouter 2 ans
     return dateLimite.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  // Initialiser le canvas de signature_____________________________________________________________________________________
+
+  ngAfterViewInit(): void {
+    const canvas = document.getElementById('signature-pad') as HTMLCanvasElement;
+
+    // Initialiser Signature Pad
+    this.signaturePad = new SignaturePad(canvas);
+  }
+
+  saveSignature(): void {
+    if (this.signaturePad.isEmpty()) {
+      alert('Veuillez ajouter une signature avant de sauvegarder.');
+      return;
+    }
+
+    // Convertir la signature en image Base64
+    const signatureDataURL = this.signaturePad.toDataURL();
+
+    // Stocker l'image dans le sessionStorage
+    sessionStorage.setItem('signatureImage', signatureDataURL);
+
+    alert('Signature enregistrée avec succès dans le sessionStorage.');
+    console.log('Signature enregistrée :', signatureDataURL);
+  }
+
+  clearSignature(): void {
+    this.signaturePad.clear();
   }
 }

@@ -100,4 +100,44 @@
     margin-top: 10px;
     font-size: 0.8rem;
   }
+
+//   css pour la signature ______________________________________________________
+
+.signature-section {
+    margin-top: 20px;
+    color: #013238;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .signature-placeholder {
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #013238; /* Bordure verte */
+    border-radius: 5px;
+    background-color: #88d58b; /* Vert clair */
+    padding: 10px; /* Ajoute un padding pour éviter que le canvas touche les bords */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Centre le canvas à l'intérieur */
+  }
+  
+  .signature-pad-container {
+    width: 100%;
+    max-width: 380px; /* Largeur légèrement réduite pour respecter le padding */
+    canvas {
+      width: 100%;
+      height: 200px;
+      border: none; /* Supprime les bordures du canvas, déjà englobé par .signature-placeholder */
+      border-radius: 5px;
+    }
+  }
+  
+  button {
+    margin: 5px;
+    display: inline-block;
+    align-self: center;
+  }
   
