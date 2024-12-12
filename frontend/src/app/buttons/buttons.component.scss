@@ -1,4 +1,10 @@
 @use '@angular/material' as mat;
+.form-placement  {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between; /* Espacement entre les deux blocs */
+  align-items: flex-start; /* Alignement vertical des deux sections */
+}
 
 .button {
     display: flex;
@@ -46,7 +52,7 @@ button img.check-icon {
 .enjeux-container {
   background-color: #B5CDBF; /* Couleur de fond souhaitée */
   border-radius: 2px;      /* Optionnel : arrondir les bords */
-  padding: 5px 5px;
+  padding: 3px 3px;
 }
 
 .questions-container {
@@ -134,25 +140,34 @@ button img.check-icon {
   }
   
   .left {
-    flex: 1; /* Largeur de la colonne gauche */
-    max-width: 29%; /* Limite la largeur à 30% */
+    /*
+    flex: 1; /* Largeur de la colonne gauche 
+    max-width: 29%; /* Limite la largeur à 30% 
     padding: 10px;
     margin-top: 16%;
     margin-left: 1%;
+    */
+      flex: 1.3; /* Occupation de l'espace : ajustez au besoin */
+      max-width: 35%; /* Limite la largeur si nécessaire */
+      padding: 20px; /* Espacement interne */
+    
   }
   
   .right {
-    flex: 2; /* Largeur de la colonne droite */
-    max-width: 75%; /* Limite la largeur à 70% */
-    padding: 20px;
-    border-radius: 8px;
+    flex: 2; /* Augmente la proportion de l'espace que prend .right par rapport à .left */
+    max-width: 70%; /* Ajustez la largeur maximale */
+    padding: 10px; /* Ajoute plus d'espace interne */
+    margin: 10px; /* Ajoute de l'espace autour si nécessaire */
+    box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
   }
 
   .form-container {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100vh;
+     position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   }
 
 
@@ -173,26 +188,30 @@ button img.check-icon {
     align-items: center;
     text-align: center;
     background: #ffffff;
-    border: 5px solid #B5CDBF;
+    border: 3px solid #B5CDBF;
   }
   .info1{
     width: 35px;
     position: absolute;
-    top : 29%;
-    left : 85%;
+    top : 0%;
+    left : 101%;
     cursor: pointer;
   }
   .info2{
     width: 35px;
     position: absolute;
-    top : 3%;
-    left : 90%;
-    cursor: pointer;
+    top: 14%;
+    left: 83%;
   }
   
 
 
-  
+  .header {
+    display: flex;
+    flex-direction: column; /* Arrange les éléments verticalement */
+    align-items: flex-end; /* Aligne les boutons à droite */
+    padding: 10px;
+  }
   
   /* Header container */
 .header-container {
@@ -301,10 +320,12 @@ button img.check-icon {
     color: #013238;
   }
   .logo {
-    position : absolute;
-    top : 3%;
-
-    height: 175px;
+    position: absolute; /* Permet de positionner le logo par rapport à la fenêtre */
+    top: 10px; /* Distance par rapport au haut de la page */
+    left: 10px; /* Distance par rapport à la gauche de la page */
+    height: 80px; /* Ajuste la hauteur du logo */
+    cursor: pointer; /* Change le curseur pour indiquer qu'il est cliquable */
+    z-index: 100; /* S'assure que le logo est au-dessus des autres éléments */
   }
 
 
@@ -327,37 +348,37 @@ button img.check-icon {
   }
   
   .side-button {
-    background-color: #B5CDBF;
-    color: white;
+    position: absolute;
+    top: 50%; /* Aligne verticalement au centre */
+    transform: translateY(-50%); /* Ajuste le décalage vertical pour centrer exactement */
+    z-index: 10; /* Assure que les boutons sont au-dessus des autres éléments */
+    background-color: #013238; /* Couleur de fond des boutons */
+    color: #ffffff; /* Couleur du texte ou des icônes */
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-weight: bold;
-    font-size: 20px;
-    text-align: center;
     cursor: pointer;
+    width: 50px; /* Taille des boutons */
+    height: 50px;
+    border-radius: 50%; /* Rendu en cercle */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajout d'une ombre pour le style */
     display: flex;
     justify-content: center;
-    padding-top: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    align-items: center;
+    font-size: 20px; /* Taille du texte ou de l'icône */
+    transition: all 0.3s ease;
   }
   
-  .side-button:hover {
-    background-color: #013238;
-    color: #ffffff;
-    transform: scale(1.1);
-  }
-  
-  .left-button {
-    margin-right: 10px;
-  }
-  
+  .side-button.left-button {
+  left: 43.5%;
+}
 
-  .right-button {
-    margin-left: 10px;
-  }
+.side-button.right-button {
+  right: -25px; /* Position à droite */
+  left: 77.5%;
+}
+
+.side-button:hover {
+  background-color: #0056b3; /* Change la couleur au survol */
+}
 
 
   
@@ -411,16 +432,19 @@ textarea:focus {
 
 .progress-bar-container {
   width: 60%; 
-  max-width: 300px;
+  //max-width: 300px;
   margin: 16px auto 0 auto;
   text-align: center;
-  display: flex;
+  //display: flex;
   flex-direction: column;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   border-radius: 12px; 
-  padding: 10px; 
-  background: #C5FDDF;
+  padding: 2em 6em; 
+  background: linear-gradient(to left,#769785, #93BDA6,#A5C9B6);
+  height :50em;
+  margin-top: 8em;
+
 }
 
 .progress-bar {
@@ -451,7 +475,21 @@ textarea:focus {
  
   @media (max-width: 768px) {
     .simple-form {
-      width: 90%;
+      border-radius: 10px;
+    padding: 15px;
+    width: 95%;
+    /* max-width: 855px; */
+    /* min-height: 447px; */
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* align-items: center; */
+    text-align: center;
+    background: #ffffff;
+    border: 3px solid #B5CDBF;
     }
   
     .side-button {
@@ -473,15 +511,14 @@ textarea:focus {
   }
 
   .share-button {
-    background-color: #013238;
+    background-color: #007bff; /* Couleur bleue pour le bouton partager */
     color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 15px;
+    margin-bottom: 10px;
     font-size: 16px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
   }
 
   .share-button:hover {

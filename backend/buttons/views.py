@@ -98,7 +98,6 @@ class SauvegardeReponseClientView(APIView):
                 est_un_engagement = data.get('est_engagement'),
                 score_final= data.get('score_final'),
                 sa_reponse= data.get('sa_reponse',''),
-                id_engagement = data.get('id_engagement', None)
             )
             return Response({"message": "Réponse sauvegardée avec succès"}, status=201)
 

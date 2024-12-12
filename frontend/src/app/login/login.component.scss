@@ -12,21 +12,23 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
   background-size: cover; /* S'assure que l'image couvre toute la page */
   background-color: #013238;
 
-
   .login-form {
     position: relative;
     z-index: 2;
     padding: 40px;
     border-radius: 8px;
     text-align: center;
-
+    background-color: #ffffff;
+    opacity: 0.9;
+    
     transform: translateY(-10%);
 
     .form-title {
-      color: #ffffff;  
+      color : #013238;
       font-size: 24px;  
       margin-bottom: 30px; 
       font-weight: bold;
+      user-select: none;
     }
 
     .logo-icon::before {
@@ -35,7 +37,7 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
         width: 300px;
         height: 200px;
         margin: 0 auto; // Centre l'icône horizontalement
-        background-image: url('../../assets/images/logo_shiftingpact.png');
+        background-image: url('../../assets/images/logoVert.png');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -60,14 +62,14 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
 
       input {
         padding: 10px 10px 10px 40px;
-        border: 2px solid #ffffff;
+        border: 2px solid #013238;
         border-radius: 4px;
         background-color: transparent;
-        color: #ffffff;
+        color : #013238;
         font-size: 16px;
 
         &::placeholder {
-          color: #ffffff;
+          color: #013238;
           opacity: 0.7;
         }
       }
@@ -76,10 +78,11 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
     .btn-login {
       width: 70%;
       padding: 10px;
-      border: 2px solid #ffffff;
+      border: 2px solid #013238;
       border-radius: 4px;
       background-color: transparent;
-      color: #ffffff;
+      color : #FFFFFF;
+      background-color: #013238;
       font-weight: bold;
       cursor: pointer;
       transition: background-color 0.3s;
@@ -92,7 +95,7 @@ $primary-color: #3f4c76; // Couleur principale pour contraste du texte
     .forgot-password {
       display: inline-block;
       margin-top: 10px;
-      color: #ffffff;
+      color : #013238;
       text-decoration: none;
       font-size: 14px;
 
