@@ -1,0 +1,16 @@
+<div class="glossaire-container">
+  <h1 class="title">Glossaire</h1>
+
+  <div *ngIf="glossaires.length > 0; else noData">
+    <div class="glossaire-scrollable">
+      <div *ngFor="let item of glossaires" class="glossaire-item">
+        <h2 class="glossaire-title">{{ item.nom }}</h2>
+        <p class="glossaire-definition">{{ item.definition }}</p>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p class="no-data-message">Aucune donnée disponible.</p>
+  </ng-template>
+</div>

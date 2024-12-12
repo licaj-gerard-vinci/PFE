@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'reponses',
     'buttons',
+    'glossaires',
 ]
 
 # Configuration REST Framework

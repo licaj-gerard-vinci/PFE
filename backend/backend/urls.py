@@ -26,5 +26,6 @@ urlpatterns = [
     path('onboarding/', include('onboarding.urls')),
     path('buttons/', include('buttons.urls')),
     path('reponses/', include('reponses.urls')),
-    path('report/', include('report.urls'))
+    path('report/', include('report.urls')),
+    path('glossaires/', include('glossaires.urls')),
 ]

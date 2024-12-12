@@ -1,0 +1,53 @@
+.glossaire-container {
+  max-width: 800px;
+  margin: 150px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.glossaire-scrollable {
+  max-height: 400px; /* Limite la hauteur pour activer le défilement vertical */
+  overflow-y: auto; /* Barre de défilement vertical */
+  padding-right: 10px; /* Ajoute de l'espace pour éviter que le contenu touche la barre */
+}
+
+.glossaire-item {
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.glossaire-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.glossaire-definition {
+  font-size: 1rem;
+  color: #555;
+}
+
+.no-data-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+  margin-top: 20px;
+}
