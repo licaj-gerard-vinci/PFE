@@ -73,7 +73,7 @@ Assurez-vous que les outils suivants sont installés sur votre machine :
 5. **Démarrer le serveur frontend :**
 ```bash
    cd ../frontend
-   npm start
+   ng serve
 ```
 
 ## 🌈 Fonctionnalités
