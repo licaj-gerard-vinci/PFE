@@ -14,7 +14,7 @@
       const isLoggedIn = window.isLoggedIn && window.isLoggedIn();
       const currentPath = window.location.pathname;
 
-      if (currentPath !== '/login' || currentPath !== '/register') {
+      if (currentPath === '/login' || currentPath === '/register') {
         const button = document.getElementById('auth-button');
         if (button) {
           button.style.display = 'none';
