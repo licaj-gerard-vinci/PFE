@@ -24,5 +24,7 @@ urlpatterns = [
     path('questions/', include('question.urls')),
     path('api/', include('client.urls')),
     path('onboarding/', include('onboarding.urls')),
-    path('buttons/', include('buttons.urls'))
+    path('buttons/', include('buttons.urls')),
+    path('reponses/', include('reponses.urls')),
+    path('report/', include('report.urls'))
 ]
