@@ -9,7 +9,7 @@ import { throwError } from 'rxjs';
     providedIn: 'root',
 })
 export class ButtonsService {
-    private baseUrl = 'http://127.0.0.1:8000/buttons'; // Backend URL
+    private baseUrl = 'http://127.0.0.1:8000/buttons';
 
     constructor(private http: HttpClient) {}
 
