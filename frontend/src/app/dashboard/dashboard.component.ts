@@ -129,7 +129,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         width: '400px',
       });
     } else {
-      this.router.navigate(['/formulaire'], { queryParams: { id_client: company.id_client } });
+      this.router.navigate(['/verification'], { queryParams: { id_client: company.id_client } });
     }
   
     // Trigger change detection to update the UI
