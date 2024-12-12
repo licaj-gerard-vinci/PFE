@@ -60,7 +60,7 @@ import { ActivatedRoute, Router } from '@angular/router';
       return ((this.currentQuestionIndex + 1) / this.questions2.length) * 100;
     }
   
-    getEnjeux() {
+    getEnjeux() { // y17: a pas touché
         this.buttonsService.getEnjeux().subscribe(
             (response) =>  {
                 this.enjeux = response;
@@ -72,7 +72,7 @@ import { ActivatedRoute, Router } from '@angular/router';
             }
         )
     }
-    getQuestions() {
+    getQuestions() { // y17: a pas touché
         this.buttonsService.getQuestions().subscribe(
             (response) => {
                 this.questions = response;
@@ -83,7 +83,7 @@ import { ActivatedRoute, Router } from '@angular/router';
             }
         )
     }
-    getTemplates() {
+    getTemplates() { 
         this.buttonsService.getTemplatesClient(this.id_client).subscribe(
           (response) => {
             this.clientsTemplates = response;
@@ -112,7 +112,7 @@ import { ActivatedRoute, Router } from '@angular/router';
       });
     }
 
-    sortQuestions(_id_enjeu: any): void {
+    sortQuestions(_id_enjeu: any): void { // y17: a pas touché
         if (this.selectedEnjeuId === _id_enjeu){
             this.sortedQuestions = [];
             this.selectedEnjeuId = null;
@@ -256,15 +256,15 @@ import { ActivatedRoute, Router } from '@angular/router';
         }
         return true;
     }
-    openModal(): void {
+    openModal(): void { // y17: a pas touché
       this.showModal = true;
     }
     
-    closeModal(): void {
+    closeModal(): void { // y17: a pas touché
         this.showModal = false;
     }
     
-    confirmValidation(): void {
+    confirmValidation(): void { // todo : a touché
       this.buttonsService.updateClient(this.id_client).subscribe(
         (response: any) => {
           console.log(response.message);
@@ -277,29 +277,29 @@ import { ActivatedRoute, Router } from '@angular/router';
       this.goHome();
     }
 
-    openInfo1(): void {
+    openInfo1(): void { // y17: a pas touché
         this.showInfo = true;
     }
     
-    closeInfo1(): void {
+    closeInfo1(): void { // y17: a pas touché
         this.showInfo = false;
     }
 
-    openInfo2(): void {
+    openInfo2(): void { // y17: a pas touché
         this.showInfo2 = true;
     }
     
-    closeInfo2(): void {
+    closeInfo2(): void { // y17: a pas touché
         this.showInfo2 = false;
     }
-  responses = {
+  responses = { // y17: a pas touché
     aujourdhui: null as string | null, 
     engagement: null as string | null, 
   };
 
-  selectedCheckboxes: string[] = []; 
+  selectedCheckboxes: string[] = [];  // y17: a pas touché
 
-  loadQuestions(): void {
+  loadQuestions(): void { // y17: a pas touché
     this.buttonsService.getQuestionsReponse().subscribe(
       (response) => {
         this.questions2 = response.map((q: any, index: number) => ({
@@ -323,11 +323,11 @@ import { ActivatedRoute, Router } from '@angular/router';
     );
   }
 
-  get currentQuestion() {
+  get currentQuestion() { // y17: utils
     return this.questions2[this.currentQuestionIndex] || null;
   }
 
-  nextQuestion(): void {
+  nextQuestion(): void { // y17: pas touché
     if (this.currentQuestionIndex < this.questions2.length - 1) {
       this.currentQuestionIndex++;
       this.resetResponses(); 
@@ -335,7 +335,7 @@ import { ActivatedRoute, Router } from '@angular/router';
     }
   }
 
-  previousQuestion(): void {
+  previousQuestion(): void { // y17: pas touché
     if (this.currentQuestionIndex > 0) {
       this.currentQuestionIndex--;
       this.resetResponses(); 
@@ -641,4 +641,6 @@ copyLink() {
 goHome(): void {
   this.router.navigate(['/home']);
 }
+
+
 }
