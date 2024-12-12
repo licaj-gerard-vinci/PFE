@@ -14,8 +14,6 @@ yarn-error.log*
 # Environnement Docker
 .env
 docker-compose.override.yml
-/backend/venv/
-
 
 # IDE/Éditeurs
 .vscode/

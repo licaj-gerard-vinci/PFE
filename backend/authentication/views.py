@@ -10,7 +10,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import AccessToken, TokenError
 import re
 
-
 class RegisterView(APIView):
     def post(self, request):
         data = request.data
@@ -41,7 +40,7 @@ class LoginView(APIView):
         else:
             try:
                 user = Clients.objects.get(email=email)
-            except Clients.DoesNotExist:
+            except Client.DoesNotExist:
                 return Response({'error': 'Utilisateur non trouvé'}, status=status.HTTP_404_NOT_FOUND)
 
             # Vérifie si le mot de passe est correct
@@ -97,7 +96,7 @@ def get_client_by_email(request, email):
         ).get(email=email)  # Exclut 'mdp' en ne le sélectionnant pas explicitement
 
         return JsonResponse(client, safe=False)  # Retourne les données JSON
-    except Clients.DoesNotExist:
+    except Client.DoesNotExist:
         return JsonResponse({'error': 'Client not found'}, status=404)
 
 

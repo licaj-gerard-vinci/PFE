@@ -8,9 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app/app-routing.module';
 import { CommonModule } from '@angular/common';
 import { routes } from './app/app-routing.module';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatDialogModule } from '@angular/material/dialog'; // Import Angular Material Dialog module
-import { provideAnimations } from '@angular/platform-browser/animations'; // Ensure animations are available
+
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -21,9 +19,7 @@ bootstrapApplication(AppComponent, {
       ReactiveFormsModule,
       HttpClientModule, 
       AppRoutingModule,
-      MatDialogModule ,
       CommonModule
-    ),
-    provideAnimations()
+    )
   ]
 }).catch(err => console.error(err));

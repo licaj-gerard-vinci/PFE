@@ -1,557 +1,60 @@
 .rapport-container {
   font-family: 'Arial', sans-serif;
-  color: #013238; // Texte principal en vert foncé
-  background: linear-gradient(110deg, #b5cdbf,#f6fafd, #b5cdbf); /* Dégradé similaire */
-  padding: 55px; // Réduit le padding global
-  border-radius: 10px; // Coins arrondis réduits
-  max-width: 800px; // Réduction de la largeur maximale
-  margin: auto;
-  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2); // Ombre adoucie
-}
-
-.logo {
-  position : absolute;
-  top : 3%;
-  left : 2%;
-  height: 135px;
-}
-
-
-
-.rapport-header {
-  text-align: center;
-  margin-bottom: 20px; // Réduction de l'espace entre le header et le reste de la page
-
-  h1 {
-    font-size: 2rem; // Réduction de la taille du titre principal
-    color: #013238; // Vert foncé
-  }
-
-  .subtitle {
-    font-size: 1.1rem; // Réduction de la taille du sous-titre
-    font-weight: bold;
-    color: #08ac99; // Vert d'eau
-  }
-}
-
-.rapport-body {
-  background: #0e403d; // Fond vert foncé
-  padding: 15px; // Réduction du padding interne
-  border-radius: 20px; // Coins légèrement arrondis
-  display: flex;
-  flex-direction: column;
-  gap: 15px; // Réduction de l'espacement entre les éléments internes
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); // Ombre allégée
-}
-
-.graph-container {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 20px; // Réduction de l'espace entre les colonnes
-  align-items: center;
-  justify-content: space-between;
-
-  .graph {
-    width: 300px; /* Largeur réduite */
-    height: 150px; /* Hauteur réduite */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    canvas {
-      max-width: 100%;
-      max-height: 100%;
-    }
-  }
-
-  .text {
-    flex: 1;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    h2.score-title {
-      color: #3cd4c2;
-      font-size: 1.5rem; // Réduction de la taille des titres
-      margin-bottom: 10px;
-
-    }
-
-    ul {
-      margin-top: -26px;
-      list-style: none;
-      padding: 0;
-
-      h3{
-        color: #cef0f4;
-        font-size: 1.2rem; // Réduction de la taille des sous-titres
-        margin-bottom: 20px; // Réduction de l'espace entre les éléments
-      }
-
-      li {
-        margin-bottom: 15px; // Réduction de l'espace entre les éléments de la liste
-        font-size: 0.9rem; // Réduction de la taille du texte
-        color: #cef0f4;
-      }
-
-      li::before {
-        content: '•'; // Puce ronde
-        color: #e1e6e5; // Vert clair
-        display: inline-block;
-        width: 1em;
-        margin-left: -1em; // Décalage de la puce
-      }
-      
-    }
-  }
-
-  .score-card-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .score-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border-radius: 15px;
-    background: linear-gradient(145deg, #013238, #0e403d);
-    color: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    margin: auto;
-  }
-  
-  .score-label {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .score-value {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .score-progress-container {
-    width: 100%;
-    max-width: 300px;
-    height: 20px;
-    border-radius: 10px;
-    background-color: #013238;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .score-progress-bar {
-    height: 100%;
-    transition: width 0.5s ease-in-out;
-  }
-  
-
-
-}
-
-.graph-container-second {
-  background: #2a8f88; // Fond vert clair
-  padding: 15px; // Réduction du padding interne
-  border-radius: 20px; // Coins légèrement arrondis
-  margin-top: 15px; // Réduction de l'espace entre les sections
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px; // Réduction de l'espacement interne
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-
-  .graph {
-    margin: 0 auto;
-    width: 200px; // Réduction de la taille du graphique
-    height: 200px;
-
-    canvas {
-      max-width: 100%;
-      max-height: 100%;
-    }
-  }
-
-  .score-title {
-    font-size: 1.3rem; // Réduction de la taille du texte
-    color: #cef0f4;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-
-  p {
-    font-size: 0.9rem; // Réduction de la taille du texte
-    color: #eae3e2;
-    text-align: center;
-    margin-bottom: 0;
-  }
-}
-
-.domain-switch-container {
-  background: #0e403d;
-  padding: 15px; // Réduction du padding interne
-  border-radius: 20px; // Coins légèrement arrondis
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px; // Réduction de l'espacement interne
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-
-  .domain-title {
-    font-size: 1.3rem; // Réduction de la taille des titres
-    color: #cef0f4;
-    text-align: center;
-  }
-
-  .navigation-buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; // Réduction de l'espace entre les boutons et le graphique
-
-    button {
-      background: #013238;
-      color: #cef0f4;
-      border: none;
-      padding: 8px 10px; // Taille compacte des boutons
-      border-radius: 8px;
-      cursor: pointer;
-
-      &:hover {
-        background: #cef0f4;
-        color: #013238;
-      }
-    }
-
-    .graph {
-      width: 200px; // Réduction de la taille du graphique des domaines
-      height: 200px;
-
-      canvas {
-        max-width: 100%;
-        max-height: 100%;
-      }
-    }
-  }
-
-  .engagement-list {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 0;
-
-    li {
-      color: #cef0f4;
-      font-size: 0.9rem; // Réduction de la taille du texte
-      margin-bottom: 5px;
-    }
-  }
-
-  p {
-    color: #cef0f4;
-    font-size: 1rem; // Réduction de la taille du texte
-    margin-bottom: 5px; 
-  }
-
-  .engagement-table {
-    width: 100%;
-    margin-top: 15px; /* Espacement par rapport au graphique */
-    border-collapse: collapse;
-    background-color: #f8f9fa; /* Fond clair */
-    color: #013238; /* Couleur du texte */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Effet d'ombre */
-    border-radius: 10px; /* Coins arrondis */
-    overflow: hidden;
-  }
-  
-  .engagement-table thead {
-    background-color: #2a8f88; /* Fond vert foncé */
-    color: #fff; /* Texte blanc */
-  }
-  
-  .engagement-table th,
-  .engagement-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd; /* Lignes de séparation */
-  }
-  
-  .engagement-table th {
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-  }
-  
-  .engagement-table tr:last-child td {
-    border-bottom: none; /* Pas de bordure pour la dernière ligne */
-  }
-  
-  .engagement-table tbody tr:hover {
-    background-color: #e9f5f2; /* Effet survol */
-  }
-  
-
-  mat-paginator {
-    margin-top: 15px;
-    background: linear-gradient(125deg, #c0f3d3, #f8f9fa,#c0f3d3,); /* Dégradé doux */
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-  }
-
-  
-
-}
-
-
-
-
-
-
-.legend {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px; // Réduction de l'espace avec le graphique
-  gap: 5px; // Réduction de l'espace entre les éléments de la légende
-
-  .legend-item {
-    display: inline-block;
-    margin: 0 10px;
-    padding: 4px 10px; // Taille compacte des éléments
-    font-size: 0.9rem; // Réduction de la taille du texte
-    border-radius: 10px;
-    color: #0e403d;
-    font-weight: bold;
-    text-align: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-}
-
-footer {
-  text-align: center;
-  color: #012f2f; // Vert d'eau
-  margin-top: 10px; // Réduction de l'espace avant le footer
-  font-size: 1rem; // Réduction de la taille du texte
-  font-weight: bold;
-}
-
-
-
-
-.circular-chart-container {
-  margin-top: 30px;
+  margin: 20px;
   padding: 20px;
-  background-color: #2a8f88; // Fond vert clair
-  border-radius: 20px; // Coins arrondis
-  text-align: center;
-  color: #ffffff;
+  background-color: #f5f5f5;
 
-  .circular-chart-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
+  .rapport-header {
+    text-align: center;
+    margin-bottom: 40px;
 
-  .circular-chart-graph {
-    width: 100%;
-    max-width: 400px;
-    height: 220px; // Taille uniforme
-    margin: 0 auto;
-
-    canvas {
-      max-width: 100%;
-      max-height: 100%;
+    h1 {
+      color: #004a6b;
+      font-size: 2em;
     }
-  }
 
-  .circular-chart-legend {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 20px;
-    gap: 10px;
-
-    .legend-item {
-      display: inline-block;
-      padding: 5px 10px;
-      font-size: 0.9rem;
-      color: #013238; // Texte sombre
-      background-color: #ffffff; // Fond clair pour les étiquettes
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    .subtitle {
+      color: #00897b;
+      font-size: 1.2em;
       font-weight: bold;
-      text-align: center;
     }
   }
 
-
-  .engagement-contract {
-  background: linear-gradient(120deg, #e3fcec, #f8f9fa); /* Dégradé doux */
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Ombre subtile */
-  max-width: 700px;
-  margin: 30px auto;
-  font-family: 'Arial', sans-serif;
-  color: #013238;
-  }
-  
-  .contract-title {
-    text-align: center;
-    font-size: 2.2rem;
-    font-weight: bold;
-    color: #013238;
-    margin-bottom: 10px;
-    margin-top: -15px;
-  }
-  
-  .contract-subtitle {
-    text-align: center;
-    font-size: 1.5rem;
-    color: #088f8f; /* Couleur douce pour le sous-titre */
-    margin-bottom: 20px;
-  }
-
-  .contract-period {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #013238;
-    margin-bottom: 15px;
-    font-weight: bold;
-  }
-
-  .contract-description {
-    text-align: center;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #860303;
+  .section {
     margin-bottom: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      color: #004a6b;
+      border-bottom: 2px solid #00897b;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th {
+        text-align: left;
+        padding: 10px;
+        background-color: #004a6b;
+        color: #ffffff;
+      }
+
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+    }
   }
 
-  .description-contract{
-    text-align: center;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #013238;
-    margin-bottom: 30px;
-    border-radius: 15px;
-    background: linear-gradient(125deg, #c0f3d3, #f8f9fa,#c0f3d3,); /* Dégradé doux */
-  }
-  
-  .engagement-details {
-    color: #013238;
-    margin-bottom: 20px;
-    line-height: 1.8;
-  }
-  
-  .engagement-details p {
-    margin-bottom: 15px;
-  }
-  
-  .contract-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .contract-table td {
-    padding: 10px;
-    vertical-align: top;
-  }
-  
-  .contract-table td:first-child {
+  .error-message {
+    color: red;
     font-weight: bold;
-    color: #013238;
-    width: 50%;
-  }
-  
-  .signature-section {
-    margin-top: 20px;
-    color: #013238;
-  }
-  
-  .signature-placeholder {
-    border: 1px solid #013238; /* Green border for signature box */
-    height: 60px;
-    margin-top: 10px;
-    border-radius: 5px;
-    background-color: #88d58b;
-  }
-  
-}
-
-
-.certificate-container {
-  font-family: 'Arial', sans-serif;
-  color: #ffffff;
-  background-color: #013238; /* Dark green background */
-  border-radius: 20px;
-  padding: 30px;
-  max-width: 900px;
-  margin: auto;
-  margin-top: 30px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  
-}
-
-.certificate-logo {
-  width: 250px; /* Ajustez la largeur du logo */
-  height: 100px; /* Ajustez la hauteur du conteneur */
-  background-image: url('../../assets/images/logo_shiftingpact_verteau_blanc.png'); /* Chemin de l'image */
-  background-repeat: no-repeat;
-  background-size: contain; /* Ajuste l'image à la taille du conteneur */
-  background-position: left center; /* Positionne le logo à gauche au centre verticalement */
-
-  p {
-    font-size: 1rem;
-    font-weight: lighter;
-    color: #b0c6b1;
-    margin: 10px 0 0;
+    text-align: center;
   }
 }
-
-.certificate-icon img {
-  width: 70px;
-  height: 70px;
-}
-
-.certificate-body {
-  background-color: #0e403d; /* Slightly lighter green than the container */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.certificate-body h2 {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.certificate-body p {
-  margin: 10px 0;
-  line-height: 1.6;
-}
-
-.certificate-body strong {
-  color: #b0c6b1; /* Light green for emphasis */
-}
-
-.certificate-body a {
-  color: #ebefeb;
-  text-decoration: none;
-}
-
-.certificate-body a:hover {
-  text-decoration: underline;
-}
-
-
-
