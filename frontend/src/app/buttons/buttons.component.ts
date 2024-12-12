@@ -274,6 +274,7 @@ import { ActivatedRoute, Router } from '@angular/router';
           console.error('Erreur lors de la mise à jour du client:', error);
         }
       );
+      this.goHome();
     }
 
     openInfo1(): void {

@@ -12,7 +12,7 @@ class Admin(models.Model):
     id_admin = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    email = models.CharField(unique=True, max_length=255)
     mdp = models.CharField(max_length=255)
     role = models.CharField(max_length=255, blank=True, null=True)
 

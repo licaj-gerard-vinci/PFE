@@ -128,7 +128,6 @@ class ReponseClient(models.Model):
     est_un_engagement = models.BooleanField()
     score_final = models.FloatField()
     sa_reponse = models.CharField(max_length=255, null=True, blank=True)
-    id_engagement = models.IntegerField(null=True,blank=True)
 
     class Meta :
         db_table = 'reponse_client'
