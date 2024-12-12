@@ -619,14 +619,8 @@ getExistingAnswer(questionId: number) {
 }
 copyLink() {
   const currentUrl = window.location.href; 
-  const token = sessionStorage.getItem('token'); // Récupérer le token
 
-  if (!token) {
-    alert('Aucun token disponible. Connectez-vous d’abord.');
-    return;
-  }
-
-  const urlWithToken = `${currentUrl}?token=${token}`;
+  const urlWithToken = `${currentUrl}`;
 
 
   navigator.clipboard.writeText(urlWithToken)
