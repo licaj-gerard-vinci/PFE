@@ -4,7 +4,7 @@ import { ButtonsService } from '../services/buttons.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { FormValidationService } from '../services/form-validation.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
   id_client: number = 0;
   est_termine: boolean = false;
   allAnswersValidated: boolean = false;
-  constructor(private router: Router, private buttonsService: ButtonsService, private http: HttpClient) {}
+  constructor(private router: Router, private buttonsService: ButtonsService, private http: HttpClient, private formValidationService: FormValidationService) {}
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
     const tokenFromUrl = urlParams.get('token');
@@ -45,6 +45,11 @@ export class HomeComponent implements OnInit {
             alert('Vous devez être connecté pour accéder à ce formulaire.');
         }
     );
+
+    // Subscribe to form validation changes
+    this.formValidationService.formValidated$.subscribe((validated) => {
+      this.allAnswersValidated = validated;
+    });
   }
 
   checkAllAnswersValidated(clientId: number) {
