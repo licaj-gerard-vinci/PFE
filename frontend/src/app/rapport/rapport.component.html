@@ -1,31 +1,43 @@
 <div class="rapport-container" *ngIf="rapportData && rapportData.client; else loadingTemplate">
   <!-- En-tête -->
+  <div class="main-container">
+    <div class="left">
+      <img src="/logoBlanc.png" class="logo" (click)="goHome()" alt="Logo">
+    </div>
   <div class="rapport-header">
     <h1>Rapport d'impact et Pacte d'engagement</h1>
     <p class="subtitle">Entreprise : {{ rapportData.client.nom_entreprise }}</p>
   </div>
 
-  <!-- Bloc principal -->
-  <div class="rapport-body">
-    <div class="graph-container">
-      <div class="graph">
-        <canvas id="gaugeChart"></canvas>
-      </div>
-      <div class="text">
-        <h2 class="score-title">Score {{ rapportData.client.nom_entreprise }} : {{ rapportData.scores.score_total }}</h2>
-        <ul>
-          <li>Les pratiques environnementales, sociales et de gouvernance (ESG) au sein de l’entreprise.</li>
-          <li>Le Pacte d’engagement composé des actions que l’entreprise s’est engagée à mettre en place d’ici 2 ans.</li>
-        </ul>
+    <!-- Bloc principal -->
+    <div class="rapport-body">
+      <div class="graph-container">
+        <!-- Carte moderne pour le score total -->
+        <div id="gaugeChartContainer" class="score-card-container">
+          <div class="score-card">
+            <h2 class="score-label" 
+                [ngStyle]="{'color': rapportData.scores.score_total < 25 ? '#A6B1E1' : rapportData.scores.score_total < 50 ? '#88CCF1' : rapportData.scores.score_total < 75 ? '#B8E986' : '#6ACD8D'}">
+              {{ rapportData.scores.score_total < 25 ? 'Insuffisant' : rapportData.scores.score_total < 50 ? 'Bon' : rapportData.scores.score_total < 75 ? 'Très bon' : 'Excellent' }}
+            </h2>
+            <div class="score-value">{{ rapportData.scores.score_total.toFixed(2) }}%</div>
+            <div class="score-progress-container">
+              <div class="score-progress-bar" 
+                   [ngStyle]="{'width': rapportData.scores.score_total + '%', 'background-color': rapportData.scores.score_total < 25 ? '#A6B1E1' : rapportData.scores.score_total < 50 ? '#88CCF1' : rapportData.scores.score_total < 75 ? '#B8E986' : '#6ACD8D'}">
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Texte explicatif -->
+        <div class="text">
+          <ul>
+            <h3>Le score de l’entreprise est calculé en prenant en compte :  </h3>
+            <li>Les pratiques environnementales, sociales et de gouvernance (ESG) au sein de l’entreprise.</li>
+            <li>Le Pacte d’engagement composé des actions que l’entreprise s’est engagée à mettre en place d’ici 2 ans.</li>
+          </ul>
+        </div>
       </div>
     </div>
-    <div class="legend">
-      <span class="legend-item" style="background-color: #A6B1E1">Insuffisant</span>
-      <span class="legend-item" style="background-color: #88CCF1">Bon</span>
-      <span class="legend-item" style="background-color: #B8E986">Très bon</span>
-      <span class="legend-item" style="background-color: #6ACD8D">Excellent</span>
-    </div>
-  </div>
 
   <!-- Graphique engagements -->
   <div class="graph-container-second">
@@ -33,6 +45,8 @@
     <div class="graph">
       <canvas id="engagementChart"></canvas>
     </div>
+    <p>**Poser la souris sur le graphique pour voir les différents résultat<p>
+
     <div class="legend">
       <span class="legend-item" style="background-color: #88CCF1">Score ESG actuel</span>
       <span class="legend-item" style="background-color: #B8E986">Score d’engagement</span>
@@ -55,7 +69,29 @@
       <span class="legend-item" style="background-color: #88CCF1">Score ESG actuel</span>
       <span class="legend-item" style="background-color: #B8E986">Score d’engagement</span>
     </div>
-  </div>
+
+    <!-- Tableau des engagements du domaine actuel -->
+     <!-- TODO -->
+      <!-- Tableau des engagements -->
+        <table class="engagement-table">
+          <thead>
+            <tr>
+              <th> </th>
+              <th>Engagements de {{ rapportData.client.nom_entreprise }} : {{ getEngagementPeriod() }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let engagement of getCurrentDomainEngagements(); let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ engagement }}</td>
+            </tr>
+          </tbody>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>  
 
   <!-- Graphique circulaire -->
   <div class="circular-chart-container">
@@ -79,14 +115,17 @@
       <h3 class="contract-subtitle">Pacte d’Engagement</h3>
     
       <div class="engagement-details">
-        <p>
-          <strong>Engagements de {{rapportData.client.nom_entreprise}} :</strong>
+        <p class="contract-period">
+          <strong>Engagements de {{ rapportData.client.nom_entreprise }} :</strong> 
           {{ getEngagementPeriod() }}
         </p>
-        <p>
-          J’engage ma responsabilité et celle de l’entreprise que je représente à tenir
-          les engagements définis dans le présent document.
-        </p>
+        <div class="description-contract">
+          <p class="contract-description">
+            J’engage ma responsabilité et celle de l’entreprise que je représente à tenir
+            les engagements définis dans le présent document.
+          </p>
+        </div>
+        
         <table class="contract-table">
           <tbody>
             <tr>
@@ -108,16 +147,8 @@
           </tbody>
         </table>
       </div>
-    
-      <div class="signature-section">
-        <strong>Signature :</strong>
-        <div class="signature-placeholder">
-          <!-- Placeholder for signature -->
-        </div>
-      </div>
     </div>
   </div>
-
 
   <div class="certificate-container">
     <div class="certificate-header">
@@ -148,10 +179,10 @@
         {{ currentDate | date: 'dd/MM/yyyy' }} — {{ getDateLimite() }}
       </p>
       <p>
-        <strong>Numéro de certificat :</strong> {{ rapportData.client.numero_certificat }}
+        <strong>Numéro de certificat :</strong> SP-024-091{{ rapportData.client.numero_certificat }}
       </p>
       <p>
-        <strong>Code d’entité certificatrice :</strong> {{ rapportData.client.code_entite_certificatrice }}
+        <strong>Code d’entité certificatrice :</strong>  NOBRUPEO-06 {{ rapportData.client.code_entite_certificatrice }}
       </p>
       <p>
         <strong>Identification dans le registre :</strong>

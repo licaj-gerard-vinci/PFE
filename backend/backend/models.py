@@ -12,7 +12,7 @@ class Admin(models.Model):
     id_admin = models.AutoField(primary_key=True)
     nom = models.CharField(max_length=255)
     prenom = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    email = models.CharField(unique=True, max_length=255)
     mdp = models.CharField(max_length=255)
     role = models.CharField(max_length=255, blank=True, null=True)
 
@@ -44,6 +44,7 @@ class Clients(models.Model):
     ajouter_autre_chose = models.BooleanField()
     remarque_commentaire_precision = models.CharField(max_length=5000, blank=True, null=True)
     date_de_soumission = models.DateField()
+    est_termine = models.BooleanField(blank=True, null=True)
     est_valide = models.CharField(max_length=255)
     mdp = models.CharField(max_length=5000, blank=True, null=True)
 
@@ -57,7 +58,6 @@ class Engagements(models.Model):
     id_enjeu = models.ForeignKey('Enjeux', models.DO_NOTHING, db_column='id_enjeu')
     engagement = models.CharField(max_length=50000)
     commentaire = models.CharField(max_length=50000, blank=True, null=True)
-    id_admin = models.ForeignKey(Admin, models.DO_NOTHING, db_column='id_admin')
     kpis = models.CharField(max_length=255, blank=True, null=True)
     date = models.DateField()
 
@@ -132,12 +132,10 @@ class ReponseClient(models.Model):
     est_un_engagement = models.BooleanField()
     score_final = models.FloatField()
     sa_reponse = models.CharField(max_length=255, blank=True, null=True)
-    id_engagement = models.ForeignKey(Engagements, models.DO_NOTHING, db_column='id_engagement', blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'reponse_client'
-        unique_together = (('id_reponse', 'id_client'),)
 
 
 class Reponses(models.Model):
@@ -148,6 +146,7 @@ class Reponses(models.Model):
     id_template = models.ForeignKey('Templates', models.DO_NOTHING, db_column='id_template')
     champ_libre = models.BooleanField()
     score_engagement = models.FloatField()
+    id_engagement = models.ForeignKey(Engagements, models.DO_NOTHING, db_column='id_engagement', blank=True, null=True)
 
     class Meta:
         managed = False
