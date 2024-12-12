@@ -1,0 +1,135 @@
+.dashboard-container {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #f6fafd, #b5cdbf);
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 1000px;
+  margin: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-title {
+  text-align: center;
+  color: #013238;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.chart-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.dashboard-chart {
+  max-width: 350px;
+  max-height: 350px;
+  border: 2px solid #013238;
+  border-radius: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #b5cdbf, #f6fafd);
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 600px;
+}
+
+mat-label,
+mat-icon {
+  color: #013238;
+}
+
+button.mat-icon-button {
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background-color: white;
+}
+  
+  button.mat-icon-button:hover {
+    background-color: #f0f0f0; 
+  }
+
+  .table-section {
+    .company-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #ffffff;
+      border: 1px solid #013238;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+      
+
+.company-table th {
+  background: #013238;
+  color: #ffffff;
+  text-align: left;
+  padding: 10px;
+}
+
+.company-table td {
+  padding: 10px;
+  color: #013238;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.company-table td:last-child {
+  text-align: center;
+}
+
+.company-table th:last-child {
+  text-align: center;
+}
+
+.actions-cell button {
+  background: #08ac99;
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.actions-cell button:hover {
+  background: #065f4a;
+}
+
+mat-paginator {
+  margin-top: 15px;
+  background: #f6fafd;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.no-data-message {
+  text-align: center;
+  color: #013238;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+}
+
+.status-container mat-icon {
+  margin-right: 4px;
+}

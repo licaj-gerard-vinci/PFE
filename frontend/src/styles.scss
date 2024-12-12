@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; overflow: visible; }
+
+.mat-typography {
+    //background-color: linear-gradient(135deg, #b5cdbf, #f6fafd, #b5cdbf);
+    background: url('assets/images/background.png') no-repeat center center;
+    background-size: cover; /* S'assure que l'image couvre toute la page */
+    background-color: #013238;
+
+}
+
+.auth-button,.dashboard-button,.onboarding-button, .formulaire-button  {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff; /* Blanc */
+    background-color: #013238; /* Vert foncé */
+    border: 2px solid #013238; /* Bordure vert foncé */
+    text-decoration: none;
+    padding: 10px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  
+    &:hover {
+      background-color: #fdef91; /* Fond jaune doux */
+      color: #013238; /* Texte vert foncé */
+    }
+
+  }
+  
+     .navbar {
+      display: flex;
+      justify-content: flex-end;
+      background-color: #013238;
+      padding: 10px 20px;
+    }
+    .navbar-left, .navbar-right {
+      display: flex;
+    }

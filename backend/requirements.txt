@@ -2,8 +2,6 @@ django
 djangorestframework
 psycopg2
 djangorestframework-simplejwt
-PyJWT==2.10.1
-python-decouple==3.8
-sqlparse==0.5.2
-tzdata==2024.2
-asgiref==3.8.1
+django-cors-headers
+python-decouple
+django-extensions

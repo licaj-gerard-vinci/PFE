@@ -1,8 +1,10 @@
 <div class="home-container">
-    <h1>Bienvenue sur votre espace entreprise</h1>
-    <p>
-      Vous pouvez consulter vos rapports d'impact et vos engagements en cliquant sur le bouton ci-dessous.
-    </p>
-    <button class="btn" (click)="navigateToRapport(1)">Voir mon rapport</button>
+  <h1>Bienvenue sur votre espace entreprise</h1>
+  <p>
+    Vous pouvez consulter vos rapports d'impact et vos engagements en cliquant sur le bouton ci-dessous.
+  </p>
+  <button class="btn" (click)="navigateToRapport()">Voir mon rapport</button>
+  <div *ngIf="!est_termine">
+    <button class="btn" (click)="navigateToFormulaire()">Accéder au formulaire</button>
   </div>
-  
+</div>

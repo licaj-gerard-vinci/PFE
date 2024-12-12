@@ -22,6 +22,12 @@ export class RegisterComponent {
 
     onSubmit() {
         this.registerError = '';
+
+        // Vérifie que les champs sont remplis
+        if (!this.nom || !this.prenom || !this.email || !this.password) {
+            this.registerError = 'Erreur: tous les champs doivent être remplis.';
+            return;
+        }
         this.authService.register({ nom: this.nom, prenom: this.prenom, email: this.email, mdp: this.password }).subscribe(
             (response) => {
                 console.log('Registration successful', response);
@@ -29,7 +35,7 @@ export class RegisterComponent {
             },
             (error) => {
                 console.error('Registration failed', error);
-                this.registerError = 'Erreur lors de l\'inscription';
+                this.registerError = 'Erreur: vous n\'êtes autorisé à vous inscrire en tant qu\'admin.';
             }
         );
     }
@@ -40,7 +46,7 @@ export class RegisterComponent {
                 console.log('Login successful after registration', loginResponse);
                 if (loginResponse.access) {
                     this.authService.storeTokens({ refresh: loginResponse.refresh });
-                    window.location.href = '/'; // Redirige vers la page d'accueil
+                    window.location.href = '/login'; // Redirige vers la page d'accueil
                 }
             },
             (loginError) => {

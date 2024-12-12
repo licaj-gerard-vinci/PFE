@@ -8,8 +8,6 @@ $primary-color: #b5cdbf; // Couleur principale pour contraste du texte
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* Ajout de l'image en fond */
   background: url('../../assets/images/background.png') no-repeat center center;
   background-size: cover; /* S'assure que l'image couvre toute la page */
   background-color: #013238;
@@ -20,11 +18,13 @@ $primary-color: #b5cdbf; // Couleur principale pour contraste du texte
     padding: 40px;
     border-radius: 8px;
     text-align: center;
+    background-color: #ffffff;
+    opacity: 0.9;
 
     transform: translateY(-8%);
 
     .form-title {
-      color: #ffffff;  
+      color: #013238;  
       font-size: 24px;  
       margin-bottom: 30px; 
       font-weight: bold;
@@ -36,7 +36,7 @@ $primary-color: #b5cdbf; // Couleur principale pour contraste du texte
         width: 300px;
         height: 200px;
         margin: 0 auto; // Centre l'icône horizontalement
-        background-image: url('../../assets/images/logo_shiftingpact.png');
+        background-image: url('../../assets/images/logoVert.png');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -65,14 +65,14 @@ $primary-color: #b5cdbf; // Couleur principale pour contraste du texte
 
       input {
         padding: 10px 10px 10px 40px;
-        border: 2px solid #ffffff;
+        border: 2px solid #013238;
         border-radius: 4px;
         background-color: transparent;
-        color: #ffffff;
+        color: #013238;
         font-size: 16px;
 
         &::placeholder {
-          color: #ffffff;
+          color: #013238;
           opacity: 0.7;
         }
       }
@@ -85,6 +85,7 @@ $primary-color: #b5cdbf; // Couleur principale pour contraste du texte
       border-radius: 4px;
       background-color: transparent;
       color: #ffffff;
+      background-color: #013238;
       font-weight: bold;
       cursor: pointer;
       transition: background-color 0.3s;

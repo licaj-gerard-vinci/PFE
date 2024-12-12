@@ -38,7 +38,12 @@ export class AuthService {
   }
 
     // Fonction pour vérifier si l'utilisateur est connecté
-    isLoggedIn(): boolean {
+    /*isLoggedIn(): boolean {
         return !!this.getAccessToken();
-    }
+    }*/
+
+        isLoggedIn(): boolean {
+          return !!sessionStorage.getItem('token'); // Vérifie si un token est stocké
+        }
+       
 }

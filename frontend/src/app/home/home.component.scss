@@ -1,32 +1,47 @@
+
 .home-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, #f6fafd, #b5cdbf); /* Dégradé similaire */
+  border-radius: 25px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Ombre */
+  font-family: 'Arial', sans-serif; /* Police */
+  
+
+  h1 {
     text-align: center;
-    padding: 50px;
-    font-family: Arial, sans-serif;
-  
-    h1 {
-      color: #004a6b;
-      font-size: 2.5em;
-    }
-  
-    p {
-      font-size: 1.2em;
-      color: #333;
-      margin: 20px 0;
-    }
-  
-    .btn {
-      background-color: #00897b;
-      color: white;
-      padding: 15px 30px;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-  
-    .btn:hover {
-      background-color: #005f5a;
+    margin-bottom: 25px;
+    color: #013238; /* Vert foncé */
+    font-size: 2rem; /* Taille de police ajustée */
+    font-weight: bold;
+  }
+
+  p {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #013238; /* Vert foncé */
+    margin: 20px 0;
+  }
+
+  .btn {
+    display: block;
+    margin: 20px auto;
+    width: 100%;
+    padding: 15px;
+    background-color: #013238; /* Vert foncé */
+    color: #ffffff; /* Blanc */
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #fdef91; /* Jaune passé */
+      color: #013238; /* Vert foncé */
     }
   }
-  
+}
