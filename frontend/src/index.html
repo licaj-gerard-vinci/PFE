@@ -17,11 +17,7 @@
   </div>
   <app-root></app-root>
 
-  <script> //Je n'ai pas eu de choix que de mettre le script ici car je n'ai pas pu le mettre dans un fichier séparé
-           //j'ai dabord creer un component pour la navbar mais je n'ai pas pu l'importer dans le fichier index.html
-           // malgré un code complet cela ne voulait pas s'afficher et je n'ai eu actuellement le choix que de mettre ce scripte
-           //^_^'
-
+  <script>
     function initializeFromSessionStorage() {
       const token = sessionStorage.getItem('token');
       if (!token) {
@@ -31,7 +27,6 @@
       return token;
     }
 
-    // Fonction pour décoder le token JWT
     function decodeToken(token) {
       try {
         const decodedToken = jwt_decode(token);
@@ -84,8 +79,6 @@
       }
     }
 
-
-
     function updateLoginButtons() {
       const isLoggedIn = !!initializeFromSessionStorage(); // Est connecté si le token existe
       const navbarRight = document.getElementById('navbar-right');
@@ -112,9 +105,44 @@
         const logoutButton = document.getElementById('logout-button');
         if (logoutButton) logoutButton.style.display = 'none';
       } else {
+        // Bouton Se Déconnecter
         let logoutButton = document.getElementById('logout-button');
         if (!logoutButton) {
-          logoutButton = document.createElement('a');
+
+          
+
+        // Bouton Glossaire
+        let glossaireButton = document.getElementById('glossaire-button');
+        if (!glossaireButton) {
+          glossaireButton = document.createElement('a');
+          glossaireButton.id = 'glossaire-button';
+          glossaireButton.textContent = 'Glossaire';
+          glossaireButton.href = '/glossaires';
+          glossaireButton.style.padding = '10px 20px';
+          glossaireButton.style.fontSize = '16px';
+          glossaireButton.style.cursor = 'pointer';
+          glossaireButton.style.marginLeft = '10px';
+          navbarRight.appendChild(glossaireButton);
+        }
+
+        // Bouton Standard
+        let standardButton = document.getElementById('standard-button');
+        if (!standardButton) {
+          standardButton = document.createElement('a');
+          standardButton.id = 'standard-button';
+          standardButton.textContent = 'Standard';
+          standardButton.href = '/standards';
+          standardButton.style.padding = '10px 20px';
+          standardButton.style.fontSize = '16px';
+          standardButton.style.cursor = 'pointer';
+          standardButton.style.marginLeft = '10px';
+          navbarRight.appendChild(standardButton);
+        }
+
+        const loginButton = document.getElementById('login-button');
+        if (loginButton) loginButton.style.display = 'none';
+
+        logoutButton = document.createElement('a');
           logoutButton.id = 'logout-button';
           logoutButton.textContent = 'Se déconnecter';
           logoutButton.href = '/logout';
@@ -129,12 +157,8 @@
           navbarRight.appendChild(logoutButton);
         }
         logoutButton.style.display = 'block';
-
-        const loginButton = document.getElementById('login-button');
-        if (loginButton) loginButton.style.display = 'none';
       }
     }
-
 
     document.addEventListener('DOMContentLoaded', () => {
       const token = initializeFromSessionStorage();

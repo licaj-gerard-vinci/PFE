@@ -2,6 +2,14 @@
 $input-bg: #b5cdbf;
 $primary-color: #b5cdbf; // Couleur principale pour contraste du texte
 
+.logo {
+  position: absolute; /* Permet de positionner le logo par rapport à la fenêtre */
+  top: 10px; /* Distance par rapport au haut de la page */
+  left: 10px; /* Distance par rapport à la gauche de la page */
+  height: 80px; /* Ajuste la hauteur du logo */
+  z-index: 100; /* S'assure que le logo est au-dessus des autres éléments */
+}
+
 .register-container {
   position: relative;
   height: 100vh;

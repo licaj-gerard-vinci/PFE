@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormValidationService } from '../services/form-validation.service';
 
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -45,8 +46,6 @@ export class HomeComponent implements OnInit {
         },
         (error) => {
             console.error('Utilisateur non connecté ou erreur :', error);
-
-            alert('Vous devez être connecté pour accéder à ce formulaire.');
         }
     );
 
@@ -74,4 +73,5 @@ export class HomeComponent implements OnInit {
   navigateToFormulaire() {
     this.router.navigate(['/formulaire'], { queryParams: { id_client: this.id_client } });
   }
+
 }

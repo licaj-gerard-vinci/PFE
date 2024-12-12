@@ -6,6 +6,15 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+
+  .logo {
+    position: absolute; /* Permet de positionner le logo par rapport à la fenêtre */
+    top: 10px; /* Distance par rapport au haut de la page */
+    left: 10px; /* Distance par rapport à la gauche de la page */
+    height: 80px; /* Ajuste la hauteur du logo */
+    cursor: pointer; /* Change le curseur pour indiquer qu'il est cliquable */
+    z-index: 100; /* S'assure que le logo est au-dessus des autres éléments */
+  }
   
   .title {
     text-align: center;

@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http'; // Pour l'appel à l'API
 import { CommonModule } from '@angular/common'; // Pour utiliser le pipe lowercase
 import { FormsModule } from '@angular/forms'; // Pour utiliser ngModel
 import { StandardsService } from './standards.service';
+import { Router } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-standards',
@@ -16,7 +19,7 @@ export class StandardsComponent implements OnInit {
   filteredStandards: any[] = []; // Liste filtrée pour l'affichage
   searchQuery: string = ''; // Valeur du champ de recherche
 
-  constructor(private standardsService: StandardsService) {} // Injection du service HttpClient
+  constructor(private standardsService: StandardsService, private router : Router) {} // Injection du service HttpClient
 
   ngOnInit(): void {
     this.fetchStandards();
@@ -43,4 +46,9 @@ export class StandardsComponent implements OnInit {
       standard.plus_info.toLowerCase().includes(query)
     );
   }
+
+  goHome(): void {
+    this.router.navigate(['/home']);
+  }  
+
 }

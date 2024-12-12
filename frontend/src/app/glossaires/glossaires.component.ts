@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GlossairesService } from './glosaires.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-glossaires',
@@ -15,7 +16,7 @@ export class GlossairesComponent implements OnInit {
   filteredGlossaires: any[] = []; // Propriété pour stocker les données filtrées
   searchQuery: string = ''; // Valeur du champ de recherche
 
-  constructor(private glossaireService: GlossairesService) {}
+  constructor(private glossaireService: GlossairesService, private router : Router) {}
 
   ngOnInit(): void {
     this.fetchGlossaires();
@@ -42,4 +43,9 @@ export class GlossairesComponent implements OnInit {
       glossaire.definition.toLowerCase().includes(query)
     );
   }
+
+  goHome(): void {
+    this.router.navigate(['/home']);
+  }  
+
 }
