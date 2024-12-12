@@ -9,6 +9,15 @@
   box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2); // Ombre adoucie
 }
 
+.logo {
+  position : absolute;
+  top : 3%;
+  left : 2%;
+  height: 135px;
+}
+
+
+
 .rapport-header {
   text-align: center;
   margin-bottom: 20px; // Réduction de l'espace entre le header et le reste de la page
@@ -66,19 +75,87 @@
       color: #3cd4c2;
       font-size: 1.5rem; // Réduction de la taille des titres
       margin-bottom: 10px;
+
     }
 
     ul {
+      margin-top: -26px;
       list-style: none;
       padding: 0;
 
+      h3{
+        color: #cef0f4;
+        font-size: 1.2rem; // Réduction de la taille des sous-titres
+        margin-bottom: 20px; // Réduction de l'espace entre les éléments
+      }
+
       li {
-        margin-bottom: 5px; // Réduction de l'espace entre les éléments de la liste
+        margin-bottom: 15px; // Réduction de l'espace entre les éléments de la liste
         font-size: 0.9rem; // Réduction de la taille du texte
         color: #cef0f4;
       }
+
+      li::before {
+        content: '•'; // Puce ronde
+        color: #e1e6e5; // Vert clair
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em; // Décalage de la puce
+      }
+      
     }
   }
+
+  .score-card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .score-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 15px;
+    background: linear-gradient(145deg, #013238, #0e403d);
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    margin: auto;
+  }
+  
+  .score-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .score-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .score-progress-container {
+    width: 100%;
+    max-width: 300px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #013238;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .score-progress-bar {
+    height: 100%;
+    transition: width 0.5s ease-in-out;
+  }
+  
+
+
 }
 
 .graph-container-second {
@@ -222,7 +299,19 @@
   }
   
 
+  mat-paginator {
+    margin-top: 15px;
+    background: linear-gradient(125deg, #c0f3d3, #f8f9fa,#c0f3d3,); /* Dégradé doux */
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  
+
 }
+
+
 
 
 
@@ -250,7 +339,8 @@ footer {
   text-align: center;
   color: #012f2f; // Vert d'eau
   margin-top: 10px; // Réduction de l'espace avant le footer
-  font-size: 0.8rem; // Réduction de la taille du texte
+  font-size: 1rem; // Réduction de la taille du texte
+  font-weight: bold;
 }
 
 
@@ -304,30 +394,56 @@ footer {
 
 
   .engagement-contract {
-    font-family: 'Arial', sans-serif;
-    background-color: #a0f1c5; /* Light background for the contract */
-    border: 1px solid #013238; /* Border matching the green theme */
-    padding: 20px;
-    border-radius: 20px;
-    max-width: 600px;
-    margin: auto;
-    margin-top: 55px;
-    margin-bottom: 55px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(120deg, #e3fcec, #f8f9fa); /* Dégradé doux */
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Ombre subtile */
+  max-width: 700px;
+  margin: 30px auto;
+  font-family: 'Arial', sans-serif;
+  color: #013238;
   }
   
   .contract-title {
-    font-size: 1.8rem;
-    color: #013238; /* Dark green for the title */
     text-align: center;
-    margin-bottom: 50px;
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #013238;
+    margin-bottom: 10px;
+    margin-top: -15px;
   }
   
   .contract-subtitle {
-    font-size: 1.3rem;
-    color: #013238;
     text-align: center;
+    font-size: 1.5rem;
+    color: #088f8f; /* Couleur douce pour le sous-titre */
     margin-bottom: 20px;
+  }
+
+  .contract-period {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #013238;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .contract-description {
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #860303;
+    margin-bottom: 30px;
+  }
+
+  .description-contract{
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #013238;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    background: linear-gradient(125deg, #c0f3d3, #f8f9fa,#c0f3d3,); /* Dégradé doux */
   }
   
   .engagement-details {
@@ -429,7 +545,7 @@ footer {
 }
 
 .certificate-body a {
-  color: #b0c6b1;
+  color: #ebefeb;
   text-decoration: none;
 }
 

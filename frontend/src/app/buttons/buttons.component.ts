@@ -41,42 +41,16 @@ import { ActivatedRoute, Router } from '@angular/router';
     constructor(private buttonsService: ButtonsService, private route: ActivatedRoute, private router: Router) {}
 
     ngOnInit(): void {
-      const urlParams = new URLSearchParams(window.location.search);
-      const tokenFromUrl = urlParams.get('token');
-      if (tokenFromUrl) {
-
-          sessionStorage.setItem('token', tokenFromUrl);
-      }
-      this.buttonsService.getQuestionsUser().subscribe(
-          (response) => {
-              console.log('Utilisateur connecté (objet complet) :', response.client);
-
-              this.id_client = response.client.id_client;
-              console.log('ID_USER :', this.id_client);
-
-              const token = sessionStorage.getItem('token');
-              console.log('Utilisateur connecté :', {
-                  prenom: response.client.prenom,
-                  nom: response.client.nom,
-                  token: token
-              });
-              this.getEnjeux();
-              this.getQuestions();
-              this.getClientResponses();
-              this.loadQuestions();
-              this.getTemplates();
-          },
-          (error) => {
-              console.error('Utilisateur non connecté ou erreur :', error);
-
-              alert('Vous devez être connecté pour accéder à ce formulaire.');
-          }
-      );
       this.route.queryParamMap.subscribe(params => {
         const idClientStr = params.get('id_client');
         this.id_client = idClientStr ? parseInt(idClientStr, 10) : 0; 
         console.log('ID Client:', this.id_client);
       });
+      this.getEnjeux();
+      this.getQuestions();
+      this.getClientResponses();
+      this.loadQuestions();
+      this.getTemplates();
   }
 
     getProgressPercentage(): number {
@@ -300,6 +274,7 @@ import { ActivatedRoute, Router } from '@angular/router';
           console.error('Erreur lors de la mise à jour du client:', error);
         }
       );
+      this.goHome();
     }
 
     openInfo1(): void {

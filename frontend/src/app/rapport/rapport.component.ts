@@ -3,15 +3,22 @@ import { CommonModule } from '@angular/common';
 import { RapportService } from '../rapport.service';
 import { Chart, ChartOptions, registerables } from 'chart.js';
 import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
+import { TemplateRef, ViewChild } from '@angular/core';
+import { MatPaginatorModule } from '@angular/material/paginator';
+
+
 
 @Component({
   selector: 'app-rapport',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatPaginatorModule],
   templateUrl: './rapport.component.html',
   styleUrls: ['./rapport.component.scss'],
 })
 export class RapportComponent implements OnInit {
+  @ViewChild('loadingTemplate', { static: true }) loadingTemplate!: TemplateRef<any>;
+
   rapportData: any = null; // Données du rapport
   isLoading: boolean = true; // Indicateur de chargement
   errorMessage: string | null = null; // Message d’erreur
@@ -22,7 +29,7 @@ export class RapportComponent implements OnInit {
   currentDomainIndex: number = 0; // Index du domaine actuellement affiché
   currentDate: Date = new Date(); // Date actuelle
 
-  constructor(private rapportService: RapportService, private authService: AuthService) {
+  constructor(private rapportService: RapportService, private authService: AuthService, private router: Router) { 
     Chart.register(...registerables); // Enregistrement de Chart.js
   }
 
@@ -57,57 +64,55 @@ export class RapportComponent implements OnInit {
   // Rendu du graphique global (score ESG total)
   renderChartScoreTotal(): void {
     setTimeout(() => {
-      const canvas = document.getElementById('gaugeChart') as HTMLCanvasElement;
-
-      if (!canvas) {
-        console.error('Canvas introuvable pour le graphique global.');
+      const canvasContainer = document.getElementById('gaugeChartContainer');
+  
+      if (!canvasContainer) {
+        console.error('Conteneur introuvable pour l’affichage du score global.');
         return;
       }
-
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        console.error('Contexte de canvas introuvable pour le graphique global.');
-        return;
-      }
-
+  
+      // Effacer le contenu précédent
+      canvasContainer.innerHTML = '';
+  
       const score = this.rapportData?.scores?.score_total || 0;
-      const segments = [
-        { label: 'Insuffisant', color: '#A6B1E1', range: [0, 25] },
-        { label: 'Bon', color: '#88CCF1', range: [25, 50] },
-        { label: 'Très bon', color: '#B8E986', range: [50, 75] },
-        { label: 'Excellent', color: '#6ACD8D', range: [75, 100] },
-      ];
-
-      const data = {
-        labels: segments.map((seg) => seg.label),
-        datasets: [
-          {
-            data: segments.map((seg) => seg.range[1] - seg.range[0]),
-            backgroundColor: segments.map((seg) => seg.color),
-            borderWidth: 0,
-          },
-        ],
-      };
-
-      const options: ChartOptions<'doughnut'> = {
-        maintainAspectRatio: false,
-        cutout: '70%',
-        rotation: 180,
-        circumference: 270,
-        plugins: {
-          legend: { display: false },
-          tooltip: { enabled: false
-           },
-        },
-      };
-
-      this.chart = new Chart(ctx, {
-        type: 'doughnut',
-        data,
-        options,
-      });
+  
+      // Labels et styles en fonction du score
+      let label = '';
+      let labelColor = '';
+      if (score < 25) {
+        label = 'Insuffisant';
+        labelColor = '#A6B1E1'; // Violet clair
+      } else if (score < 50) {
+        label = 'Bon';
+        labelColor = '#88CCF1'; // Bleu clair
+      } else if (score < 75) {
+        label = 'Très bon';
+        labelColor = '#B8E986'; // Vert clair
+      } else {
+        label = 'Excellent';
+        labelColor = '#6ACD8D'; // Vert foncé
+      }
+  
+      // Créer le conteneur pour le design moderne
+      const cardHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; border-radius: 15px; background: linear-gradient(145deg, #013238, #0e403d); color: #fff; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);">
+          <div style="font-size: 2rem; font-weight: bold; margin-bottom: 10px; color: ${labelColor};">
+            ${label}
+          </div>
+          <div style="font-size: 3rem; font-weight: bold; margin-bottom: 20px;">
+            ${score.toFixed(2)}%
+          </div>
+          <div style="width: 100%; max-width: 300px; height: 20px; border-radius: 10px; background-color: #013238; overflow: hidden;">
+            <div style="width: ${score}%; height: 100%; background-color: ${labelColor}; transition: width 0.5s;"></div>
+          </div>
+        </div>
+      `;
+  
+      // Insérer dans le DOM
+      canvasContainer.innerHTML = cardHTML;
     }, 100);
   }
+  
 
   // Rendu du graphique des engagements ESG
   renderEngagementChart(): void {
@@ -164,16 +169,6 @@ export class RapportComponent implements OnInit {
     }, 100);
   }
 
-  // Méthode pour changer le domaine affiché (E, S, G)
-  switchDomain(direction: string): void {
-    const domainCount = this.rapportData?.domains?.length || 0;
-    if (direction === 'next') {
-      this.currentDomainIndex = (this.currentDomainIndex + 1) % domainCount;
-    } else if (direction === 'prev') {
-      this.currentDomainIndex = (this.currentDomainIndex - 1 + domainCount) % domainCount;
-    }
-    this.renderDomainSwitchChart();
-  }
 
   // Rendu du graphique par domaine
   renderDomainSwitchChart(): void {
@@ -232,18 +227,7 @@ export class RapportComponent implements OnInit {
     }, 100);
   }
 
-  getEngagementPeriod(): string {
-    const startDate = new Date();
-    const endDate = new Date();
-    endDate.setFullYear(startDate.getFullYear() + 2); // Ajout de 2 ans
-  
-    // Formatage en "Mois Année" (ex: "Décembre 2024")
-    const options: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
-    const formattedStartDate = startDate.toLocaleDateString('fr-FR', options);
-    const formattedEndDate = endDate.toLocaleDateString('fr-FR', options);
-  
-    return `${formattedStartDate} - ${formattedEndDate}`;
-  }
+
   
   renderCircularChart(): void {
     setTimeout(() => {
@@ -326,6 +310,33 @@ export class RapportComponent implements OnInit {
     }, 100);
   }
 
+
+  
+  // Méthode pour changer le domaine affiché (E, S, G)
+  switchDomain(direction: string): void {
+    const domainCount = this.rapportData?.domains?.length || 0;
+    if (direction === 'next') {
+      this.currentDomainIndex = (this.currentDomainIndex + 1) % domainCount;
+    } else if (direction === 'prev') {
+      this.currentDomainIndex = (this.currentDomainIndex - 1 + domainCount) % domainCount;
+    }
+    this.renderDomainSwitchChart();
+  }
+
+
+  getEngagementPeriod(): string {
+    const startDate = new Date();
+    const endDate = new Date();
+    endDate.setFullYear(startDate.getFullYear() + 2); // Ajout de 2 ans
+  
+    // Formatage en "Mois Année" (ex: "Décembre 2024")
+    const options: Intl.DateTimeFormatOptions = { month: 'long', year: 'numeric' };
+    const formattedStartDate = startDate.toLocaleDateString('fr-FR', options);
+    const formattedEndDate = endDate.toLocaleDateString('fr-FR', options);
+  
+    return `${formattedStartDate} - ${formattedEndDate}`;
+  }
+
   getDateLimite(): string {
     const currentDate = new Date();
     const dateLimite = new Date();
@@ -336,7 +347,14 @@ export class RapportComponent implements OnInit {
     return dateLimite.toLocaleDateString('fr-FR', options);
   }
   
+  getCurrentDomainEngagements(): string[] {
+    const currentDomain = this.rapportData?.domains[this.currentDomainIndex];
+    return currentDomain?.engagements || [];
+  }
   
   
+  goHome(): void {
+    this.router.navigate(['/home']);
+  }  
 
 }
