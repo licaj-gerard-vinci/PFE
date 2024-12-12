@@ -1,17 +1,18 @@
 <div class="home-container">
   <h1>Bienvenue sur votre espace entreprise</h1>
-  <p>
-    Vous pouvez consulter vos rapports d'impact et vos engagements en cliquant sur le bouton ci-dessous.
-  </p>
+  
   <button *ngIf="est_termine"
   class="btn" 
   [disabled]="!allAnswersValidated" 
-  (click)="navigateToRapport()" 
-  matTooltip="Votre Pacte est en cours de verification" 
-  [matTooltipDisabled]="allAnswersValidated">
+  (click)="navigateToPacte()">
   Pacte d'Engagement
 </button>
+  
   <div *ngIf="!est_termine">
-    <button class="btn" (click)="navigateToFormulaire()">Accéder au formulaire</button>
-  </div>
+    <p *ngIf="estValide == 'N/D'">Votre entreprise est en cours de vérification</p>
+    <button *ngIf="estValide == 'Validée'" class="btn" (click)="navigateToFormulaire()">Accéder au formulaire</button>
+    <p *ngIf="estValide == 'Refusée'">
+      Votre entreprise a été refusée. Pour en savoir plus veuillez contacter le support : contact&#64;shiftingpact.be
+    </p>
+      </div>
 </div>

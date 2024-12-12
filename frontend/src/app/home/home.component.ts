@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   id_client: number = 0;
   est_termine: boolean = false;
   allAnswersValidated: boolean = false;
+  estValide: string = '';
   constructor(private router: Router, private buttonsService: ButtonsService, private http: HttpClient, private formValidationService: FormValidationService) {}
   ngOnInit(): void {
     const urlParams = new URLSearchParams(window.location.search);
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
             console.log('Utilisateur connecté (objet complet) :', response.client);
             this.est_termine = response.client.est_termine;
             this.id_client = response.client.id_client;
+            this.estValide = response.client.est_valide;
             console.log('ID_USER :', this.id_client);
 
             const token = sessionStorage.getItem('token');
@@ -63,8 +65,8 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  navigateToRapport() {
-    this.router.navigate([`/rapport`]);
+  navigateToPacte() {
+    this.router.navigate([`/engagement`], { queryParams: { id_client: this.id_client } });
   }
 
   navigateToFormulaire() {
