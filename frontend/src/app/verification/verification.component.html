@@ -1,0 +1,198 @@
+<body class="body">
+    
+  <div class="main-container">
+    
+    <div class="progress-bar-container">
+      
+      <button class="share-button" (click)="copyLink()">Partager</button>
+      <img (click)="openInfo2()" src="/information.png" class="info2">
+      <div class="progress-text">{{ getProgressPercentage() | number:'1.0-0' }}%</div>
+      <div class="progress-bar">
+
+        <div class="progress-bar-fill" [style.width.%]="getProgressPercentage()"></div>
+      </div>
+      <div class="form-placement">
+      
+      <!-----------------------------------------------------------------LEFT-------------------------------------------------------------------------------------------------------------------->
+      <div class="left">
+        <img src="/logoBlanc.png" class="logo" (click)="goHome()" alt="Logo">
+  
+        
+        
+  
+        <!-- Pop-up 1 -->
+        <div class="popup-overlay" *ngIf="showInfo" (click)="closeInfo1()">
+          <div class="popup-content" (click)="$event.stopPropagation()">
+            <h3>Comment fonctionne le formulaire ?</h3>
+            <p>Le formulaire est divisé en deux parties :</p>
+  
+            <div class="info-section">
+              <span class="info-title">Aujourd'hui :</span>
+              <span class="info-text"> Indiquez ce que vous faites actuellement</span>
+            </div>
+  
+            <div class="info-section">
+              <span class="info-title">Pacte d'engagment (dans les 2 ans) :</span>
+              <span class="info-text"> Prenez un engagement sur ce que vous allez faire dans le futur</span>
+            </div>
+  
+            <p>Cela vous permet de planifier des actions concrètes pour améliorer vos habitudes ou vos engagements à l'avenir.</p>
+            <button (click)="closeInfo1()">Fermer</button>
+          </div>
+        </div>
+  
+        <!-- Pop-up 2 -->
+        <div class="popup-overlay" *ngIf="showInfo2" (click)="closeInfo2()">
+          <div class="popup-content" (click)="$event.stopPropagation()">
+            <h3>Comment fonctionne la barre de progression ?</h3>
+            <p>La barre de progression montre votre avancement dans le formulaire.</p>
+  
+            <h3>À quoi sert le bouton de partage ?</h3>
+            <p>Le bouton de partage vous permet de partager votre progression avec vos collègues.</p>
+            <button (click)="closeInfo2()">Fermer</button>
+          </div>
+        </div>
+  
+        <div class="enjeux-container" *ngIf="enjeux.length > 0;">
+          <div *ngFor="let enjeu of sortedEnjeux; let i = index">
+            <button class="button" (click)="sortQuestions(enjeu.id_enjeu)">
+              <img [src]="selectedEnjeuId === enjeu.id_enjeu ? '/chevron-down.svg' : '/chevron-right.svg'" alt="icone" class="icon" />
+              {{i+1}}. {{enjeu.nom}}
+              <img *ngIf="hasAllResponses(enjeu.id_enjeu)" src="/check.png" alt="icon" class="check-icon" />
+            </button>
+            <div class="questions-container" [class.active]="selectedEnjeuId === enjeu.id_enjeu">
+              <div *ngFor="let question of sortedQuestions; let j = index"
+                [ngClass]="{'selected': question.id_question === selectedQuestionId}"
+                (click)="selectQuestion(question.id_question)">
+                <button class="button">
+                  <img *ngIf="(isAnswered(question.id_question) || !checkIfCanAnswer(question.id_question))" src="/check.png" class="check" />
+                  {{i+1}}.{{j+1}} {{question.sujet}}
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          <div *ngIf="checkEachEnjeux()">
+            <button (click)="openModal()" class="button validation-button">
+              VALIDATION
+            </button>
+          </div>
+  
+          <!-- Modal Pop-Up -->
+              
+          <div class="custom-modal" *ngIf="showModal">
+            <div class="custom-modal-content">
+              <p class="custom-modal-message">Voulez-vous vraiment envoyer le formulaire ?</p>
+              <div class="custom-modal-buttons">
+                <button class="custom-modal-cancel-button" (click)="closeModal()">Annuler</button>
+                <button class="custom-modal-confirm-button" (click)="confirmValidation()">Confirmer</button>
+              </div>
+            </div>
+          </div>
+  
+  
+        </div>
+      </div>
+      <!-----------------------------------------------------------------RIGHT-------------------------------------------------------------------------------------------------------------------->
+      <div class="right">
+        <div class="form-container">
+          <form class="simple-form">
+            <div class="header-container">
+              <div class="aujourdhui" [class.active]="activeTab === 'aujourdhui'" (click)="switchTab('aujourdhui')">
+                <img (click)="openInfo1()" src="/information.png" class="info1">
+                <p>AUJOURD'HUI</p>
+              </div>
+              <div class="engagement" [class.active]="activeTab === 'engagement'" (click)="switchTab('engagement')">
+
+                <p>PACTE D'ENGAGEMENT (DANS LES 2 ANS)</p>
+              </div>
+            </div>
+  
+            <div class="question-container">
+              <div class="question-number">{{ currentQuestion.number }}</div>
+              <div class="question-text">{{ currentQuestion.text }}</div>
+            </div>
+  
+            <div *ngIf="getExistingAnswer(currentQuestion.id); else answerForm">
+              <p>Réponse(s) :</p>
+              <ul>
+                <li *ngFor="let reponseClient of getClientAnswer(currentQuestion.id, activeTab)">
+                  - {{ reponseClient.texte }} {{reponseClient.rep_aujourd_hui}}{{reponseClient.rep_dans_2_ans}}
+                </li>
+              </ul>
+            </div>
+  
+            <ng-template #answerForm>
+              <div class="question-options">
+                <ul *ngIf="currentQuestion?.type === 'radio'">
+                  <li *ngFor="let reponse of currentQuestion.reponses">
+                    <label *ngIf="checkTemplatesReponses(reponse); else elseBlock">
+                      <input
+                        type="radio"
+                        [value]="reponse.text"
+                        [checked]="activeTab === 'aujourdhui' ? responses.aujourdhui === reponse.text : responses.engagement === reponse.text"
+                        name="answer"
+                        (change)="onReponseSelected(reponse)"
+                      />
+                      {{ reponse.text }}
+                    </label>
+                    <ng-template #elseBlock>
+                      <img src="/croixRouge.png" class="croixRouge">{{ reponse.text }}
+                    </ng-template>
+                  </li>
+                </ul>
+  
+                <ul *ngIf="currentQuestion?.type === 'checkbox'">
+                  <li *ngFor="let reponse of currentQuestion.reponses">
+                    <label *ngIf="checkTemplatesReponses(reponse); else elseBlock1">
+                      <input
+                        type="checkbox"
+                        [value]="reponse.text"
+                        [checked]="activeTab === 'aujourdhui' ? getText(selectedCheckboxeAujourdhui, reponse.text) : getText(selectedCheckboxeEngagement, reponse.text)"
+                        (change)="onCheckboxChange($event, reponse)"
+                      />
+                      {{ reponse.text }}
+                    </label>
+                    <ng-template #elseBlock1>
+                      <img src="/croixRouge.png" class="croixRouge">{{ reponse.text }}
+                    </ng-template>
+                  </li>
+                </ul>
+  
+                <div *ngIf="currentQuestion?.type === 'libre'">
+                  <textarea
+                    placeholder="Votre réponse (max 50000 caractères)..."
+                    [value]="activeTab === 'aujourdhui' ? champLibreAujourdhui : champLibreEngagement"
+                    (input)="onChampInput($event)"
+                  ></textarea>
+                </div>
+              </div>
+            </ng-template>
+  
+            <div class="comment-section">
+              <div class="comment-container">
+                <button *ngIf="checkIfCanAnswer(currentQuestion.id) && !isAnswered(currentQuestion.id)" class="addComment" type="button" (click)="toggleCommentField()">+</button>
+                <p *ngIf="checkIfCanAnswer(currentQuestion.id) && !isAnswered(currentQuestion.id)"  class="comment-text">Ajouter un commentaire</p>
+              </div>
+              <div *ngIf="showCommentField" class="comment-field">
+                <textarea
+                  placeholder="Votre réponse (max 50000 caractères)..."
+                  (input)="onCommentInput($event)"
+                ></textarea>
+              </div>
+            </div>
+  
+            <div *ngIf="checkIfCanAnswer(currentQuestion.id) && !isAnswered(currentQuestion.id)">
+              <button type="button" class="confirm-button" (click)="confirmAnswer()">CONFIRMER</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="navigation-buttons">
+        <button class="side-button left-button" (click)="previousQuestion()">&#60;</button>
+        <button class="side-button right-button" (click)="nextQuestion()">&#62;</button>
+      </div>
+      </div>
+    </div>
+  </div>
+</body>
